@@ -26,15 +26,15 @@ public class Aplicacion {
     static ArrayList<Controlador> lista = new ArrayList<>();
 
     public static void initVentanaPrincipal() {
+        //TODO: añadir una pequeña función para la serialización / deserialización de animales, simular W/R de una DB
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
 
-        for (Controlador e : lista) {
-            if (e.animal instanceof Mamifero) e.liberacionControlador();
-            if (e.animal instanceof Reptil) e.bajaControlador();
-            gridPane.add(e.vista.panel);
-        }
+        for (Controlador e : lista) gridPane.add(e.vista.panel);
+
+        //TODO: añadir botones para modificar el estado del animal.
+        // IDEA: click -> ventanaDetalle(de ese animal) -> Botones para realizar las acciones posibles
         ventanaPrincipal.add(gridPane);
         ventanaPrincipal.setVisible(true);
         ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

@@ -3,15 +3,15 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 
 public class Vista {
     /**
-     * El panel es la parte de
+     * El panel se añade a las ventanas de la aplicación. Es la representación gráfica de los datos.
      */
     JPanel panel;
-
 
     /**
      * Esencialmente el constructor y actualizarVista tienen la misma  función, ya que actualizarVista no es
@@ -38,9 +38,9 @@ public class Vista {
         header.add(new JLabel("ID: " + id));
 
         JPanel body = new JPanel(new BorderLayout());
-        body.add(new JLabel(fechaEntrada.getDayOfMonth() + "/" + fechaEntrada.getMonthValue() + "/" + fechaEntrada.getYear()), BorderLayout.NORTH);
+        body.add(new JLabel(fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))), BorderLayout.NORTH);
         body.add(new JLabel(especie), BorderLayout.CENTER);
-        body.add(new JLabel("Peso" + peso), BorderLayout.SOUTH);
+        body.add(new JLabel("Peso: " + peso), BorderLayout.SOUTH);
 
         panel.add(header, BorderLayout.NORTH);
         panel.add(body, BorderLayout.CENTER);
@@ -55,7 +55,7 @@ public class Vista {
      */
     private static void printAnimal(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento) {
         System.out.println("->Animal " + id + " " + tipo);
-        System.out.println("  Especie: " + especie + "  Entrada: " + fechaEntrada.toString().replaceAll("\\d{2}:\\d{2}:\\d{2} .*", ""));
+        System.out.println("  Especie: " + especie + "  Entrada: " + fechaEntrada.toString());
         System.out.println("  Estado: " + estado + "  Peso:" + peso + "kg");
         historialTratamiento.forEach((k, v) -> {
             System.out.println("  ->Fecha:" + k);
