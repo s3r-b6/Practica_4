@@ -15,4 +15,9 @@ public class Mamifero extends Animal {
         super(id, peso, especie);
         this.tipoLesion = atropello ? LesionMamifero.Atropello : LesionMamifero.Otro;
     }
+
+    @Override
+    public String getTipoLesion() {
+        return tipoLesion.toString();
+    }
 }

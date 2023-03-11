@@ -14,28 +14,30 @@ public class Controlador {
     Animal animal;
     Vista vista;
 
-    
+
     Controlador(Animal modelo) {
         this.animal = modelo;
-        this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getEstado() + "", animal.getPeso(), animal.getHistorialTratamiento());
+        this.vista = new Vista();
+        solicitarUpdate();
     }
 
     public void tratamientoControlador(String tratamiento) {
         animal.tratamientoAnimal(tratamiento);
-        vista.actualizarVista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getEstado() + "", animal.getPeso(), animal.getHistorialTratamiento());
+        solicitarUpdate();
     }
 
     public void liberacionControlador() {
         animal.liberacionAnimal();
-        vista.actualizarVista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getEstado() + "", animal.getPeso(), animal.getHistorialTratamiento());
+        solicitarUpdate();
     }
 
     public void bajaControlador() {
         animal.bajaAnimal();
+        solicitarUpdate();
+    }
+
+    private void solicitarUpdate() {
         vista.actualizarVista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getEstado() + "", animal.getPeso(), animal.getHistorialTratamiento());
+                animal.getFechaEntrada(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(), animal.getTipoLesion());
     }
 }

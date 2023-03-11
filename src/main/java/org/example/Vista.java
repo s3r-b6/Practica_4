@@ -14,14 +14,6 @@ public class Vista {
     JPanel panel;
 
     /**
-     * Esencialmente el constructor y actualizarVista tienen la misma  función, ya que actualizarVista no es
-     * selectivo. Es decir, siempre se crea un nuevo JPanel que se liga a la vista y se revalida y se pinta otra vez.
-     */
-    Vista(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento) {
-        actualizarVista(tipo, id, especie, fechaEntrada, estado, peso, historialTratamiento);
-    }
-
-    /**
      * Este método toma los atributos del tipo de dato Mamifero, Reptil o Ave y crea un JPanel con su representación
      * para el usuario; cada vez que se llama a actualizarVista se reemplaza el atributo panel de la vista.
      * Probablemente sería mejor -y más o menos sencillo- actualizar selectivamente la parte del panel que
@@ -29,37 +21,40 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVista(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento) {
-        printAnimal(tipo, id, especie, fechaEntrada, estado, peso, historialTratamiento);
+    public void actualizarVista(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento, String tipoLesion) {
         this.panel = new JPanel(new BorderLayout());
 
-        JPanel header = new JPanel(new FlowLayout());
-        header.add(new JLabel(tipo));
-        header.add(new JLabel("ID: " + id));
+        Component[] components = buildComponents(tipo, id, especie, fechaEntrada, estado, peso, historialTratamiento, tipoLesion);
 
-        JPanel body = new JPanel(new BorderLayout());
-        body.add(new JLabel(fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))), BorderLayout.NORTH);
-        body.add(new JLabel(especie), BorderLayout.CENTER);
-        body.add(new JLabel("Peso: " + peso), BorderLayout.SOUTH);
+        panel.add(components[0], BorderLayout.NORTH);
+        panel.add(components[1], BorderLayout.CENTER);
+        panel.add(components[2], BorderLayout.SOUTH);
 
-        panel.add(header, BorderLayout.NORTH);
-        panel.add(body, BorderLayout.CENTER);
-        panel.add(new JLabel(estado), BorderLayout.SOUTH);
         this.panel.revalidate();
         this.panel.repaint();
     }
 
+    public Component[] buildComponents(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento, String tipoLesion) {
+        JPanel h1 = new JPanel(new GridLayout(1, 2));
+        h1.add(new JLabel("Familia: " + tipo));
+        h1.add(new JLabel("ID: " + id));
 
-    /**
-     * DEBUG: Escribe los datos del animal
-     */
-    private static void printAnimal(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento) {
-        System.out.println("->Animal " + id + " " + tipo);
-        System.out.println("  Especie: " + especie + "  Entrada: " + fechaEntrada.toString());
-        System.out.println("  Estado: " + estado + "  Peso:" + peso + "kg");
-        historialTratamiento.forEach((k, v) -> {
-            System.out.println("  ->Fecha:" + k);
-            System.out.println("  ->Tratamiento: " + v);
-        });
+        JPanel h2 = new JPanel(new GridLayout(1, 2));
+        h2.add(new JLabel("Especie: " + especie));
+        h2.add(new JLabel("Peso: " + peso + "kg"));
+
+        JLabel img = new JLabel(new ImageIcon("src/main/java/org/example/sil.png"));
+        img.setSize(40, 40);
+
+        JPanel headers = new JPanel(new GridLayout(2, 1));
+        headers.add(h1);
+        headers.add(h2);
+
+        JPanel datosEntrada = new JPanel(new GridLayout(2, 2));
+        datosEntrada.add(new JLabel("Fecha alta: " + fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
+        datosEntrada.add(new JLabel("Estado: " + estado));
+
+        return new Component[]{headers, img, datosEntrada};
     }
 }

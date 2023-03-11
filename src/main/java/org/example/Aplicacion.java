@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Aplicacion {
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
-    static JPanel gridPane = new JPanel(new GridLayout());
+    static ArrayList<Controlador> lista = new ArrayList<>();
 
     /**
      * La lista de animales contiene los controladores para cada uno de los animales.
@@ -23,13 +23,19 @@ public class Aplicacion {
      * Desde la interfaz, se pueden enviar señales al controlador para que modifique los  datos del modelo y
      * justo después actualice la representación de los datos.
      */
-    static ArrayList<Controlador> lista = new ArrayList<>();
 
     public static void initVentanaPrincipal() {
-        //TODO: añadir una pequeña función para la serialización / deserialización de animales, simular W/R de una DB
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
+        JPanel gridPane = new JPanel();
+
+        ventanaPrincipal.setResizable(false);
+        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ventanaPrincipal.setSize(new Dimension(900, 1020));
+        ventanaPrincipal.setTitle("Aplicación del santuario");
+
+        GridLayout gl = new GridLayout(3, lista.size() / 3);
+        gl.setHgap(25);
+        gl.setVgap(25);
+        gridPane.setLayout(gl);
 
         for (Controlador e : lista) gridPane.add(e.vista.panel);
 
@@ -37,11 +43,23 @@ public class Aplicacion {
         // IDEA: click -> ventanaDetalle(de ese animal) -> Botones para realizar las acciones posibles
         ventanaPrincipal.add(gridPane);
         ventanaPrincipal.setVisible(true);
-        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        ventanaPrincipal.setSize(new Dimension(300, 450));
+    }
+
+    private static void readToList() {
+        //TODO: añadir una pequeña función para la serialización / deserialización de animales, simular W/R de una DB
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
     }
 
     public static void main(String[] args) {
+        readToList();
         initVentanaPrincipal();
     }
 }

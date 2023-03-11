@@ -43,8 +43,8 @@ public abstract class Animal {
         return this.especie;
     }
 
-    public Estado getEstado() {
-        return this.estado;
+    public String getEstado() {
+        return this.estado.toString();
     }
 
     public HashMap<Date, String> getHistorialTratamiento() {
@@ -64,4 +64,6 @@ public abstract class Animal {
     public void liberacionAnimal() {
         this.estado = Estado.Liberado;
     }
+
+    public abstract String getTipoLesion();
 }
