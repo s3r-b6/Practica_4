@@ -1,34 +1,47 @@
 package org.example;
 
-import org.example.Modelo.*;
+import org.example.Modelo.Ave;
+import org.example.Modelo.Mamifero;
+import org.example.Modelo.Reptil;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * Esta clase contiene el main() y también contiene el punto de entrada a la interfaz, i.e., la ventana sobre
+ * la que se insertan los animales.
+ */
 public class Aplicacion {
+    static JFrame ventanaPrincipal = new JFrame();
+    static JFrame ventanaDetalle = new JFrame();
+    static JPanel gridPane = new JPanel(new GridLayout());
 
-    static ArrayList<ControladorAnimales> lista = new ArrayList<>();
-
-    /*
-      modelo <-> controlador <-> vista
-
-      ArrayList<Componente> c ; Componente: la vista de cada animal se actualiza con .repaint() ??¿?¿¿?¿?¿?¿?;
-
-      vista: redibujar
+    /**
+     * La lista de animales contiene los controladores para cada uno de los animales.
+     * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador.
+     * Desde la interfaz, se pueden enviar señales al controlador para que modifique los  datos del modelo y
+     * justo después actualice la representación de los datos.
      */
+    static ArrayList<Controlador> lista = new ArrayList<>();
 
-    public static void init() {
-        lista.add(new ControladorAnimales(new Reptil("Lagarto", lista.size() + 1, 3, true)));
-        lista.add(new ControladorAnimales(new Mamifero("Perro", lista.size() + 1, 3, true)));
-        lista.add(new ControladorAnimales(new Ave("Jilguero", lista.size() + 1, 3, true)));
+    public static void initVentanaPrincipal() {
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
+
+        for (Controlador e : lista) {
+            if (e.animal instanceof Mamifero) e.liberacionControlador();
+            if (e.animal instanceof Reptil) e.bajaControlador();
+            gridPane.add(e.vista.panel);
+        }
+        ventanaPrincipal.add(gridPane);
+        ventanaPrincipal.setVisible(true);
+        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ventanaPrincipal.setSize(new Dimension(300, 450));
     }
 
     public static void main(String[] args) {
-        init();
-        for (ControladorAnimales e : lista) {
-            if (e.animal instanceof Ave) e.bajaControlador();
-            else if (e.animal instanceof Mamifero) e.tratamientoControlador("Medicina");
-            else if (e.animal instanceof Reptil) e.liberacionControlador();
-        }
+        initVentanaPrincipal();
     }
-
 }

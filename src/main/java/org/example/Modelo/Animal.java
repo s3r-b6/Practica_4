@@ -1,12 +1,13 @@
 package org.example.Modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 
 public abstract class Animal {
     int id;
     int peso;
-    Date fechaEntrada;
+    LocalDate fechaEntrada;
     String especie;
     Estado estado;
     HashMap<Date, String> historialTratamiento;
@@ -14,7 +15,7 @@ public abstract class Animal {
     public Animal(int id, int peso, String especie) {
         this.id = id;
         this.peso = peso;
-        this.fechaEntrada = new Date();
+        this.fechaEntrada = LocalDate.now();
         this.especie = especie;
         this.estado = Estado.Tratamiento;
         this.historialTratamiento = new HashMap<>();
@@ -34,7 +35,7 @@ public abstract class Animal {
         return this.peso;
     }
 
-    public Date getFechaEntrada() {
+    public LocalDate getFechaEntrada() {
         return this.fechaEntrada;
     }
 
