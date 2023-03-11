@@ -37,12 +37,30 @@ public class Aplicacion {
         gl.setVgap(25);
         gridPane.setLayout(gl);
 
-        for (Controlador e : lista) gridPane.add(e.vista.panel);
+        for (Controlador e : lista) {
+            JPanel contenedorAnimal = new JPanel(new BorderLayout());
+            JButton botonDetalle = new JButton("Detalle");
+            botonDetalle.addActionListener(actionEvent -> spawnVistaDetalle(e));
 
-        //TODO: añadir botones para modificar el estado del animal.
-        // IDEA: click -> ventanaDetalle(de ese animal) -> Botones para realizar las acciones posibles
+            contenedorAnimal.add(e.vista.vistaNormal, BorderLayout.NORTH);
+            contenedorAnimal.add(botonDetalle, BorderLayout.SOUTH);
+
+            gridPane.add(contenedorAnimal);
+        }
+
         ventanaPrincipal.add(gridPane);
         ventanaPrincipal.setVisible(true);
+    }
+
+    private static void spawnVistaDetalle(Controlador e) {
+        //TODO: añadir botones para modificar el estado del animal.
+        // IDEA: click -> ventanaDetalle(de ese animal) -> Botones para realizar las acciones posibles
+        ventanaDetalle.getContentPane().removeAll();
+        ventanaDetalle.setSize(600, 600);
+        ventanaDetalle.add(e.vista.vistaDetalle);
+        ventanaDetalle.revalidate();
+        ventanaDetalle.repaint();
+        ventanaDetalle.setVisible(true);
     }
 
     private static void readToList() {

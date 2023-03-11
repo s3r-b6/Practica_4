@@ -37,7 +37,7 @@ public class Controlador {
     }
 
     private void solicitarUpdate() {
-        vista.actualizarVista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+        vista.actualizarVistas(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                 animal.getFechaEntrada(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(), animal.getTipoLesion());
     }
 }
