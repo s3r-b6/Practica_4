@@ -1,8 +1,8 @@
 package org.example.Modelo;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public abstract class Animal {
     int id;
@@ -10,7 +10,8 @@ public abstract class Animal {
     LocalDate fechaEntrada;
     String especie;
     Estado estado;
-    HashMap<LocalDate, String> historialTratamiento;
+    ArrayList<LocalDate[]> fechasTratamientos;
+    ArrayList<String> descripcionTratamientos;
 
     public Animal(int id, int peso, String especie) {
         this.id = id;
@@ -18,7 +19,8 @@ public abstract class Animal {
         this.fechaEntrada = LocalDate.now();
         this.especie = especie;
         this.estado = Estado.Tratamiento;
-        this.historialTratamiento = new HashMap<>();
+        this.fechasTratamientos = new ArrayList<>();
+        this.descripcionTratamientos = new ArrayList<>();
     }
 
     enum Estado {
@@ -35,8 +37,8 @@ public abstract class Animal {
         return this.peso;
     }
 
-    public LocalDate getFechaEntrada() {
-        return this.fechaEntrada;
+    public String getFechaEntrada() {
+        return this.fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     public String getEspecie() {
@@ -47,22 +49,40 @@ public abstract class Animal {
         return this.estado.toString();
     }
 
-    public HashMap<LocalDate, String> getHistorialTratamiento() {
-        return this.historialTratamiento;
+    public String[][] getHistorialTratamiento() {
+        String[][] tratamientos = new String[fechasTratamientos.size()][3];
+
+        for (int i = 0; i < tratamientos.length; i++) {
+            LocalDate[] fechasArray = fechasTratamientos.get(i);
+            String descripcionTratamiento = descripcionTratamientos.get(i);
+
+            tratamientos[i] = new String[]{
+                    fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    descripcionTratamiento
+            };
+        }
+
+        return tratamientos;
     }
 
-    public void tratamientoAnimal(String tratamiento) {
-        this.historialTratamiento.put(LocalDate.now(), tratamiento);
+    public void tratamientoAnimal(String tratamiento, LocalDate fechaFin) {
+        fechasTratamientos.add(new LocalDate[]{LocalDate.now(), fechaFin});
+        descripcionTratamientos.add(tratamiento);
     }
 
 
-    public void bajaAnimal() {
+    public boolean bajaAnimal() {
+        if (this.estado == Estado.Fallecido) return false;
         this.estado = Estado.Fallecido;
+        return true;
     }
 
 
-    public void liberacionAnimal() {
+    public boolean liberacionAnimal() {
+        if (this.estado == Estado.Fallecido) return false;
         this.estado = Estado.Liberado;
+        return true;
     }
 
     public abstract String getTipoLesion();

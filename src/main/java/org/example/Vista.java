@@ -27,30 +27,32 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVistas(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<LocalDate, String> historialTratamiento, String tipoLesion) {
-        actualizarVistaNormal(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
-        actualizarVistaDetalle(tipo, id, especie, fechaEntrada, estado, peso, historialTratamiento, tipoLesion);
+    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String[][] historialTratamiento, String tipoLesion) {
+        JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
+        actualizarVistaNormal(contenedorCuerpo);
+        contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
+        actualizarVistaDetalle(contenedorCuerpo, historialTratamiento);
     }
 
-    private void actualizarVistaNormal(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, String tipoLesion) {
-        JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
+    private void actualizarVistaNormal(JPanel contenedorCuerpo) {
         this.vistaNormal = new JPanel(new BorderLayout());
         this.vistaNormal.add(contenedorCuerpo);
         this.vistaNormal.revalidate();
         this.vistaNormal.repaint();
     }
 
-    private void actualizarVistaDetalle(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<LocalDate, String> historialTratamiento, String tipoLesion) {
-        JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
-        JScrollPane contenedorTratamiento = buildPanelTratamientos(historialTratamiento);
+    private void actualizarVistaDetalle(JPanel contenedorCuerpo, String[][] historialTratamiento) {
+        JTable tabla = new JTable(historialTratamiento, new String[]{"Fecha-Inicio", "Tratamiento", "Fecha-Fin"});
+        tabla.setEnabled(false);
+        JScrollPane panelTratamientos = new JScrollPane(tabla);
         this.vistaDetalle = new JPanel(new BorderLayout());
         this.vistaDetalle.add(contenedorCuerpo, BorderLayout.NORTH);
-        this.vistaDetalle.add(contenedorTratamiento, BorderLayout.CENTER);
+        this.vistaDetalle.add(panelTratamientos, BorderLayout.CENTER);
         this.vistaDetalle.revalidate();
         this.vistaDetalle.repaint();
     }
 
-    private static JPanel buildCuerpo(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, String tipoLesion) {
+    private static JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
 
         JPanel h1 = new JPanel(new GridLayout(1, 2));
@@ -69,7 +71,7 @@ public class Vista {
         headers.add(h2);
 
         JPanel datosEntrada = new JPanel(new GridLayout(2, 2));
-        datosEntrada.add(new JLabel("Fecha alta: " + fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        datosEntrada.add(new JLabel("Fecha alta: " + fechaEntrada));
         datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
         datosEntrada.add(new JLabel("Estado: " + estado));
 
@@ -77,12 +79,5 @@ public class Vista {
         contenedorCuerpo.add(img, BorderLayout.CENTER);
         contenedorCuerpo.add(datosEntrada, BorderLayout.SOUTH);
         return contenedorCuerpo;
-    }
-
-    private static JScrollPane buildPanelTratamientos(HashMap<LocalDate, String> historialTratamiento) {
-        String[] columnas = new String[]{"Fecha", "Tratamiento"};
-        String[][] datos = new String[historialTratamiento.size()][2];
-
-        return new JScrollPane(new JTable(datos, columnas));
     }
 }

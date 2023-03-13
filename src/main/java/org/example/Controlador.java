@@ -3,6 +3,8 @@ package org.example;
 
 import org.example.Modelo.Animal;
 
+import java.time.LocalDate;
+
 /**
  * El controlador  liga el modelo de datos con la vista. Los modelos son esencialmente animales únicos, con sus
  * propios datos, y, la vista, es un Componente Swing que representa esos datos. Las updates a los datos se realizan
@@ -21,19 +23,17 @@ public class Controlador {
         solicitarUpdate();
     }
 
-    public void tratamientoControlador(String tratamiento) {
-        animal.tratamientoAnimal(tratamiento);
+    public void tratamientoControlador(String tratamiento, LocalDate fechaFin) {
+        animal.tratamientoAnimal(tratamiento, fechaFin);
         solicitarUpdate();
     }
 
     public void liberacionControlador() {
-        animal.liberacionAnimal();
-        solicitarUpdate();
+        if (animal.liberacionAnimal()) solicitarUpdate();
     }
 
     public void bajaControlador() {
-        animal.bajaAnimal();
-        solicitarUpdate();
+        if (animal.bajaAnimal()) solicitarUpdate();
     }
 
     private void solicitarUpdate() {
