@@ -38,6 +38,10 @@ public class Aplicacion {
         gridPane.setLayout(gl);
 
         for (Controlador e : lista) {
+            e.tratamientoControlador("Pastillas");
+            e.tratamientoControlador("Pastillas 2");
+            e.tratamientoControlador("Pastillas 3");
+
             JPanel contenedorAnimal = new JPanel(new BorderLayout());
             JButton botonDetalle = new JButton("Detalle");
             botonDetalle.addActionListener(actionEvent -> spawnVistaDetalle(e));
@@ -57,7 +61,20 @@ public class Aplicacion {
         // IDEA: click -> ventanaDetalle(de ese animal) -> Botones para realizar las acciones posibles
         ventanaDetalle.getContentPane().removeAll();
         ventanaDetalle.setSize(600, 600);
-        ventanaDetalle.add(e.vista.vistaDetalle);
+
+        JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
+        JButton botonBaja = new JButton("Baja");
+        JButton botonLiberar = new JButton("Liberar");
+        JButton botonTratamiento = new JButton("Tratamiento");
+        contenedorBotones.add(botonBaja);
+        contenedorBotones.add(botonLiberar);
+        contenedorBotones.add(botonTratamiento);
+
+        JPanel contenedorDetalle = new JPanel(new BorderLayout());
+        contenedorDetalle.add(e.vista.vistaDetalle, BorderLayout.CENTER);
+        contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
+
+        ventanaDetalle.add(contenedorDetalle);
         ventanaDetalle.revalidate();
         ventanaDetalle.repaint();
         ventanaDetalle.setVisible(true);

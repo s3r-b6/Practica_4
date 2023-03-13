@@ -2,10 +2,12 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
 /**
  * Esencialmente, un JPanel y las operaciones que se realizan sobre él.
@@ -25,7 +27,7 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVistas(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento, String tipoLesion) {
+    public void actualizarVistas(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<LocalDate, String> historialTratamiento, String tipoLesion) {
         actualizarVistaNormal(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
         actualizarVistaDetalle(tipo, id, especie, fechaEntrada, estado, peso, historialTratamiento, tipoLesion);
     }
@@ -38,12 +40,12 @@ public class Vista {
         this.vistaNormal.repaint();
     }
 
-    private void actualizarVistaDetalle(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<Date, String> historialTratamiento, String tipoLesion) {
+    private void actualizarVistaDetalle(String tipo, int id, String especie, LocalDate fechaEntrada, String estado, int peso, HashMap<LocalDate, String> historialTratamiento, String tipoLesion) {
         JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
-        JPanel contenedorTratamiento = buildPanelTratamientos(historialTratamiento);
+        JScrollPane contenedorTratamiento = buildPanelTratamientos(historialTratamiento);
         this.vistaDetalle = new JPanel(new BorderLayout());
-        this.vistaDetalle.add(contenedorCuerpo, BorderLayout.CENTER);
-        this.vistaDetalle.add(contenedorTratamiento, BorderLayout.SOUTH);
+        this.vistaDetalle.add(contenedorCuerpo, BorderLayout.NORTH);
+        this.vistaDetalle.add(contenedorTratamiento, BorderLayout.CENTER);
         this.vistaDetalle.revalidate();
         this.vistaDetalle.repaint();
     }
@@ -77,9 +79,10 @@ public class Vista {
         return contenedorCuerpo;
     }
 
-    private static JPanel buildPanelTratamientos(HashMap<Date, String> historialTratamiento) {
-        JPanel contenedorTratamiento = new JPanel();
-        contenedorTratamiento.add(new JLabel(historialTratamiento.toString()));
-        return contenedorTratamiento;
+    private static JScrollPane buildPanelTratamientos(HashMap<LocalDate, String> historialTratamiento) {
+        String[] columnas = new String[]{"Fecha", "Tratamiento"};
+        String[][] datos = new String[historialTratamiento.size()][2];
+
+        return new JScrollPane(new JTable(datos, columnas));
     }
 }

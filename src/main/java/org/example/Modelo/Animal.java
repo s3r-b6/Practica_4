@@ -10,7 +10,7 @@ public abstract class Animal {
     LocalDate fechaEntrada;
     String especie;
     Estado estado;
-    HashMap<Date, String> historialTratamiento;
+    HashMap<LocalDate, String> historialTratamiento;
 
     public Animal(int id, int peso, String especie) {
         this.id = id;
@@ -47,12 +47,12 @@ public abstract class Animal {
         return this.estado.toString();
     }
 
-    public HashMap<Date, String> getHistorialTratamiento() {
+    public HashMap<LocalDate, String> getHistorialTratamiento() {
         return this.historialTratamiento;
     }
 
     public void tratamientoAnimal(String tratamiento) {
-        this.historialTratamiento.put(new Date(), tratamiento);
+        this.historialTratamiento.put(LocalDate.now(), tratamiento);
     }
 
 
