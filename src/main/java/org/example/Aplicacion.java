@@ -5,6 +5,7 @@ import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -87,16 +88,27 @@ public class Aplicacion {
 
     private static void accionTratamiento(Controlador cont) {
         JFrame ventanaTratamiento = new JFrame();
-        JPanel contenedorTratamiento = new JPanel(new FlowLayout());
+        ventanaTratamiento.setSize(450, 325);
+        ventanaTratamiento.setResizable(false);
 
-        contenedorTratamiento.add(new JTextField());
-        contenedorTratamiento.add(new JTextField());
-        contenedorTratamiento.add(new JTextField());
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
+        contenedorTratamiento.setBorder(padding);
+
+        JPanel contenedorFecha = new JPanel(new FlowLayout());
+        JTextArea textArea = new JTextArea(5, 10);
+        textArea.setLineWrap(true);
+        contenedorFecha.add(new JLabel("Fecha-inicio"));
+        contenedorFecha.add(new JTextField(7));
+
+        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
+        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
+        contenedorTratamiento.add(new JButton("Añadir"), BorderLayout.SOUTH);
+
         ventanaTratamiento.add(contenedorTratamiento);
-        ventanaTratamiento.setSize(200, 200);
-        ventanaTratamiento.setVisible(true);
 
-        cargarVistaDetalle(cont); //sólo debería ocurrir si hay una update en los tratamientos <- temp
+        ventanaTratamiento.setVisible(true);
+        //cargarVistaDetalle(cont); //sólo debería ocurrir si hay una update en los tratamientos <- temp
     }
 
     private static void accionBaja(Controlador cont) {
