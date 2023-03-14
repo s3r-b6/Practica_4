@@ -17,30 +17,25 @@ import java.util.ArrayList;
 public class Aplicacion {
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
-    static ArrayList<Controlador> lista = new ArrayList<>();
-
     /**
      * La lista de animales contiene los controladores para cada uno de los animales.
      * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador.
      * Desde la interfaz, se pueden enviar señales al controlador para que modifique los  datos del modelo y
      * justo después actualice la representación de los datos.
      */
-
-    public static void initVentanaPrincipal() {
-        ventanaPrincipal.setResizable(false);
-        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        ventanaPrincipal.setSize(new Dimension(900, 1020));
-        ventanaPrincipal.setTitle("Aplicación del santuario");
-        cargarGrid();
-    }
+    static ArrayList<Controlador> lista = new ArrayList<>();
 
     private static void cargarGrid() {
         ventanaPrincipal.getContentPane().removeAll();
+        ventanaPrincipal.add(crearGridAnimales());
+        ventanaPrincipal.setVisible(true);
+    }
+
+    private static JPanel crearGridAnimales() {
         GridLayout gl = new GridLayout(3, lista.size() / 3);
+        JPanel gridPane = new JPanel(gl);
         gl.setHgap(25);
         gl.setVgap(25);
-
-        JPanel gridPane = new JPanel(gl);
 
         for (Controlador e : lista) {
             JPanel contenedorAnimal = new JPanel(new BorderLayout());
@@ -52,8 +47,7 @@ public class Aplicacion {
 
             gridPane.add(contenedorAnimal);
         }
-        ventanaPrincipal.add(gridPane);
-        ventanaPrincipal.setVisible(true);
+        return gridPane;
     }
 
 
@@ -63,6 +57,13 @@ public class Aplicacion {
     private static void cargarVistaDetalle(Controlador cont) {
         ventanaDetalle.getContentPane().removeAll();
         ventanaDetalle.setSize(600, 600);
+        ventanaDetalle.add(crearVistaDetalle(cont));
+        ventanaDetalle.revalidate();
+        ventanaDetalle.repaint();
+        ventanaDetalle.setVisible(true);
+    }
+
+    private static JPanel crearVistaDetalle(Controlador cont) {
         JPanel contenedorDetalle = new JPanel(new BorderLayout());
         JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
 
@@ -79,11 +80,7 @@ public class Aplicacion {
 
         contenedorDetalle.add(cont.vista.vistaDetalle, BorderLayout.CENTER);
         contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
-
-        ventanaDetalle.add(contenedorDetalle);
-        ventanaDetalle.revalidate();
-        ventanaDetalle.repaint();
-        ventanaDetalle.setVisible(true);
+        return contenedorDetalle;
     }
 
     private static void accionTratamiento(Controlador cont) {
@@ -100,15 +97,21 @@ public class Aplicacion {
         textArea.setLineWrap(true);
         contenedorFecha.add(new JLabel("Fecha-inicio"));
         contenedorFecha.add(new JTextField(7));
-
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
         contenedorTratamiento.add(textArea, BorderLayout.CENTER);
-        contenedorTratamiento.add(new JButton("Añadir"), BorderLayout.SOUTH);
 
+        JButton botonAdd = new JButton("Añadir");
+        botonAdd.addActionListener(e -> accionAddTratamiento());
+
+        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
         ventanaTratamiento.add(contenedorTratamiento);
 
         ventanaTratamiento.setVisible(true);
         //cargarVistaDetalle(cont); //sólo debería ocurrir si hay una update en los tratamientos <- temp
+    }
+
+    private static void accionAddTratamiento() {
+        System.out.println("Añadir");
     }
 
     private static void accionBaja(Controlador cont) {
@@ -147,6 +150,10 @@ public class Aplicacion {
 
     public static void main(String[] args) {
         readToList();
-        initVentanaPrincipal();
+        ventanaPrincipal.setResizable(false);
+        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ventanaPrincipal.setSize(new Dimension(900, 1020));
+        ventanaPrincipal.setTitle("Aplicación del santuario");
+        cargarGrid();
     }
 }
