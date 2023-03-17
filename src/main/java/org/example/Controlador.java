@@ -20,23 +20,30 @@ public class Controlador {
     Controlador(Animal modelo) {
         this.animal = modelo;
         this.vista = new Vista();
-        solicitarUpdate();
+        recrearVista();
     }
 
     public void tratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.tratamientoAnimal(tratamiento, fechaFin);
-        solicitarUpdate();
+        recrearVista();
     }
 
     public void liberacionControlador() {
-        if (animal.liberacionAnimal()) solicitarUpdate();
+        if (animal.liberacionAnimal()) {
+            vista.setLabelEstado(animal.getEstado());
+        }
     }
 
     public void bajaControlador() {
-        if (animal.bajaAnimal()) solicitarUpdate();
+        if (animal.bajaAnimal()) recargarVistas();
     }
 
-    private void solicitarUpdate() {
+    public void recargarVistas() {
+        vista.vistaDetalle.repaint();
+        vista.vistaNormal.repaint();
+    }
+
+    private void recrearVista() {
         vista.actualizarVistas(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                 animal.getFechaEntrada(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(), animal.getTipoLesion());
     }

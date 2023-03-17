@@ -1,13 +1,8 @@
 package org.example;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.IntStream;
 
 /**
  * Esencialmente, un JPanel y las operaciones que se realizan sobre él.
@@ -18,6 +13,7 @@ import java.util.stream.IntStream;
 public class Vista {
     JPanel vistaNormal;
     JPanel vistaDetalle;
+    static JLabel labelEstado = new JLabel();
 
     /**
      * Este método toma los atributos del tipo de dato Mamifero, Reptil o Ave y crea un JPanel con su representación
@@ -27,11 +23,18 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String[][] historialTratamiento, String tipoLesion) {
+    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
         JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
         actualizarVistaNormal(contenedorCuerpo);
         contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
         actualizarVistaDetalle(contenedorCuerpo, historialTratamiento);
+    }
+
+
+    public void setLabelEstado(String nuevoEstado) {
+        labelEstado.setText(nuevoEstado);
+        labelEstado.revalidate();
+        labelEstado.repaint();
     }
 
     private void actualizarVistaNormal(JPanel contenedorCuerpo) {
@@ -41,9 +44,15 @@ public class Vista {
         this.vistaNormal.repaint();
     }
 
-    private void actualizarVistaDetalle(JPanel contenedorCuerpo, String[][] historialTratamiento) {
-        JTable tabla = new JTable(historialTratamiento, new String[]{"Fecha-Inicio", "Tratamiento", "Fecha-Fin"});
+    private void actualizarVistaDetalle(JPanel contenedorCuerpo, Object[][] historialTratamiento) {
+        DefaultTableModel model = new DefaultTableModel(historialTratamiento, new String[]{"Fecha-Inicio", "Tratamiento", "Fecha-Fin", "Completado"});
+        JTable tabla = new JTable(model) {
+            public Class getColumnClass(int column) {
+                return getValueAt(0, column).getClass();
+            }
+        };
         tabla.setEnabled(false);
+        tabla.setPreferredScrollableViewportSize(tabla.getPreferredSize());
         JScrollPane panelTratamientos = new JScrollPane(tabla);
         this.vistaDetalle = new JPanel(new BorderLayout());
         this.vistaDetalle.add(contenedorCuerpo, BorderLayout.NORTH);
@@ -73,7 +82,8 @@ public class Vista {
         JPanel datosEntrada = new JPanel(new GridLayout(2, 2));
         datosEntrada.add(new JLabel("Fecha alta: " + fechaEntrada));
         datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
-        datosEntrada.add(new JLabel("Estado: " + estado));
+        labelEstado.setText("Estado " + estado);
+        datosEntrada.add(labelEstado);
 
         contenedorCuerpo.add(headers, BorderLayout.NORTH);
         contenedorCuerpo.add(img, BorderLayout.CENTER);

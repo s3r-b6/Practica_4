@@ -49,17 +49,18 @@ public abstract class Animal {
         return this.estado.toString();
     }
 
-    public String[][] getHistorialTratamiento() {
-        String[][] tratamientos = new String[fechasTratamientos.size()][3];
+    public Object[][] getHistorialTratamiento() {
+        Object[][] tratamientos = new Object[fechasTratamientos.size()][3];
 
         for (int i = 0; i < tratamientos.length; i++) {
             LocalDate[] fechasArray = fechasTratamientos.get(i);
             String descripcionTratamiento = descripcionTratamientos.get(i);
 
-            tratamientos[i] = new String[]{
+            tratamientos[i] = new Object[]{
                     fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    descripcionTratamiento
+                    descripcionTratamiento,
+                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))
             };
         }
 

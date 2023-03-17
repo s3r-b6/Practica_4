@@ -13,6 +13,11 @@ import java.util.ArrayList;
 /**
  * Esta clase contiene el main() y también contiene el punto de entrada a la interfaz, i.e., la ventana sobre
  * la que se insertan los animales.
+ * <p>
+ * En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica de negocio generalmente se maneja en el
+ * controlador y/o en el modelo, mientras que la vista solo muestra los datos al usuario. La lógica de negocio
+ * se refiere a las reglas y procesos que rigen cómo funciona una aplicación o sistema. Por ejemplo, en una
+ * aplicación bancaria, la lógica de negocio podría incluir reglas sobre cómo se calculan los intereses o cómo se realizan las transferencias entre cuentas. En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica de negocio generalmente se maneja en el controlador y/o en el modelo, mientras que la vista solo muestra los datos al usuario.
  */
 public class Aplicacion {
     static JFrame ventanaPrincipal = new JFrame();
@@ -92,7 +97,7 @@ public class Aplicacion {
         JPanel contenedorFecha = new JPanel(new FlowLayout());
         JTextArea textArea = new JTextArea(5, 10);
         textArea.setLineWrap(true);
-        contenedorFecha.add(new JLabel("Fecha-inicio"));
+        contenedorFecha.add(new JLabel("Fecha de fin: (12/03/2023)"));
         JTextField fecha = new JTextField(7);
         contenedorFecha.add(fecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
@@ -109,10 +114,9 @@ public class Aplicacion {
     }
 
     private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
-        String fechaTexto = fecha.getText();
-        String descripcionTexto = textArea.getText();
+        String fechaTexto = fecha.getText().trim();
+        String descripcionTexto = textArea.getText().trim();
         String mensajeError = "";
-
 
         if (!descripcionTexto.matches(".{12,144}")) {
             fecha.setText("");
@@ -145,8 +149,8 @@ public class Aplicacion {
 
     private static void accionBaja(Controlador cont) {
         cont.bajaControlador();
-        cargarGrid();
-        cargarVistaDetalle(cont);
+        //cargarGrid();
+        //cargarVistaDetalle(cont);
     }
 
     private static void accionLiberar(Controlador cont) {
