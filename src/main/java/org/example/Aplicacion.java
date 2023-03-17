@@ -51,9 +51,6 @@ public class Aplicacion {
     }
 
 
-    //TODO -> BUG. Al modificar el estado, se vuelven a cargar los tratamientos?
-
-
     private static void cargarVistaDetalle(Controlador cont) {
         ventanaDetalle.getContentPane().removeAll();
         ventanaDetalle.setSize(600, 600);
@@ -96,12 +93,13 @@ public class Aplicacion {
         JTextArea textArea = new JTextArea(5, 10);
         textArea.setLineWrap(true);
         contenedorFecha.add(new JLabel("Fecha-inicio"));
-        contenedorFecha.add(new JTextField(7));
+        JTextField fecha = new JTextField(7);
+        contenedorFecha.add(fecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
         contenedorTratamiento.add(textArea, BorderLayout.CENTER);
 
         JButton botonAdd = new JButton("Añadir");
-        botonAdd.addActionListener(e -> accionAddTratamiento());
+        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
 
         contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
         ventanaTratamiento.add(contenedorTratamiento);
@@ -110,8 +108,39 @@ public class Aplicacion {
         //cargarVistaDetalle(cont); //sólo debería ocurrir si hay una update en los tratamientos <- temp
     }
 
-    private static void accionAddTratamiento() {
+    private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
+        String fechaTexto = fecha.getText();
+        String descripcionTexto = textArea.getText();
+        String mensajeError = "";
+
+
+        if (!descripcionTexto.matches(".{12,144}")) {
+            fecha.setText("");
+            mensajeError += "Mal input de la descripción\n";
+        }
+        if (!fechaTexto.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
+            textArea.setText("");
+            mensajeError += "Mal input en la fecha";
+        }
+        if (mensajeError.length() != 0) {
+            JOptionPane.showMessageDialog(null, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalDate fechaParseada = parseFecha(fechaTexto);
+        cont.tratamientoControlador(descripcionTexto, fechaParseada);
+        cargarGrid();
+        cargarVistaDetalle(cont);
+
         System.out.println("Añadir");
+    }
+
+    private static LocalDate parseFecha(String fechaTexto) {
+        String[] partesFecha = fechaTexto.split("/");
+        String temp = partesFecha[0];
+        partesFecha[0] = partesFecha[2]; //dd -> yyyy
+        partesFecha[2] = temp; // yyyy -> dd
+        return LocalDate.parse(partesFecha[0] + "-" + partesFecha[1] + "-" + partesFecha[2]);
     }
 
     private static void accionBaja(Controlador cont) {
