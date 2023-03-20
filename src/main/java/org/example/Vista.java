@@ -13,7 +13,13 @@ import java.awt.*;
 public class Vista {
     JPanel vistaNormal;
     JPanel vistaDetalle;
-    static JLabel labelEstado = new JLabel();
+
+    /**
+     * Este atributo marca si el animal ya no está bajo el cuidado del santuario, es decir, si ha muerto
+     * o ha sido liberado. Si el animal ya no está bajo el control del mismo, no tiene sentido mostrar los
+     * botones para interactuar con él (liberarlo, declararlo como fallecido, o, cambiar su tratamiento).
+     */
+    boolean fueraDelSantuario;
 
     /**
      * Este método toma los atributos del tipo de dato Mamifero, Reptil o Ave y crea un JPanel con su representación
@@ -24,22 +30,13 @@ public class Vista {
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
     public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
-        JPanel contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
-        actualizarVistaNormal(contenedorCuerpo);
-        contenedorCuerpo = buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion);
-        actualizarVistaDetalle(contenedorCuerpo, historialTratamiento);
-    }
-
-
-    public void setLabelEstado(String nuevoEstado) {
-        labelEstado.setText(nuevoEstado);
-        labelEstado.revalidate();
-        labelEstado.repaint();
+        fueraDelSantuario = estado.equals("Fallecido") || estado.equals("Liberado");
+        actualizarVistaNormal(buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion));
+        actualizarVistaDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion), historialTratamiento);
     }
 
     private void actualizarVistaNormal(JPanel contenedorCuerpo) {
-        this.vistaNormal = new JPanel(new BorderLayout());
-        this.vistaNormal.add(contenedorCuerpo);
+        this.vistaNormal = contenedorCuerpo;
         this.vistaNormal.revalidate();
         this.vistaNormal.repaint();
     }
@@ -61,9 +58,9 @@ public class Vista {
         this.vistaDetalle.repaint();
     }
 
-    private static JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String tipoLesion) {
+    private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
-
+        JLabel labelEstado = new JLabel();
         JPanel h1 = new JPanel(new GridLayout(1, 2));
         h1.add(new JLabel("Familia: " + tipo));
         h1.add(new JLabel("ID: " + id));
@@ -84,7 +81,6 @@ public class Vista {
         datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
         labelEstado.setText("Estado " + estado);
         datosEntrada.add(labelEstado);
-
         contenedorCuerpo.add(headers, BorderLayout.NORTH);
         contenedorCuerpo.add(img, BorderLayout.CENTER);
         contenedorCuerpo.add(datosEntrada, BorderLayout.SOUTH);

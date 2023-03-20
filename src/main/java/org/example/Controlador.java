@@ -30,17 +30,23 @@ public class Controlador {
 
     public void liberacionControlador() {
         if (animal.liberacionAnimal()) {
-            vista.setLabelEstado(animal.getEstado());
+            recrearVista();
+            recargarVistas();
         }
     }
 
     public void bajaControlador() {
-        if (animal.bajaAnimal()) recargarVistas();
+        if (animal.bajaAnimal()) {
+            recrearVista();
+            recargarVistas();
+        }
     }
 
     public void recargarVistas() {
-        vista.vistaDetalle.repaint();
+        vista.vistaNormal.revalidate();
         vista.vistaNormal.repaint();
+        vista.vistaDetalle.revalidate();
+        vista.vistaDetalle.repaint();
     }
 
     private void recrearVista() {

@@ -17,7 +17,10 @@ import java.util.ArrayList;
  * En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica de negocio generalmente se maneja en el
  * controlador y/o en el modelo, mientras que la vista solo muestra los datos al usuario. La lógica de negocio
  * se refiere a las reglas y procesos que rigen cómo funciona una aplicación o sistema. Por ejemplo, en una
- * aplicación bancaria, la lógica de negocio podría incluir reglas sobre cómo se calculan los intereses o cómo se realizan las transferencias entre cuentas. En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica de negocio generalmente se maneja en el controlador y/o en el modelo, mientras que la vista solo muestra los datos al usuario.
+ * aplicación bancaria, la lógica de negocio podría incluir reglas sobre cómo se calculan los intereses o cómo
+ * se realizan las transferencias entre cuentas. En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica
+ * de negocio generalmente se maneja en el controlador y/o en el modelo, mientras que la vista solo muestra
+ * los datos al usuario.
  */
 public class Aplicacion {
     static JFrame ventanaPrincipal = new JFrame();
@@ -44,7 +47,7 @@ public class Aplicacion {
 
         for (Controlador e : lista) {
             JPanel contenedorAnimal = new JPanel(new BorderLayout());
-            JButton botonDetalle = new JButton("Detalle");
+            JButton botonDetalle = new JButton("Detalles");
             botonDetalle.addActionListener(actionEvent -> cargarVistaDetalle(e));
 
             contenedorAnimal.add(e.vista.vistaNormal, BorderLayout.CENTER);
@@ -81,7 +84,7 @@ public class Aplicacion {
         contenedorBotones.add(botonTratamiento);
 
         contenedorDetalle.add(cont.vista.vistaDetalle, BorderLayout.CENTER);
-        contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
+        if (!cont.vista.fueraDelSantuario) contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
         return contenedorDetalle;
     }
 
@@ -97,7 +100,7 @@ public class Aplicacion {
         JPanel contenedorFecha = new JPanel(new FlowLayout());
         JTextArea textArea = new JTextArea(5, 10);
         textArea.setLineWrap(true);
-        contenedorFecha.add(new JLabel("Fecha de fin: (12/03/2023)"));
+        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
         JTextField fecha = new JTextField(7);
         contenedorFecha.add(fecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
@@ -149,8 +152,8 @@ public class Aplicacion {
 
     private static void accionBaja(Controlador cont) {
         cont.bajaControlador();
-        //cargarGrid();
-        //cargarVistaDetalle(cont);
+        cargarGrid();
+        cargarVistaDetalle(cont);
     }
 
     private static void accionLiberar(Controlador cont) {
