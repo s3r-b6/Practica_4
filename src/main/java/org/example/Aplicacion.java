@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.Modelo.Animal;
 import org.example.Modelo.Ave;
 import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
@@ -8,8 +7,8 @@ import org.example.Modelo.Reptil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -52,25 +51,33 @@ public class Aplicacion {
 
     private static void accionMenuAlta() {
         ventanaAlta.getContentPane().removeAll();
-
         ventanaAlta.setLayout(new BorderLayout());
         ventanaAlta.setSize(375, 250);
         ventanaAlta.setResizable(false);
 
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
-        JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
-        JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 1));
+        JPanel contenedorPeso = new JPanel(new GridLayout(2, 2));
+        JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 2));
         JPanel contenedorLesiones = new JPanel(new GridLayout(1, 2));
         JPanel contenedorEspecie = new JPanel(new GridLayout(1, 1));
 
         JTextField pesoTF = new JTextField(4);
         JTextField fechaEntradaTF = new JTextField(10);
 
+        JLabel errorFecha = new JLabel();
+        errorFecha.setForeground(Color.RED);
+        errorFecha.setForeground(Color.RED);
+        pesoTF.addKeyListener(parseInputPeso(pesoTF, errorFecha));
+        fechaEntradaTF.addKeyListener(parseInputFecha(fechaEntradaTF, errorFecha));
+
         ButtonGroup especies = new ButtonGroup();
         JRadioButton aveBoton = new JRadioButton("Ave");
         JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
         JRadioButton reptilBoton = new JRadioButton("Reptil");
+        JButton botonAddAnimal = new JButton("Añadir");
+
+        botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, fechaEntradaTF, especies));
 
         JCheckBox tipoLesion = new JCheckBox();
 
@@ -79,12 +86,14 @@ public class Aplicacion {
         especies.add(reptilBoton);
 
         contenedorFechaEntrada.add(new JLabel("Fecha de entrada: "));
+        contenedorFechaEntrada.add(errorFecha);
         contenedorFechaEntrada.add(fechaEntradaTF);
         contenedorEspecie.add(new JLabel("Especie: "));
         contenedorEspecie.add(aveBoton);
         contenedorEspecie.add(mamiferoBoton);
         contenedorEspecie.add(reptilBoton);
         contenedorPeso.add(new JLabel("Peso: "));
+        contenedorPeso.add(errorFecha);
         contenedorPeso.add(pesoTF);
         contenedorLesiones.add(new JLabel("Caza / Atropello / Infeccion: "));
         contenedorLesiones.add(tipoLesion);
@@ -94,12 +103,55 @@ public class Aplicacion {
         contenedorCampos.add(contenedorPeso);
         contenedorCampos.add(contenedorLesiones);
 
-        //id -> calculado
-
         ventanaAlta.add(contenedorCampos, BorderLayout.CENTER);
-        ventanaAlta.add(new JButton("Añadir"), BorderLayout.SOUTH);
+        ventanaAlta.add(botonAddAnimal, BorderLayout.SOUTH);
 
         ventanaAlta.setVisible(true);
+    }
+
+    //TODO ---->
+    private static void accionAddAnimal(JTextField pesoTF, JTextField fechaEntradaTF, ButtonGroup especies) {
+        String especie = especies.getSelection().toString();
+        String peso = pesoTF.getText();
+        String fecha = fechaEntradaTF.getText();
+    }
+
+    private static KeyAdapter parseInputFecha(JTextField fechaEntradaTF, JLabel errorFecha) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = fechaEntradaTF.getText();
+                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
+                    fechaEntradaTF.setEditable(false);
+                    fechaEntradaTF.setText("");
+                    errorFecha.setText("Por favor, introduce sólo números");
+                } else {
+                    fechaEntradaTF.setEditable(true);
+                    errorFecha.setText("");
+                    if (value.length() == 2 || value.length() == 5)
+                        fechaEntradaTF.setText(value + '/');
+                }
+            }
+        };
+    }
+
+    private static KeyAdapter parseInputPeso(JTextField pesoTF, JLabel errorFecha) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = pesoTF.getText();
+                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
+                    pesoTF.setEditable(true);
+                    errorFecha.setText("");
+                } else if (value.length() > 4) {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce un valor válido (muy largo)");
+                } else {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce sólo números");
+                }
+            }
+        };
     }
 
     private static JPanel crearGridAnimales() {
