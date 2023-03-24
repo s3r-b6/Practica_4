@@ -26,8 +26,12 @@ import java.util.ArrayList;
  * los datos al usuario.
  */
 public class Aplicacion {
+
+    //TODO: Añadir títulos a las ventanas
+
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
+    static JFrame ventanaAlta = new JFrame();
     /**
      * La lista de animales contiene los controladores para cada uno de los animales.
      * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador.
@@ -41,63 +45,61 @@ public class Aplicacion {
         ventanaPrincipal.setLayout(new BorderLayout());
         ventanaPrincipal.add(crearGridAnimales(), BorderLayout.CENTER);
         JButton botonAlta = new JButton("Alta");
-        botonAlta.addActionListener(e -> {
-            JFrame ventanaAlta = new JFrame();
-            ventanaAlta.setSize(450, 325);
-            ventanaAlta.setResizable(false);
-
-            JPanel contenedorCampos = new JPanel(new GridLayout(4, 1));
-            JPanel contenedorPeso = new JPanel(new FlowLayout());
-            JPanel contenedorFechaEntrada = new JPanel(new FlowLayout());
-            JPanel contenedorEspecie = new JPanel(new FlowLayout());
-
-            JTextField pesoTF = new JTextField(4);
-            JTextField fechaEntradaTF = new JTextField(10);
-
-            ButtonGroup especies = new ButtonGroup();
-            JRadioButton aveBoton = new JRadioButton("Ave");
-            JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
-            JRadioButton reptilBoton = new JRadioButton("Reptil");
-
-            JCheckBox tipoLesion = new JCheckBox();
-
-            JPanel contenedorLesiones = new JPanel(new FlowLayout());
-
-            especies.add(mamiferoBoton);
-            especies.add(aveBoton);
-            especies.add(reptilBoton);
-
-            contenedorFechaEntrada.add(new JLabel("Fecha de entrada"));
-            contenedorFechaEntrada.add(fechaEntradaTF);
-            contenedorEspecie.add(new JLabel("Especie"));
-            contenedorEspecie.add(aveBoton);
-            contenedorEspecie.add(mamiferoBoton);
-            contenedorEspecie.add(reptilBoton);
-            contenedorPeso.add(new JLabel("Peso"));
-            contenedorPeso.add(pesoTF);
-            contenedorLesiones.add(new JLabel("Lesion: "));
-            contenedorLesiones.add(tipoLesion);
-
-            contenedorCampos.add(contenedorEspecie);
-            contenedorCampos.add(contenedorFechaEntrada);
-            contenedorCampos.add(contenedorPeso);
-            contenedorCampos.add(contenedorLesiones);
-            //peso
-            //especie
-            //fechaEntrada
-            //tipoLesion -> bool
-
-            //id -> calculado
-            //estado -> por defecto en tratamiento
-            //fechasTratamientos -> no
-            //descripcionTratamientos -> no
-
-            ventanaAlta.add(contenedorCampos);
-
-            ventanaAlta.setVisible(true);
-        });
+        botonAlta.addActionListener(e -> accionMenuAlta());
         ventanaPrincipal.add(botonAlta, BorderLayout.SOUTH);
         ventanaPrincipal.setVisible(true);
+    }
+
+    private static void accionMenuAlta() {
+        ventanaAlta.getContentPane().removeAll();
+
+        ventanaAlta.setLayout(new BorderLayout());
+        ventanaAlta.setSize(375, 250);
+        ventanaAlta.setResizable(false);
+
+        JPanel contenedorCampos = new JPanel();
+        contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
+        JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
+        JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 1));
+        JPanel contenedorLesiones = new JPanel(new GridLayout(1, 2));
+        JPanel contenedorEspecie = new JPanel(new GridLayout(1, 1));
+
+        JTextField pesoTF = new JTextField(4);
+        JTextField fechaEntradaTF = new JTextField(10);
+
+        ButtonGroup especies = new ButtonGroup();
+        JRadioButton aveBoton = new JRadioButton("Ave");
+        JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
+        JRadioButton reptilBoton = new JRadioButton("Reptil");
+
+        JCheckBox tipoLesion = new JCheckBox();
+
+        especies.add(mamiferoBoton);
+        especies.add(aveBoton);
+        especies.add(reptilBoton);
+
+        contenedorFechaEntrada.add(new JLabel("Fecha de entrada: "));
+        contenedorFechaEntrada.add(fechaEntradaTF);
+        contenedorEspecie.add(new JLabel("Especie: "));
+        contenedorEspecie.add(aveBoton);
+        contenedorEspecie.add(mamiferoBoton);
+        contenedorEspecie.add(reptilBoton);
+        contenedorPeso.add(new JLabel("Peso: "));
+        contenedorPeso.add(pesoTF);
+        contenedorLesiones.add(new JLabel("Caza / Atropello / Infeccion: "));
+        contenedorLesiones.add(tipoLesion);
+
+        contenedorCampos.add(contenedorEspecie);
+        contenedorCampos.add(contenedorFechaEntrada);
+        contenedorCampos.add(contenedorPeso);
+        contenedorCampos.add(contenedorLesiones);
+
+        //id -> calculado
+
+        ventanaAlta.add(contenedorCampos, BorderLayout.CENTER);
+        ventanaAlta.add(new JButton("Añadir"), BorderLayout.SOUTH);
+
+        ventanaAlta.setVisible(true);
     }
 
     private static JPanel crearGridAnimales() {
