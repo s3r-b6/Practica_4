@@ -42,7 +42,7 @@ public class Controlador {
         }
     }
 
-    public void recargarVistas() {
+    private void recargarVistas() {
         vista.vistaNormal.revalidate();
         vista.vistaNormal.repaint();
         vista.vistaDetalle.revalidate();
