@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Modelo.Animal;
 import org.example.Modelo.Ave;
 import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
@@ -7,6 +8,8 @@ import org.example.Modelo.Reptil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -35,7 +38,65 @@ public class Aplicacion {
 
     private static void cargarGrid() {
         ventanaPrincipal.getContentPane().removeAll();
-        ventanaPrincipal.add(crearGridAnimales());
+        ventanaPrincipal.setLayout(new BorderLayout());
+        ventanaPrincipal.add(crearGridAnimales(), BorderLayout.CENTER);
+        JButton botonAlta = new JButton("Alta");
+        botonAlta.addActionListener(e -> {
+            JFrame ventanaAlta = new JFrame();
+            ventanaAlta.setSize(450, 325);
+            ventanaAlta.setResizable(false);
+
+            JPanel contenedorCampos = new JPanel(new GridLayout(4, 1));
+            JPanel contenedorPeso = new JPanel(new FlowLayout());
+            JPanel contenedorFechaEntrada = new JPanel(new FlowLayout());
+            JPanel contenedorEspecie = new JPanel(new FlowLayout());
+
+            JTextField pesoTF = new JTextField(4);
+            JTextField fechaEntradaTF = new JTextField(10);
+
+            ButtonGroup especies = new ButtonGroup();
+            JRadioButton aveBoton = new JRadioButton("Ave");
+            JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
+            JRadioButton reptilBoton = new JRadioButton("Reptil");
+
+            JCheckBox tipoLesion = new JCheckBox();
+
+            JPanel contenedorLesiones = new JPanel(new FlowLayout());
+
+            especies.add(mamiferoBoton);
+            especies.add(aveBoton);
+            especies.add(reptilBoton);
+
+            contenedorFechaEntrada.add(new JLabel("Fecha de entrada"));
+            contenedorFechaEntrada.add(fechaEntradaTF);
+            contenedorEspecie.add(new JLabel("Especie"));
+            contenedorEspecie.add(aveBoton);
+            contenedorEspecie.add(mamiferoBoton);
+            contenedorEspecie.add(reptilBoton);
+            contenedorPeso.add(new JLabel("Peso"));
+            contenedorPeso.add(pesoTF);
+            contenedorLesiones.add(new JLabel("Lesion: "));
+            contenedorLesiones.add(tipoLesion);
+
+            contenedorCampos.add(contenedorEspecie);
+            contenedorCampos.add(contenedorFechaEntrada);
+            contenedorCampos.add(contenedorPeso);
+            contenedorCampos.add(contenedorLesiones);
+            //peso
+            //especie
+            //fechaEntrada
+            //tipoLesion -> bool
+
+            //id -> calculado
+            //estado -> por defecto en tratamiento
+            //fechasTratamientos -> no
+            //descripcionTratamientos -> no
+
+            ventanaAlta.add(contenedorCampos);
+
+            ventanaAlta.setVisible(true);
+        });
+        ventanaPrincipal.add(botonAlta, BorderLayout.SOUTH);
         ventanaPrincipal.setVisible(true);
     }
 
@@ -113,7 +174,6 @@ public class Aplicacion {
         ventanaTratamiento.add(contenedorTratamiento);
 
         ventanaTratamiento.setVisible(true);
-        //cargarVistaDetalle(cont); //sólo debería ocurrir si hay una update en los tratamientos <- temp
     }
 
     private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
@@ -134,12 +194,10 @@ public class Aplicacion {
             return;
         }
 
-        LocalDate fechaParseada = parseFecha(fechaTexto);
-        cont.tratamientoControlador(descripcionTexto, fechaParseada);
+        cont.nuevoTratamientoControlador(descripcionTexto, parseFecha(fechaTexto));
+
         cargarGrid();
         cargarVistaDetalle(cont);
-
-        System.out.println("Añadir");
     }
 
     private static LocalDate parseFecha(String fechaTexto) {
@@ -163,7 +221,6 @@ public class Aplicacion {
     }
 
     private static void readToList() {
-        //TODO: añadir una pequeña función para la serialización / deserialización de animales, simular W/R de una DB
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
@@ -176,9 +233,9 @@ public class Aplicacion {
 
         // DEBUG
         lista.forEach(e -> {
-            e.tratamientoControlador("Pastillas", LocalDate.now());
-            e.tratamientoControlador("Pastillas 2", LocalDate.now());
-            e.tratamientoControlador("Pastillas 3", LocalDate.now());
+            e.nuevoTratamientoControlador("Pastillas", LocalDate.now());
+            e.nuevoTratamientoControlador("Pastillas 2", LocalDate.now());
+            e.nuevoTratamientoControlador("Pastillas 3", LocalDate.now());
         });
         // DEBUG
 

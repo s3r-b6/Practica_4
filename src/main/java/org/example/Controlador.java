@@ -23,7 +23,7 @@ public class Controlador {
         recrearVista();
     }
 
-    public void tratamientoControlador(String tratamiento, LocalDate fechaFin) {
+    public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.tratamientoAnimal(tratamiento, fechaFin);
         recrearVista();
     }

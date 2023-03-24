@@ -74,14 +74,16 @@ public abstract class Animal {
 
 
     public boolean bajaAnimal() {
-        if (this.estado == Estado.Fallecido) return false;
+        if (this.estado == Estado.Fallecido)
+            return false;
         this.estado = Estado.Fallecido;
         return true;
     }
 
 
     public boolean liberacionAnimal() {
-        if (this.estado == Estado.Fallecido) return false;
+        if (this.estado == Estado.Fallecido)
+            return false;
         this.estado = Estado.Liberado;
         return true;
     }
