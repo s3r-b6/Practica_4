@@ -69,7 +69,7 @@ public class Vista {
         h2.add(new JLabel("Especie: " + especie));
         h2.add(new JLabel("Peso: " + peso + "kg"));
 
-        JLabel img = new JLabel(new ImageIcon("src/main/java/org/example/sil.png"));
+        JLabel img = getImg(tipo);
         img.setSize(40, 40);
 
         JPanel headers = new JPanel(new GridLayout(2, 1));
@@ -85,5 +85,19 @@ public class Vista {
         contenedorCuerpo.add(img, BorderLayout.CENTER);
         contenedorCuerpo.add(datosEntrada, BorderLayout.SOUTH);
         return contenedorCuerpo;
+    }
+
+    private static JLabel getImg(String tipo) {
+        StringBuilder imgPath = new StringBuilder("src/main/java/org/example/IMG/");
+        switch (tipo) {
+            case "Ave" -> imgPath.append("ave_");
+            case "Mamifero" -> imgPath.append("mam_");
+            case "Reptil" -> imgPath.append("rep_");
+        }
+
+        imgPath.append((int) ((Math.random() * (3 - 1)) + 1)).append(".png"); //rand_number entre 1 y 3
+
+
+        return new JLabel(new ImageIcon(String.valueOf(imgPath)));
     }
 }

@@ -305,7 +305,7 @@ public class Aplicacion {
         cargarVistaDetalle(cont);
     }
 
-    private static void readToList() {
+    private static void construirLista() {
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
@@ -327,7 +327,7 @@ public class Aplicacion {
     }
 
     public static void main(String[] args) {
-        readToList();
+        construirLista();
         ventanaPrincipal.setResizable(false);
         ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         ventanaPrincipal.setSize(new Dimension(900, 1020));
