@@ -70,8 +70,11 @@ public class Aplicacion {
 
         ButtonGroup familiasBtn = new ButtonGroup();
         JRadioButton aveBoton = new JRadioButton("Ave");
+        aveBoton.setActionCommand("Ave");
         JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
+        mamiferoBoton.setActionCommand("Mamífero");
         JRadioButton reptilBoton = new JRadioButton("Reptil");
+        reptilBoton.setActionCommand("Reptil");
 
         JCheckBox tipoLesion = new JCheckBox();
         JButton botonAddAnimal = new JButton("Añadir");
@@ -112,17 +115,32 @@ public class Aplicacion {
 
     //TODO ---->
     private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
-        String familia = familiasBtn.getSelection().toString();
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
 
+        if (pesoTF.getText().equals("") || especie.equals("") || familiasBtn.getSelection() == null) {
+            JOptionPane.showMessageDialog(null, "Por favor, introduce valores en los campos", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String familia = familiasBtn.getSelection().getActionCommand();
+
+        System.out.println("Añadiendo " + familia);
         switch (familia) {
-            case "Ave" ->
-                    lista.add(new Controlador(new Ave(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-            case "Mamífero" ->
-                    lista.add(new Controlador(new Mamifero(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-            case "Reptil" ->
-                    lista.add(new Controlador(new Reptil(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+            case "Ave" -> {
+                System.out.println("Ave");
+                lista.add(new Controlador(new Ave(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+                cargarGrid();
+            }
+            case "Mamífero" -> {
+                System.out.println("Mamifero");
+                lista.add(new Controlador(new Mamifero(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+                cargarGrid();
+            }
+            case "Reptil" -> {
+                System.out.println("Reptil");
+                lista.add(new Controlador(new Reptil(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+                cargarGrid();
+            }
         }
     }
 
@@ -165,7 +183,6 @@ public class Aplicacion {
         }
         return gridPane;
     }
-
 
     private static void cargarVistaDetalle(Controlador cont) {
         ventanaDetalle.getContentPane().removeAll();
