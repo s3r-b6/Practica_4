@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
@@ -57,48 +58,48 @@ public class Aplicacion {
 
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
-        JPanel contenedorPeso = new JPanel(new GridLayout(2, 2));
+        JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
         JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 2));
         JPanel contenedorLesiones = new JPanel(new GridLayout(1, 2));
-        JPanel contenedorEspecie = new JPanel(new GridLayout(1, 1));
+        JPanel contenedorTipo = new JPanel(new GridLayout(1, 1));
 
+        JLabel errorPeso = new JLabel();
+
+        JTextField especie = new JTextField(10);
         JTextField pesoTF = new JTextField(4);
-        JTextField fechaEntradaTF = new JTextField(10);
 
-        JLabel errorFecha = new JLabel();
-        errorFecha.setForeground(Color.RED);
-        errorFecha.setForeground(Color.RED);
-        pesoTF.addKeyListener(parseInputPeso(pesoTF, errorFecha));
-        fechaEntradaTF.addKeyListener(parseInputFecha(fechaEntradaTF, errorFecha));
-
-        ButtonGroup especies = new ButtonGroup();
+        ButtonGroup familiasBtn = new ButtonGroup();
         JRadioButton aveBoton = new JRadioButton("Ave");
         JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
         JRadioButton reptilBoton = new JRadioButton("Reptil");
-        JButton botonAddAnimal = new JButton("Añadir");
-
-        botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, fechaEntradaTF, especies));
 
         JCheckBox tipoLesion = new JCheckBox();
+        JButton botonAddAnimal = new JButton("Añadir");
 
-        especies.add(mamiferoBoton);
-        especies.add(aveBoton);
-        especies.add(reptilBoton);
+        errorPeso.setForeground(Color.RED);
+        pesoTF.addKeyListener(parseInputPeso(pesoTF, errorPeso));
 
-        contenedorFechaEntrada.add(new JLabel("Fecha de entrada: "));
-        contenedorFechaEntrada.add(errorFecha);
-        contenedorFechaEntrada.add(fechaEntradaTF);
-        contenedorEspecie.add(new JLabel("Especie: "));
-        contenedorEspecie.add(aveBoton);
-        contenedorEspecie.add(mamiferoBoton);
-        contenedorEspecie.add(reptilBoton);
-        contenedorPeso.add(new JLabel("Peso: "));
-        contenedorPeso.add(errorFecha);
+        botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion));
+
+        familiasBtn.add(mamiferoBoton);
+        familiasBtn.add(aveBoton);
+        familiasBtn.add(reptilBoton);
+
+        contenedorFechaEntrada.add(new JLabel("Especie: "));
+        contenedorFechaEntrada.add(especie);
+        contenedorTipo.add(new JLabel("Familia: "));
+        contenedorTipo.add(aveBoton);
+        contenedorTipo.add(mamiferoBoton);
+        contenedorTipo.add(reptilBoton);
+        JPanel contenedorLabelPeso = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        contenedorLabelPeso.add(new JLabel("Peso: "));
+        contenedorLabelPeso.add(errorPeso);
+        contenedorPeso.add(contenedorLabelPeso);
         contenedorPeso.add(pesoTF);
         contenedorLesiones.add(new JLabel("Caza / Atropello / Infeccion: "));
         contenedorLesiones.add(tipoLesion);
 
-        contenedorCampos.add(contenedorEspecie);
+        contenedorCampos.add(contenedorTipo);
         contenedorCampos.add(contenedorFechaEntrada);
         contenedorCampos.add(contenedorPeso);
         contenedorCampos.add(contenedorLesiones);
@@ -110,32 +111,23 @@ public class Aplicacion {
     }
 
     //TODO ---->
-    private static void accionAddAnimal(JTextField pesoTF, JTextField fechaEntradaTF, ButtonGroup especies) {
-        String especie = especies.getSelection().toString();
+    private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
+        String familia = familiasBtn.getSelection().toString();
         String peso = pesoTF.getText();
-        String fecha = fechaEntradaTF.getText();
-    }
+        String especie = especieTF.getText();
 
-    private static KeyAdapter parseInputFecha(JTextField fechaEntradaTF, JLabel errorFecha) {
-        return new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = fechaEntradaTF.getText();
-                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
-                    fechaEntradaTF.setEditable(false);
-                    fechaEntradaTF.setText("");
-                    errorFecha.setText("Por favor, introduce sólo números");
-                } else {
-                    fechaEntradaTF.setEditable(true);
-                    errorFecha.setText("");
-                    if (value.length() == 2 || value.length() == 5)
-                        fechaEntradaTF.setText(value + '/');
-                }
-            }
-        };
+        switch (familia) {
+            case "Ave" ->
+                    lista.add(new Controlador(new Ave(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+            case "Mamífero" ->
+                    lista.add(new Controlador(new Mamifero(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+            case "Reptil" ->
+                    lista.add(new Controlador(new Reptil(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
+        }
     }
 
     private static KeyAdapter parseInputPeso(JTextField pesoTF, JLabel errorFecha) {
-        return new KeyAdapter() {
+        KeyAdapter keyAdapter = new KeyAdapter() {
             public void keyPressed(KeyEvent key) {
                 String value = pesoTF.getText();
                 if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
@@ -152,6 +144,7 @@ public class Aplicacion {
                 }
             }
         };
+        return keyAdapter;
     }
 
     private static JPanel crearGridAnimales() {
@@ -211,13 +204,16 @@ public class Aplicacion {
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         JPanel contenedorTratamiento = new JPanel(new BorderLayout());
         contenedorTratamiento.setBorder(padding);
-
-        JPanel contenedorFecha = new JPanel(new FlowLayout());
+        JLabel errorFecha = new JLabel("");
+        errorFecha.setForeground(Color.RED);
+        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
         JTextArea textArea = new JTextArea(5, 10);
         textArea.setLineWrap(true);
         contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
         JTextField fecha = new JTextField(7);
+        fecha.addKeyListener(fechaKeyAdapter(fecha, errorFecha));
         contenedorFecha.add(fecha);
+        contenedorFecha.add(errorFecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
         contenedorTratamiento.add(textArea, BorderLayout.CENTER);
 
@@ -230,25 +226,44 @@ public class Aplicacion {
         ventanaTratamiento.setVisible(true);
     }
 
+    private static KeyAdapter fechaKeyAdapter(JTextField especieTF, JLabel errorEspecie) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = especieTF.getText();
+                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
+                    especieTF.setEditable(false);
+                    especieTF.setText("");
+                    errorEspecie.setText("Por favor, introduce sólo números");
+                } else {
+                    especieTF.setEditable(true);
+                    errorEspecie.setText("");
+                    if (value.length() == 2 || value.length() == 5)
+                        especieTF.setText(value + '/');
+                }
+            }
+        };
+    }
+
     private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
         String fechaTexto = fecha.getText().trim();
         String descripcionTexto = textArea.getText().trim();
-        String mensajeError = "";
 
-        if (!descripcionTexto.matches(".{12,144}")) {
+        LocalDate fechaParseada;
+        try {
+            fechaParseada = parseFecha(fechaTexto);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(null, "Por favor introduce una fecha válida, p.ej: 12/02/2023", "Error", JOptionPane.ERROR_MESSAGE);
             fecha.setText("");
-            mensajeError += "Mal input de la descripción\n";
-        }
-        if (!fechaTexto.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
-            textArea.setText("");
-            mensajeError += "Mal input en la fecha";
-        }
-        if (mensajeError.length() != 0) {
-            JOptionPane.showMessageDialog(null, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        cont.nuevoTratamientoControlador(descripcionTexto, parseFecha(fechaTexto));
+        if (!descripcionTexto.matches(".{12,144}")) {
+            JOptionPane.showMessageDialog(null, "Mal input de la descripción", "Error", JOptionPane.ERROR_MESSAGE);
+            textArea.setText("");
+            return;
+        }
+
+        cont.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
 
         cargarGrid();
         cargarVistaDetalle(cont);
