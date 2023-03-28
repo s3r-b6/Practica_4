@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class Aplicacion {
 
     //TODO: Añadir títulos a las ventanas
-
+    //TODO: Vistas individuales y vistas de grid
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
     static JFrame ventanaAlta = new JFrame();
@@ -80,7 +80,7 @@ public class Aplicacion {
         JButton botonAddAnimal = new JButton("Añadir");
 
         errorPeso.setForeground(Color.RED);
-        pesoTF.addKeyListener(parseInputPeso(pesoTF, errorPeso));
+        pesoTF.addKeyListener(inputPesoAdapter(pesoTF, errorPeso));
 
         botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion));
 
@@ -113,7 +113,6 @@ public class Aplicacion {
         ventanaAlta.setVisible(true);
     }
 
-    //TODO ---->
     private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
@@ -144,7 +143,7 @@ public class Aplicacion {
         }
     }
 
-    private static KeyAdapter parseInputPeso(JTextField pesoTF, JLabel errorFecha) {
+    private static KeyAdapter inputPesoAdapter(JTextField pesoTF, JLabel errorFecha) {
         KeyAdapter keyAdapter = new KeyAdapter() {
             public void keyPressed(KeyEvent key) {
                 String value = pesoTF.getText();
@@ -228,7 +227,7 @@ public class Aplicacion {
         textArea.setLineWrap(true);
         contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
         JTextField fecha = new JTextField(7);
-        fecha.addKeyListener(fechaKeyAdapter(fecha, errorFecha));
+        fecha.addKeyListener(inputFechaAdapter(fecha, errorFecha));
         contenedorFecha.add(fecha);
         contenedorFecha.add(errorFecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
@@ -243,7 +242,7 @@ public class Aplicacion {
         ventanaTratamiento.setVisible(true);
     }
 
-    private static KeyAdapter fechaKeyAdapter(JTextField especieTF, JLabel errorEspecie) {
+    private static KeyAdapter inputFechaAdapter(JTextField especieTF, JLabel errorEspecie) {
         return new KeyAdapter() {
             public void keyPressed(KeyEvent key) {
                 String value = especieTF.getText();
