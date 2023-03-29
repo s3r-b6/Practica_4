@@ -8,6 +8,7 @@ public abstract class Animal {
     int id;
     int peso;
     LocalDate fechaEntrada;
+    LocalDate fechaSalida;
     String especie;
     Estado estado;
     ArrayList<LocalDate[]> fechasTratamientos;
@@ -39,6 +40,11 @@ public abstract class Animal {
 
     public String getFechaEntrada() {
         return this.fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    public String getFechaSalida() {
+        if (this.fechaSalida == null) return "";
+        else return this.fechaSalida.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     public String getEspecie() {
@@ -77,6 +83,7 @@ public abstract class Animal {
         if (this.estado == Estado.Fallecido)
             return false;
         this.estado = Estado.Fallecido;
+        this.fechaSalida = LocalDate.now();
         return true;
     }
 
@@ -85,6 +92,7 @@ public abstract class Animal {
         if (this.estado == Estado.Fallecido)
             return false;
         this.estado = Estado.Liberado;
+        this.fechaSalida = LocalDate.now();
         return true;
     }
 

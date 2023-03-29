@@ -29,10 +29,10 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
+    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
         fueraDelSantuario = estado.equals("Fallecido") || estado.equals("Liberado");
-        actualizarVistaNormal(buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion));
-        actualizarVistaDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, estado, peso, tipoLesion), historialTratamiento);
+        actualizarVistaNormal(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion));
+        actualizarVistaDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
     }
 
     private void actualizarVistaNormal(JPanel contenedorCuerpo) {
@@ -58,9 +58,8 @@ public class Vista {
         this.vistaDetalle.repaint();
     }
 
-    private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String estado, int peso, String tipoLesion) {
+    private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
-        JLabel labelEstado = new JLabel();
         JPanel h1 = new JPanel(new GridLayout(1, 2));
         h1.add(new JLabel("Familia: " + tipo));
         h1.add(new JLabel("ID: " + id));
@@ -69,7 +68,7 @@ public class Vista {
         h2.add(new JLabel("Especie: " + especie));
         h2.add(new JLabel("Peso: " + peso + "kg"));
 
-        JLabel img = getImg(tipo);
+        JLabel img = getImgLabel(tipo, estado);
         img.setSize(40, 40);
 
         JPanel headers = new JPanel(new GridLayout(2, 1));
@@ -78,16 +77,18 @@ public class Vista {
 
         JPanel datosEntrada = new JPanel(new GridLayout(2, 2));
         datosEntrada.add(new JLabel("Fecha alta: " + fechaEntrada));
+        JLabel labelFechaSalida = new JLabel();
+        if (!fechaSalida.equals("")) labelFechaSalida.setText("Fecha baja: " + fechaSalida);
+        datosEntrada.add(labelFechaSalida);
         datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
-        labelEstado.setText("Estado " + estado);
-        datosEntrada.add(labelEstado);
+        datosEntrada.add(new JLabel("Estado " + estado));
         contenedorCuerpo.add(headers, BorderLayout.NORTH);
         contenedorCuerpo.add(img, BorderLayout.CENTER);
         contenedorCuerpo.add(datosEntrada, BorderLayout.SOUTH);
         return contenedorCuerpo;
     }
 
-    private static JLabel getImg(String tipo) {
+    private static JLabel getImgLabel(String tipo, String estado) {
         StringBuilder imgPath = new StringBuilder("src/main/java/org/example/IMG/");
         switch (tipo) {
             case "Ave" -> imgPath.append("ave_");
@@ -95,9 +96,12 @@ public class Vista {
             case "Reptil" -> imgPath.append("rep_");
         }
 
-        imgPath.append((int) ((Math.random() * (3 - 1)) + 1)).append(".png"); //rand_number entre 1 y 3
-
-
+        switch (estado) {
+            case "Tratamiento" -> imgPath.append("1.png");
+            case "Fallecido" -> imgPath.append("2.png");
+            case "Liberado" -> imgPath.append("3.png");
+        }
+        System.out.println(imgPath);
         return new JLabel(new ImageIcon(String.valueOf(imgPath)));
     }
 }

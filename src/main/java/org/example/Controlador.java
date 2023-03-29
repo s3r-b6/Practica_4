@@ -51,6 +51,7 @@ public class Controlador {
 
     private void recrearVista() {
         vista.actualizarVistas(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(), animal.getTipoLesion());
+                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(),
+                animal.getTipoLesion());
     }
 }
