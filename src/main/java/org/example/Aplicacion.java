@@ -40,17 +40,65 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    private static void cargarGrid() {
+    private static void cargarPanelAnimales() {
         ventanaPrincipal.getContentPane().removeAll();
         ventanaPrincipal.setLayout(new BorderLayout());
-        ventanaPrincipal.add(crearGridAnimales(), BorderLayout.CENTER);
+        ventanaPrincipal.add(crearPanelAnimales(), BorderLayout.CENTER);
         JButton botonAlta = new JButton("Alta");
-        botonAlta.addActionListener(e -> accionMenuAlta());
+        botonAlta.addActionListener(e -> abrirMenuAlta());
         ventanaPrincipal.add(botonAlta, BorderLayout.SOUTH);
         ventanaPrincipal.setVisible(true);
     }
 
-    private static void accionMenuAlta() {
+    private static JPanel crearPanelAnimales() {
+        GridLayout gl = new GridLayout(3, lista.size() / 3);
+        JPanel gridPane = new JPanel(gl);
+        gl.setHgap(25);
+        gl.setVgap(25);
+
+        for (Controlador e : lista) {
+            JPanel contenedorAnimal = new JPanel(new BorderLayout());
+            JButton botonDetalle = new JButton("Detalles");
+            botonDetalle.addActionListener(actionEvent -> cargarPanelAnimal(e));
+
+            contenedorAnimal.add(e.vista.vistaNormal, BorderLayout.CENTER);
+            contenedorAnimal.add(botonDetalle, BorderLayout.SOUTH);
+
+            gridPane.add(contenedorAnimal);
+        }
+        return gridPane;
+    }
+
+    private static void cargarPanelAnimal(Controlador cont) {
+        ventanaDetalle.getContentPane().removeAll();
+        ventanaDetalle.setSize(600, 600);
+        ventanaDetalle.add(crearPanelAnimal(cont));
+        ventanaDetalle.revalidate();
+        ventanaDetalle.repaint();
+        ventanaDetalle.setVisible(true);
+    }
+
+    private static JPanel crearPanelAnimal(Controlador cont) {
+        JPanel contenedorDetalle = new JPanel(new BorderLayout());
+        JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
+
+        JButton botonBaja = new JButton("Baja");
+        JButton botonLiberar = new JButton("Liberar");
+        JButton botonTratamiento = new JButton("Tratamiento");
+        botonBaja.addActionListener(e -> accionBaja(cont));
+        botonLiberar.addActionListener(e -> accionLiberar(cont));
+        botonTratamiento.addActionListener(e -> abrirMenuTratamiento(cont));
+
+        contenedorBotones.add(botonBaja);
+        contenedorBotones.add(botonLiberar);
+        contenedorBotones.add(botonTratamiento);
+
+        contenedorDetalle.add(cont.vista.vistaDetalle, BorderLayout.CENTER);
+        if (!cont.vista.fueraDelSantuario) contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
+        return contenedorDetalle;
+    }
+
+    private static void abrirMenuAlta() {
         ventanaAlta.getContentPane().removeAll();
         ventanaAlta.setLayout(new BorderLayout());
         ventanaAlta.setSize(375, 250);
@@ -80,7 +128,7 @@ public class Aplicacion {
         JButton botonAddAnimal = new JButton("Añadir");
 
         errorPeso.setForeground(Color.RED);
-        pesoTF.addKeyListener(inputPesoAdapter(pesoTF, errorPeso));
+        pesoTF.addKeyListener(crearAdaptadorPeso(pesoTF, errorPeso));
 
         botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion));
 
@@ -113,6 +161,36 @@ public class Aplicacion {
         ventanaAlta.setVisible(true);
     }
 
+    private static void abrirMenuTratamiento(Controlador cont) {
+        JFrame ventanaTratamiento = new JFrame();
+        ventanaTratamiento.setSize(450, 325);
+        ventanaTratamiento.setResizable(false);
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
+        contenedorTratamiento.setBorder(padding);
+        JLabel errorFecha = new JLabel("");
+        errorFecha.setForeground(Color.RED);
+        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
+        JTextArea textArea = new JTextArea(5, 10);
+        textArea.setLineWrap(true);
+        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
+        JTextField fecha = new JTextField(7);
+        fecha.addKeyListener(crearAdaptadorFecha(fecha, errorFecha));
+        contenedorFecha.add(fecha);
+        contenedorFecha.add(errorFecha);
+        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
+        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
+
+        JButton botonAdd = new JButton("Añadir");
+        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
+
+        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
+        ventanaTratamiento.add(contenedorTratamiento);
+
+        ventanaTratamiento.setVisible(true);
+    }
+
     private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
@@ -128,136 +206,31 @@ public class Aplicacion {
             case "Ave" -> {
                 System.out.println("Ave");
                 lista.add(new Controlador(new Ave(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarGrid();
+                cargarPanelAnimales();
             }
             case "Mamífero" -> {
                 System.out.println("Mamifero");
                 lista.add(new Controlador(new Mamifero(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarGrid();
+                cargarPanelAnimales();
             }
             case "Reptil" -> {
                 System.out.println("Reptil");
                 lista.add(new Controlador(new Reptil(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarGrid();
+                cargarPanelAnimales();
             }
         }
     }
 
-    private static KeyAdapter inputPesoAdapter(JTextField pesoTF, JLabel errorFecha) {
-        KeyAdapter keyAdapter = new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = pesoTF.getText();
-                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
-                    pesoTF.setEditable(true);
-                    errorFecha.setText("");
-                } else if (value.length() > 4) {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errorFecha.setText("Por favor, introduce un valor válido (muy largo)");
-                } else {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errorFecha.setText("Por favor, introduce sólo números");
-                }
-            }
-        };
-        return keyAdapter;
+    private static void accionBaja(Controlador cont) {
+        cont.bajaControlador();
+        cargarPanelAnimales();
+        cargarPanelAnimal(cont);
     }
 
-    private static JPanel crearGridAnimales() {
-        GridLayout gl = new GridLayout(3, lista.size() / 3);
-        JPanel gridPane = new JPanel(gl);
-        gl.setHgap(25);
-        gl.setVgap(25);
-
-        for (Controlador e : lista) {
-            JPanel contenedorAnimal = new JPanel(new BorderLayout());
-            JButton botonDetalle = new JButton("Detalles");
-            botonDetalle.addActionListener(actionEvent -> cargarVistaDetalle(e));
-
-            contenedorAnimal.add(e.vista.vistaNormal, BorderLayout.CENTER);
-            contenedorAnimal.add(botonDetalle, BorderLayout.SOUTH);
-
-            gridPane.add(contenedorAnimal);
-        }
-        return gridPane;
-    }
-
-    private static void cargarVistaDetalle(Controlador cont) {
-        ventanaDetalle.getContentPane().removeAll();
-        ventanaDetalle.setSize(600, 600);
-        ventanaDetalle.add(crearVistaDetalle(cont));
-        ventanaDetalle.revalidate();
-        ventanaDetalle.repaint();
-        ventanaDetalle.setVisible(true);
-    }
-
-    private static JPanel crearVistaDetalle(Controlador cont) {
-        JPanel contenedorDetalle = new JPanel(new BorderLayout());
-        JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
-
-        JButton botonBaja = new JButton("Baja");
-        JButton botonLiberar = new JButton("Liberar");
-        JButton botonTratamiento = new JButton("Tratamiento");
-        botonBaja.addActionListener(e -> accionBaja(cont));
-        botonLiberar.addActionListener(e -> accionLiberar(cont));
-        botonTratamiento.addActionListener(e -> accionTratamiento(cont));
-
-        contenedorBotones.add(botonBaja);
-        contenedorBotones.add(botonLiberar);
-        contenedorBotones.add(botonTratamiento);
-
-        contenedorDetalle.add(cont.vista.vistaDetalle, BorderLayout.CENTER);
-        if (!cont.vista.fueraDelSantuario) contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
-        return contenedorDetalle;
-    }
-
-    private static void accionTratamiento(Controlador cont) {
-        JFrame ventanaTratamiento = new JFrame();
-        ventanaTratamiento.setSize(450, 325);
-        ventanaTratamiento.setResizable(false);
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
-        contenedorTratamiento.setBorder(padding);
-        JLabel errorFecha = new JLabel("");
-        errorFecha.setForeground(Color.RED);
-        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
-        JTextArea textArea = new JTextArea(5, 10);
-        textArea.setLineWrap(true);
-        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
-        JTextField fecha = new JTextField(7);
-        fecha.addKeyListener(inputFechaAdapter(fecha, errorFecha));
-        contenedorFecha.add(fecha);
-        contenedorFecha.add(errorFecha);
-        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
-        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
-
-        JButton botonAdd = new JButton("Añadir");
-        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
-
-        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
-        ventanaTratamiento.add(contenedorTratamiento);
-
-        ventanaTratamiento.setVisible(true);
-    }
-
-    private static KeyAdapter inputFechaAdapter(JTextField especieTF, JLabel errorEspecie) {
-        return new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = especieTF.getText();
-                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
-                    especieTF.setEditable(false);
-                    especieTF.setText("");
-                    errorEspecie.setText("Por favor, introduce sólo números");
-                } else {
-                    especieTF.setEditable(true);
-                    errorEspecie.setText("");
-                    if (value.length() == 2 || value.length() == 5)
-                        especieTF.setText(value + '/');
-                }
-            }
-        };
+    private static void accionLiberar(Controlador cont) {
+        cont.liberacionControlador();
+        cargarPanelAnimales();
+        cargarPanelAnimal(cont);
     }
 
     private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
@@ -281,8 +254,8 @@ public class Aplicacion {
 
         cont.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
 
-        cargarGrid();
-        cargarVistaDetalle(cont);
+        cargarPanelAnimales();
+        cargarPanelAnimal(cont);
     }
 
     private static LocalDate parseFecha(String fechaTexto) {
@@ -293,19 +266,46 @@ public class Aplicacion {
         return LocalDate.parse(partesFecha[0] + "-" + partesFecha[1] + "-" + partesFecha[2]);
     }
 
-    private static void accionBaja(Controlador cont) {
-        cont.bajaControlador();
-        cargarGrid();
-        cargarVistaDetalle(cont);
+    private static KeyAdapter crearAdaptadorPeso(JTextField pesoTF, JLabel errorFecha) {
+        KeyAdapter keyAdapter = new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = pesoTF.getText();
+                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
+                    pesoTF.setEditable(true);
+                    errorFecha.setText("");
+                } else if (value.length() > 4) {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce un valor válido (muy largo)");
+                } else {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce sólo números");
+                }
+            }
+        };
+        return keyAdapter;
     }
 
-    private static void accionLiberar(Controlador cont) {
-        cont.liberacionControlador();
-        cargarGrid();
-        cargarVistaDetalle(cont);
+    private static KeyAdapter crearAdaptadorFecha(JTextField especieTF, JLabel errorEspecie) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = especieTF.getText();
+                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
+                    especieTF.setEditable(false);
+                    especieTF.setText("");
+                    errorEspecie.setText("Por favor, introduce sólo números");
+                } else {
+                    especieTF.setEditable(true);
+                    errorEspecie.setText("");
+                    if (value.length() == 2 || value.length() == 5)
+                        especieTF.setText(value + '/');
+                }
+            }
+        };
     }
 
-    private static void construirLista() {
+    private static void addToLista() {
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
@@ -327,11 +327,11 @@ public class Aplicacion {
     }
 
     public static void main(String[] args) {
-        construirLista();
+        addToLista();
         ventanaPrincipal.setResizable(false);
         ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         ventanaPrincipal.setSize(new Dimension(900, 1020));
         ventanaPrincipal.setTitle("Aplicación del santuario");
-        cargarGrid();
+        cargarPanelAnimales();
     }
 }
