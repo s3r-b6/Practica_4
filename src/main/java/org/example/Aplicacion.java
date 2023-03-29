@@ -27,8 +27,6 @@ import java.util.ArrayList;
  */
 public class Aplicacion {
 
-    //TODO: Añadir títulos a las ventanas
-    //TODO: Vistas individuales y vistas de grid
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
     static JFrame ventanaAlta = new JFrame();
@@ -72,6 +70,7 @@ public class Aplicacion {
     private static void cargarPanelAnimal(Controlador cont) {
         ventanaDetalle.getContentPane().removeAll();
         ventanaDetalle.setSize(600, 600);
+        ventanaDetalle.setTitle("Vista de animal");
         ventanaDetalle.add(crearPanelAnimal(cont));
         ventanaDetalle.revalidate();
         ventanaDetalle.repaint();
@@ -103,7 +102,7 @@ public class Aplicacion {
         ventanaAlta.setLayout(new BorderLayout());
         ventanaAlta.setSize(375, 250);
         ventanaAlta.setResizable(false);
-
+        ventanaAlta.setTitle("Panel alta de animales");
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
         JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
@@ -128,7 +127,7 @@ public class Aplicacion {
         JButton botonAddAnimal = new JButton("Añadir");
 
         errorPeso.setForeground(Color.RED);
-        pesoTF.addKeyListener(crearAdaptadorPeso(pesoTF, errorPeso));
+        pesoTF.addKeyListener(adaptadorInputPeso(pesoTF, errorPeso));
 
         botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion));
 
@@ -176,7 +175,7 @@ public class Aplicacion {
         textArea.setLineWrap(true);
         contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
         JTextField fecha = new JTextField(7);
-        fecha.addKeyListener(crearAdaptadorFecha(fecha, errorFecha));
+        fecha.addKeyListener(adaptadorInputFecha(fecha, errorFecha));
         contenedorFecha.add(fecha);
         contenedorFecha.add(errorFecha);
         contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
@@ -266,8 +265,8 @@ public class Aplicacion {
         return LocalDate.parse(partesFecha[0] + "-" + partesFecha[1] + "-" + partesFecha[2]);
     }
 
-    private static KeyAdapter crearAdaptadorPeso(JTextField pesoTF, JLabel errorFecha) {
-        KeyAdapter keyAdapter = new KeyAdapter() {
+    private static KeyAdapter adaptadorInputPeso(JTextField pesoTF, JLabel errorFecha) {
+        return new KeyAdapter() {
             public void keyPressed(KeyEvent key) {
                 String value = pesoTF.getText();
                 if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
@@ -284,10 +283,9 @@ public class Aplicacion {
                 }
             }
         };
-        return keyAdapter;
     }
 
-    private static KeyAdapter crearAdaptadorFecha(JTextField especieTF, JLabel errorEspecie) {
+    private static KeyAdapter adaptadorInputFecha(JTextField especieTF, JLabel errorEspecie) {
         return new KeyAdapter() {
             public void keyPressed(KeyEvent key) {
                 String value = especieTF.getText();
