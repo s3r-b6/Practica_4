@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
@@ -38,6 +39,8 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
+    //Cargar JPanels
+
     private static void cargarPanelAnimales() {
         ventanaPrincipal.getContentPane().removeAll();
         ventanaPrincipal.setLayout(new BorderLayout());
@@ -47,6 +50,18 @@ public class Aplicacion {
         ventanaPrincipal.add(botonAlta, BorderLayout.SOUTH);
         ventanaPrincipal.setVisible(true);
     }
+
+    private static void cargarPanelAnimal(Controlador cont) {
+        ventanaDetalle.getContentPane().removeAll();
+        ventanaDetalle.setSize(600, 600);
+        ventanaDetalle.setTitle("Vista de animal");
+        ventanaDetalle.add(crearPanelAnimal(cont));
+        ventanaDetalle.revalidate();
+        ventanaDetalle.repaint();
+        ventanaDetalle.setVisible(true);
+    }
+
+    //Crear JPanels
 
     private static JPanel crearPanelAnimales() {
         GridLayout gl = new GridLayout(3, lista.size() / 3);
@@ -65,16 +80,6 @@ public class Aplicacion {
             gridPane.add(contenedorAnimal);
         }
         return gridPane;
-    }
-
-    private static void cargarPanelAnimal(Controlador cont) {
-        ventanaDetalle.getContentPane().removeAll();
-        ventanaDetalle.setSize(600, 600);
-        ventanaDetalle.setTitle("Vista de animal");
-        ventanaDetalle.add(crearPanelAnimal(cont));
-        ventanaDetalle.revalidate();
-        ventanaDetalle.repaint();
-        ventanaDetalle.setVisible(true);
     }
 
     private static JPanel crearPanelAnimal(Controlador cont) {
@@ -96,6 +101,8 @@ public class Aplicacion {
         if (!cont.vista.fueraDelSantuario) contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
         return contenedorDetalle;
     }
+
+    //Menús
 
     private static void abrirMenuAlta() {
         ventanaAlta.getContentPane().removeAll();
@@ -190,6 +197,8 @@ public class Aplicacion {
         ventanaTratamiento.setVisible(true);
     }
 
+    //Acciones
+
     private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
@@ -235,35 +244,25 @@ public class Aplicacion {
     private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
         String fechaTexto = fecha.getText().trim();
         String descripcionTexto = textArea.getText().trim();
-
         LocalDate fechaParseada;
         try {
-            fechaParseada = parseFecha(fechaTexto);
+            fechaParseada = LocalDate.parse(fechaTexto, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         } catch (DateTimeParseException e) {
             JOptionPane.showMessageDialog(null, "Por favor introduce una fecha válida, p.ej: 12/02/2023", "Error", JOptionPane.ERROR_MESSAGE);
             fecha.setText("");
             return;
         }
-
         if (!descripcionTexto.matches(".{12,144}")) {
             JOptionPane.showMessageDialog(null, "Mal input de la descripción", "Error", JOptionPane.ERROR_MESSAGE);
             textArea.setText("");
             return;
         }
-
         cont.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
-
         cargarPanelAnimales();
         cargarPanelAnimal(cont);
     }
 
-    private static LocalDate parseFecha(String fechaTexto) {
-        String[] partesFecha = fechaTexto.split("/");
-        String temp = partesFecha[0];
-        partesFecha[0] = partesFecha[2]; //dd -> yyyy
-        partesFecha[2] = temp; // yyyy -> dd
-        return LocalDate.parse(partesFecha[0] + "-" + partesFecha[1] + "-" + partesFecha[2]);
-    }
+    //KeyAdapters (controlar inputs por teclado)
 
     private static KeyAdapter adaptadorInputPeso(JTextField pesoTF, JLabel errorFecha) {
         return new KeyAdapter() {
@@ -304,24 +303,30 @@ public class Aplicacion {
     }
 
     private static void addToLista() {
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 3, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 3, true)));
-
-        // DEBUG
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Reptil("Cocodrilo", lista.size() + 1, 18, true)));
+        lista.add(new Controlador(new Mamifero("Ciervo", lista.size() + 1, 25, true)));
+        lista.add(new Controlador(new Ave("Cigüeña", lista.size() + 1, 7, true)));
+        lista.add(new Controlador(new Reptil("Salamandra", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Mamifero("Gato", lista.size() + 1, 4, true)));
+        lista.add(new Controlador(new Ave("Paloma", lista.size() + 1, 1, true)));
+        //Cargar algunos tratamientos de prueba
         lista.forEach(e -> {
-            e.nuevoTratamientoControlador("Pastillas", LocalDate.now());
-            e.nuevoTratamientoControlador("Pastillas 2", LocalDate.now());
-            e.nuevoTratamientoControlador("Pastillas 3", LocalDate.now());
+            int rand1 = (int) ((Math.random() * 3) + 0);
+            if (rand1 >= 0) e.nuevoTratamientoControlador("Fisioterapia", getFechaAleatoria());
+            if (rand1 >= 1) e.nuevoTratamientoControlador("Medicina B", getFechaAleatoria());
+            if (rand1 >= 2) e.nuevoTratamientoControlador("Pastillas C", getFechaAleatoria());
         });
-        // DEBUG
+    }
 
+    private static LocalDate getFechaAleatoria() {
+        int rand2 = (int) ((Math.random() * (12 - 1)) + 1);
+        StringBuilder fecha = new StringBuilder("2023-");
+        if (rand2 < 10) fecha.append("0").append(rand2).append("-01");
+        else fecha.append(rand2).append("-01");
+        return LocalDate.parse(fecha);
     }
 
     public static void main(String[] args) {
