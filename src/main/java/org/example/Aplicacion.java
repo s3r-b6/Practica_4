@@ -39,8 +39,7 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    //Cargar JPanels
-
+    //Cargar JPanels || abrir  ventanas
     private static void cargarPanelAnimales() {
         ventanaPrincipal.getContentPane().removeAll();
         ventanaPrincipal.setLayout(new BorderLayout());
@@ -61,8 +60,47 @@ public class Aplicacion {
         ventanaDetalle.setVisible(true);
     }
 
-    //Crear JPanels
+    private static void abrirMenuAlta() {
+        ventanaAlta.getContentPane().removeAll();
+        ventanaAlta.setSize(375, 250);
+        ventanaAlta.setResizable(false);
+        ventanaAlta.setTitle("Panel alta de animales");
+        ventanaAlta.add(crearMenuAlta());
+        ventanaAlta.setVisible(true);
+    }
 
+    private static void abrirMenuTratamiento(Controlador cont) {
+        JFrame ventanaTratamiento = new JFrame();
+        ventanaTratamiento.setSize(450, 325);
+        ventanaTratamiento.setResizable(false);
+
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
+        contenedorTratamiento.setBorder(padding);
+        JLabel errorFecha = new JLabel("");
+        errorFecha.setForeground(Color.RED);
+        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
+        JTextArea textArea = new JTextArea(5, 10);
+        textArea.setLineWrap(true);
+        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
+        JTextField fecha = new JTextField(7);
+        fecha.addKeyListener(adaptadorInputFecha(fecha, errorFecha));
+        contenedorFecha.add(fecha);
+        contenedorFecha.add(errorFecha);
+        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
+        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
+
+        JButton botonAdd = new JButton("Añadir");
+        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
+
+        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
+        ventanaTratamiento.add(contenedorTratamiento);
+
+        ventanaTratamiento.setVisible(true);
+    }
+
+
+    //Crear JPanels
     private static JPanel crearPanelAnimales() {
         GridLayout gl = new GridLayout(3, lista.size() / 3);
         JPanel gridPane = new JPanel(gl);
@@ -102,14 +140,7 @@ public class Aplicacion {
         return contenedorDetalle;
     }
 
-    //Menús
-
-    private static void abrirMenuAlta() {
-        ventanaAlta.getContentPane().removeAll();
-        ventanaAlta.setLayout(new BorderLayout());
-        ventanaAlta.setSize(375, 250);
-        ventanaAlta.setResizable(false);
-        ventanaAlta.setTitle("Panel alta de animales");
+    public static JPanel crearMenuAlta() {
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
         JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
@@ -161,40 +192,10 @@ public class Aplicacion {
         contenedorCampos.add(contenedorPeso);
         contenedorCampos.add(contenedorLesiones);
 
-        ventanaAlta.add(contenedorCampos, BorderLayout.CENTER);
-        ventanaAlta.add(botonAddAnimal, BorderLayout.SOUTH);
-
-        ventanaAlta.setVisible(true);
-    }
-
-    private static void abrirMenuTratamiento(Controlador cont) {
-        JFrame ventanaTratamiento = new JFrame();
-        ventanaTratamiento.setSize(450, 325);
-        ventanaTratamiento.setResizable(false);
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
-        contenedorTratamiento.setBorder(padding);
-        JLabel errorFecha = new JLabel("");
-        errorFecha.setForeground(Color.RED);
-        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
-        JTextArea textArea = new JTextArea(5, 10);
-        textArea.setLineWrap(true);
-        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
-        JTextField fecha = new JTextField(7);
-        fecha.addKeyListener(adaptadorInputFecha(fecha, errorFecha));
-        contenedorFecha.add(fecha);
-        contenedorFecha.add(errorFecha);
-        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
-        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
-
-        JButton botonAdd = new JButton("Añadir");
-        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
-
-        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
-        ventanaTratamiento.add(contenedorTratamiento);
-
-        ventanaTratamiento.setVisible(true);
+        JPanel contenedor = new JPanel(new BorderLayout());
+        contenedor.add(contenedorCampos, BorderLayout.CENTER);
+        contenedor.add(botonAddAnimal, BorderLayout.SOUTH);
+        return contenedor;
     }
 
     //Acciones
@@ -208,8 +209,6 @@ public class Aplicacion {
             return;
         }
         String familia = familiasBtn.getSelection().getActionCommand();
-
-        System.out.println("Añadiendo " + familia);
         switch (familia) {
             case "Ave" -> {
                 System.out.println("Ave");
