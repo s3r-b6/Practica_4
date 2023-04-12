@@ -19,8 +19,9 @@ public class Controlador {
 
     Controlador(Animal modelo) {
         this.animal = modelo;
-        this.vista = new Vista();
-        recrearVista();
+        this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                animal.getHistorialTratamiento(), animal.getTipoLesion());
     }
 
     public Vista getVista() {
@@ -29,33 +30,24 @@ public class Controlador {
 
     public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.tratamientoAnimal(tratamiento, fechaFin);
-        recrearVista();
+        this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                animal.getHistorialTratamiento(), animal.getTipoLesion());
     }
 
     public void liberacionControlador() {
         if (animal.liberacionAnimal()) {
-            recrearVista();
-            recargarVistas();
+            this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                    animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                    animal.getHistorialTratamiento(), animal.getTipoLesion());
         }
     }
 
     public void bajaControlador() {
         if (animal.bajaAnimal()) {
-            recrearVista();
-            recargarVistas();
+            this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                    animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                    animal.getHistorialTratamiento(), animal.getTipoLesion());
         }
-    }
-
-    private void recargarVistas() {
-        vista.vistaNormal.revalidate();
-        vista.vistaNormal.repaint();
-        vista.vistaDetalle.revalidate();
-        vista.vistaDetalle.repaint();
-    }
-
-    private void recrearVista() {
-        vista.actualizarVistas(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(), animal.getHistorialTratamiento(),
-                animal.getTipoLesion());
     }
 }

@@ -13,7 +13,8 @@ public class VentanaAnimal extends JFrame {
 
     public VentanaAnimal(Controlador c) {
         this.setLayout(new BorderLayout());
-        this.setSize(600, 600);
+        this.setResizable(false);
+        this.setPreferredSize(new Dimension(720, 600));
         this.setTitle("Vista de animal");
 
         JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
@@ -31,6 +32,9 @@ public class VentanaAnimal extends JFrame {
         Vista v = c.getVista();
         this.add(v.getVistaDetalle(), BorderLayout.CENTER);
         if (!v.isFueraDelSantuario()) this.add(contenedorBotones, BorderLayout.SOUTH);
+        //centrar la ventana
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 

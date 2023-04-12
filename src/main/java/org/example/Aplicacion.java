@@ -10,14 +10,12 @@ import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
 
 import javax.swing.*;
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
  * Esta clase contiene el main() y también contiene el punto de entrada a la interfaz, i.e., la ventana sobre
  * la que se insertan los animales.
- * <p>
  * En el patrón de diseño MVC (Modelo-Vista-Controlador), la lógica de negocio generalmente se maneja en el
  * controlador y/o en el modelo, mientras que la vista solo muestra los datos al usuario. La lógica de negocio
  * se refiere a las reglas y procesos que rigen cómo funciona una aplicación o sistema. Por ejemplo, en una
@@ -28,10 +26,15 @@ import java.util.ArrayList;
  */
 public class Aplicacion {
 
-    static JFrame ventanaPrincipal = new JFrame();
-    static JFrame ventanaDetalle = new JFrame();
-    static JFrame ventanaAlta = new JFrame();
-    static JFrame ventanaTratamiento = new JFrame();
+    /*
+    TODO: El adaptador es muy molesto. Mejorar estética y experiencia un poco. Después centrarse en buscar bugs.
+     Mejorar cómo se ven los tratamientos. Cambiar fotos.
+     */
+
+    static JFrame ventanaPrincipal;
+    static JFrame ventanaDetalle;
+    static JFrame ventanaAlta;
+    static JFrame ventanaTratamiento;
     /**
      * La lista de animales contiene los controladores para cada uno de los animales.
      * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador.
@@ -40,26 +43,45 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    //Cargar JPanels
+    public static void main(String[] args) {
+        cargarMockData();
+        cargarPanelAnimales(new VentanaAnimales(lista));
+    }
 
     public static void cargarPanelAnimales(VentanaAnimales v) {
+        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         ventanaPrincipal = v;
     }
 
-
     public static void cargarPanelAnimal(VentanaAnimal v) {
+        if (ventanaDetalle != null) ventanaDetalle.dispose();
         ventanaDetalle = v;
     }
 
     public static void cargarMenuAlta(VentanaAlta v) {
+        if (ventanaAlta != null) ventanaAlta.dispose();
         ventanaAlta = v;
     }
 
     public static void cargarPanelTratamiento(VentanaTratamiento v) {
+        if (ventanaTratamiento != null) ventanaTratamiento.dispose();
         ventanaTratamiento = v;
     }
 
-    private static void mockData() {
+    public static void recargarVistas(Controlador c) {
+        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
+        if (ventanaDetalle != null) ventanaDetalle.dispose();
+        cargarPanelAnimales(new VentanaAnimales(lista));
+        cargarPanelAnimal(new VentanaAnimal(c));
+    }
+
+    public static void addAnimal(Animal a) {
+        lista.add(new Controlador(a));
+        ventanaPrincipal.setVisible(false);
+        cargarPanelAnimales(new VentanaAnimales(lista));
+    }
+
+    private static void cargarMockData() {
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
@@ -78,26 +100,11 @@ public class Aplicacion {
         });
     }
 
-    public static void addAnimal(Animal a) {
-        lista.add(new Controlador(a));
-        cargarPanelAnimales(new VentanaAnimales(lista));
-    }
-
     private static LocalDate getFechaAleatoria() {
         int rand2 = (int) ((Math.random() * (12 - 1)) + 1);
         StringBuilder fecha = new StringBuilder("2023-");
         if (rand2 < 10) fecha.append("0").append(rand2).append("-01");
         else fecha.append(rand2).append("-01");
         return LocalDate.parse(fecha);
-    }
-
-    public static void recargarVistas(Controlador c) {
-        cargarPanelAnimales(new VentanaAnimales(lista));
-        cargarPanelAnimal(new VentanaAnimal(c));
-    }
-
-    public static void main(String[] args) {
-        mockData();
-        cargarPanelAnimales(new VentanaAnimales(lista));
     }
 }

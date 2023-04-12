@@ -5,12 +5,13 @@ import org.example.Controlador;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import static org.example.Aplicacion.recargarVistas;
-import static org.example.Componentes.Adaptadores.adaptadorInputFecha;
 
 public class VentanaTratamiento extends JFrame {
     public VentanaTratamiento(Controlador c) {
@@ -34,14 +35,18 @@ public class VentanaTratamiento extends JFrame {
         contenedorTratamiento.add(textArea, BorderLayout.CENTER);
 
         JButton botonAdd = new JButton("Añadir");
-        botonAdd.addActionListener(e -> accionAddTratamiento(c, fecha, textArea));
+        botonAdd.addActionListener(e -> accionAddTratamiento(this, c, fecha, textArea));
 
         contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
+
         this.add(contenedorTratamiento);
+        //centrar la ventana
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
-    public static void accionAddTratamiento(Controlador c, JTextField fecha, JTextArea textArea) {
+    public static void accionAddTratamiento(VentanaTratamiento ventanaTratamiento, Controlador c, JTextField fecha, JTextArea textArea) {
         String fechaTexto = fecha.getText().trim();
         String descripcionTexto = textArea.getText().trim();
         LocalDate fechaParseada;
@@ -58,6 +63,26 @@ public class VentanaTratamiento extends JFrame {
             return;
         }
         c.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
+        ventanaTratamiento.dispose();
         recargarVistas(c);
+    }
+
+
+    static KeyAdapter adaptadorInputFecha(JTextField especieTF, JLabel errorEspecie) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = especieTF.getText();
+                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
+                    especieTF.setEditable(false);
+                    especieTF.setText("");
+                    errorEspecie.setText("Por favor, introduce sólo números");
+                } else {
+                    especieTF.setEditable(true);
+                    errorEspecie.setText("");
+                    if (value.length() == 2 || value.length() == 5)
+                        especieTF.setText(value + '/');
+                }
+            }
+        };
     }
 }

@@ -13,7 +13,7 @@ import static org.example.Aplicacion.cargarPanelAnimal;
 public class VentanaAnimales extends JFrame {
     public VentanaAnimales(ArrayList<Controlador> lista) {
         this.setLayout(new BorderLayout());
-        this.setSize(600, 450);
+        this.setSize(1020, 1020);
         JButton botonAlta = new JButton("Alta");
         botonAlta.addActionListener(e -> cargarMenuAlta(new VentanaAlta(lista.size())));
 
@@ -37,6 +37,9 @@ public class VentanaAnimales extends JFrame {
 
         this.add(gridPane, BorderLayout.CENTER);
         this.add(botonAlta, BorderLayout.SOUTH);
+        //centrar la ventana
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 }

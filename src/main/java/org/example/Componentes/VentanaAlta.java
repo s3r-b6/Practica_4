@@ -6,9 +6,10 @@ import org.example.Modelo.Reptil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static org.example.Aplicacion.addAnimal;
-import static org.example.Componentes.Adaptadores.adaptadorInputPeso;
 
 public class VentanaAlta extends JFrame {
     public VentanaAlta(int listaSize) {
@@ -43,7 +44,7 @@ public class VentanaAlta extends JFrame {
         errorPeso.setForeground(Color.RED);
         pesoTF.addKeyListener(adaptadorInputPeso(pesoTF, errorPeso));
 
-        botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion, listaSize));
+        botonAddAnimal.addActionListener(e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, listaSize));
 
         familiasBtn.add(mamiferoBoton);
         familiasBtn.add(aveBoton);
@@ -70,11 +71,14 @@ public class VentanaAlta extends JFrame {
 
         this.add(contenedorCampos, BorderLayout.CENTER);
         this.add(botonAddAnimal, BorderLayout.SOUTH);
+        //centrar la ventana
+        this.pack();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
 
-    private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion, int listaSize) {
+    private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion, int listaSize) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
 
@@ -88,15 +92,39 @@ public class VentanaAlta extends JFrame {
         switch (familia) {
             case "Ave" -> {
                 addAnimal(new Ave(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                ventanaAlta.dispose();
             }
             case "Mamífero" -> {
                 addAnimal(new Mamifero(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                ventanaAlta.dispose();
             }
             case "Reptil" -> {
                 addAnimal(new Reptil(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                ventanaAlta.dispose();
             }
             default -> throw new IllegalStateException("Valor inesperado: " + familia);
         }
+    }
+
+
+    static KeyAdapter adaptadorInputPeso(JTextField pesoTF, JLabel errorFecha) {
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent key) {
+                String value = pesoTF.getText();
+                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
+                    pesoTF.setEditable(true);
+                    errorFecha.setText("");
+                } else if (value.length() > 4) {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce un valor válido (muy largo)");
+                } else {
+                    pesoTF.setEditable(false);
+                    pesoTF.setText("");
+                    errorFecha.setText("Por favor, introduce sólo números");
+                }
+            }
+        };
     }
 
 }
