@@ -23,6 +23,10 @@ public class Controlador {
         recrearVista();
     }
 
+    public Vista getVista() {
+        return this.vista;
+    }
+
     public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.tratamientoAnimal(tratamiento, fechaFin);
         recrearVista();

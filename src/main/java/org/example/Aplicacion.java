@@ -1,17 +1,17 @@
 package org.example;
 
+import org.example.Componentes.VentanaAlta;
+import org.example.Componentes.VentanaAnimal;
+import org.example.Componentes.VentanaAnimales;
+import org.example.Componentes.VentanaTratamiento;
+import org.example.Modelo.Animal;
 import org.example.Modelo.Ave;
 import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +31,7 @@ public class Aplicacion {
     static JFrame ventanaPrincipal = new JFrame();
     static JFrame ventanaDetalle = new JFrame();
     static JFrame ventanaAlta = new JFrame();
+    static JFrame ventanaTratamiento = new JFrame();
     /**
      * La lista de animales contiene los controladores para cada uno de los animales.
      * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador.
@@ -41,268 +42,24 @@ public class Aplicacion {
 
     //Cargar JPanels
 
-    private static void cargarPanelAnimales() {
-        ventanaPrincipal.getContentPane().removeAll();
-        ventanaPrincipal.setLayout(new BorderLayout());
-        ventanaPrincipal.add(crearPanelAnimales(), BorderLayout.CENTER);
-        JButton botonAlta = new JButton("Alta");
-        botonAlta.addActionListener(e -> abrirMenuAlta());
-        ventanaPrincipal.add(botonAlta, BorderLayout.SOUTH);
-        ventanaPrincipal.setVisible(true);
+    public static void cargarPanelAnimales(VentanaAnimales v) {
+        ventanaPrincipal = v;
     }
 
-    private static void cargarPanelAnimal(Controlador cont) {
-        ventanaDetalle.getContentPane().removeAll();
-        ventanaDetalle.setSize(600, 600);
-        ventanaDetalle.setTitle("Vista de animal");
-        ventanaDetalle.add(crearPanelAnimal(cont));
-        ventanaDetalle.revalidate();
-        ventanaDetalle.repaint();
-        ventanaDetalle.setVisible(true);
+
+    public static void cargarPanelAnimal(VentanaAnimal v) {
+        ventanaDetalle = v;
     }
 
-    //Crear JPanels
-
-    private static JPanel crearPanelAnimales() {
-        GridLayout gl = new GridLayout(3, lista.size() / 3);
-        JPanel gridPane = new JPanel(gl);
-        gl.setHgap(25);
-        gl.setVgap(25);
-
-        for (Controlador e : lista) {
-            JPanel contenedorAnimal = new JPanel(new BorderLayout());
-            JButton botonDetalle = new JButton("Detalles");
-            botonDetalle.addActionListener(actionEvent -> cargarPanelAnimal(e));
-
-            contenedorAnimal.add(e.vista.vistaNormal, BorderLayout.CENTER);
-            contenedorAnimal.add(botonDetalle, BorderLayout.SOUTH);
-
-            gridPane.add(contenedorAnimal);
-        }
-        return gridPane;
+    public static void cargarMenuAlta(VentanaAlta v) {
+        ventanaAlta = v;
     }
 
-    private static JPanel crearPanelAnimal(Controlador cont) {
-        JPanel contenedorDetalle = new JPanel(new BorderLayout());
-        JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
-
-        JButton botonBaja = new JButton("Baja");
-        JButton botonLiberar = new JButton("Liberar");
-        JButton botonTratamiento = new JButton("Tratamiento");
-        botonBaja.addActionListener(e -> accionBaja(cont));
-        botonLiberar.addActionListener(e -> accionLiberar(cont));
-        botonTratamiento.addActionListener(e -> abrirMenuTratamiento(cont));
-
-        contenedorBotones.add(botonBaja);
-        contenedorBotones.add(botonLiberar);
-        contenedorBotones.add(botonTratamiento);
-
-        contenedorDetalle.add(cont.vista.vistaDetalle, BorderLayout.CENTER);
-        if (!cont.vista.fueraDelSantuario) contenedorDetalle.add(contenedorBotones, BorderLayout.SOUTH);
-        return contenedorDetalle;
+    public static void cargarPanelTratamiento(VentanaTratamiento v) {
+        ventanaTratamiento = v;
     }
 
-    //Menús
-
-    private static void abrirMenuAlta() {
-        ventanaAlta.getContentPane().removeAll();
-        ventanaAlta.setLayout(new BorderLayout());
-        ventanaAlta.setSize(375, 250);
-        ventanaAlta.setResizable(false);
-        ventanaAlta.setTitle("Panel alta de animales");
-        JPanel contenedorCampos = new JPanel();
-        contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
-        JPanel contenedorPeso = new JPanel(new GridLayout(2, 1));
-        JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 2));
-        JPanel contenedorLesiones = new JPanel(new GridLayout(1, 2));
-        JPanel contenedorTipo = new JPanel(new GridLayout(1, 1));
-
-        JLabel errorPeso = new JLabel();
-
-        JTextField especie = new JTextField(10);
-        JTextField pesoTF = new JTextField(4);
-
-        ButtonGroup familiasBtn = new ButtonGroup();
-        JRadioButton aveBoton = new JRadioButton("Ave");
-        aveBoton.setActionCommand("Ave");
-        JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
-        mamiferoBoton.setActionCommand("Mamífero");
-        JRadioButton reptilBoton = new JRadioButton("Reptil");
-        reptilBoton.setActionCommand("Reptil");
-
-        JCheckBox tipoLesion = new JCheckBox();
-        JButton botonAddAnimal = new JButton("Añadir");
-
-        errorPeso.setForeground(Color.RED);
-        pesoTF.addKeyListener(adaptadorInputPeso(pesoTF, errorPeso));
-
-        botonAddAnimal.addActionListener(e -> accionAddAnimal(pesoTF, especie, familiasBtn, tipoLesion));
-
-        familiasBtn.add(mamiferoBoton);
-        familiasBtn.add(aveBoton);
-        familiasBtn.add(reptilBoton);
-
-        contenedorFechaEntrada.add(new JLabel("Especie: "));
-        contenedorFechaEntrada.add(especie);
-        contenedorTipo.add(new JLabel("Familia: "));
-        contenedorTipo.add(aveBoton);
-        contenedorTipo.add(mamiferoBoton);
-        contenedorTipo.add(reptilBoton);
-        JPanel contenedorLabelPeso = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        contenedorLabelPeso.add(new JLabel("Peso: "));
-        contenedorLabelPeso.add(errorPeso);
-        contenedorPeso.add(contenedorLabelPeso);
-        contenedorPeso.add(pesoTF);
-        contenedorLesiones.add(new JLabel("Caza / Atropello / Infeccion: "));
-        contenedorLesiones.add(tipoLesion);
-
-        contenedorCampos.add(contenedorTipo);
-        contenedorCampos.add(contenedorFechaEntrada);
-        contenedorCampos.add(contenedorPeso);
-        contenedorCampos.add(contenedorLesiones);
-
-        ventanaAlta.add(contenedorCampos, BorderLayout.CENTER);
-        ventanaAlta.add(botonAddAnimal, BorderLayout.SOUTH);
-
-        ventanaAlta.setVisible(true);
-    }
-
-    private static void abrirMenuTratamiento(Controlador cont) {
-        JFrame ventanaTratamiento = new JFrame();
-        ventanaTratamiento.setSize(450, 325);
-        ventanaTratamiento.setResizable(false);
-
-        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        JPanel contenedorTratamiento = new JPanel(new BorderLayout());
-        contenedorTratamiento.setBorder(padding);
-        JLabel errorFecha = new JLabel("");
-        errorFecha.setForeground(Color.RED);
-        JPanel contenedorFecha = new JPanel(new GridLayout(2, 1));
-        JTextArea textArea = new JTextArea(5, 10);
-        textArea.setLineWrap(true);
-        contenedorFecha.add(new JLabel("Fecha de fin: (p.ej., 12/03/2023)"));
-        JTextField fecha = new JTextField(7);
-        fecha.addKeyListener(adaptadorInputFecha(fecha, errorFecha));
-        contenedorFecha.add(fecha);
-        contenedorFecha.add(errorFecha);
-        contenedorTratamiento.add(contenedorFecha, BorderLayout.NORTH);
-        contenedorTratamiento.add(textArea, BorderLayout.CENTER);
-
-        JButton botonAdd = new JButton("Añadir");
-        botonAdd.addActionListener(e -> accionAddTratamiento(cont, fecha, textArea));
-
-        contenedorTratamiento.add(botonAdd, BorderLayout.SOUTH);
-        ventanaTratamiento.add(contenedorTratamiento);
-
-        ventanaTratamiento.setVisible(true);
-    }
-
-    //Acciones
-
-    private static void accionAddAnimal(JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion) {
-        String peso = pesoTF.getText();
-        String especie = especieTF.getText();
-
-        if (pesoTF.getText().equals("") || especie.equals("") || familiasBtn.getSelection() == null) {
-            JOptionPane.showMessageDialog(null, "Por favor, introduce valores en los campos", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        String familia = familiasBtn.getSelection().getActionCommand();
-
-        System.out.println("Añadiendo " + familia);
-        switch (familia) {
-            case "Ave" -> {
-                System.out.println("Ave");
-                lista.add(new Controlador(new Ave(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarPanelAnimales();
-            }
-            case "Mamífero" -> {
-                System.out.println("Mamifero");
-                lista.add(new Controlador(new Mamifero(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarPanelAnimales();
-            }
-            case "Reptil" -> {
-                System.out.println("Reptil");
-                lista.add(new Controlador(new Reptil(especie, lista.size() + 1, Integer.parseInt(peso), tipoLesion.isSelected())));
-                cargarPanelAnimales();
-            }
-        }
-    }
-
-    private static void accionBaja(Controlador cont) {
-        cont.bajaControlador();
-        cargarPanelAnimales();
-        cargarPanelAnimal(cont);
-    }
-
-    private static void accionLiberar(Controlador cont) {
-        cont.liberacionControlador();
-        cargarPanelAnimales();
-        cargarPanelAnimal(cont);
-    }
-
-    private static void accionAddTratamiento(Controlador cont, JTextField fecha, JTextArea textArea) {
-        String fechaTexto = fecha.getText().trim();
-        String descripcionTexto = textArea.getText().trim();
-        LocalDate fechaParseada;
-        try {
-            fechaParseada = LocalDate.parse(fechaTexto, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(null, "Por favor introduce una fecha válida, p.ej: 12/02/2023", "Error", JOptionPane.ERROR_MESSAGE);
-            fecha.setText("");
-            return;
-        }
-        if (!descripcionTexto.matches(".{12,144}")) {
-            JOptionPane.showMessageDialog(null, "Mal input de la descripción", "Error", JOptionPane.ERROR_MESSAGE);
-            textArea.setText("");
-            return;
-        }
-        cont.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
-        cargarPanelAnimales();
-        cargarPanelAnimal(cont);
-    }
-
-    //KeyAdapters (controlar inputs por teclado)
-
-    private static KeyAdapter adaptadorInputPeso(JTextField pesoTF, JLabel errorFecha) {
-        return new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = pesoTF.getText();
-                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
-                    pesoTF.setEditable(true);
-                    errorFecha.setText("");
-                } else if (value.length() > 4) {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errorFecha.setText("Por favor, introduce un valor válido (muy largo)");
-                } else {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errorFecha.setText("Por favor, introduce sólo números");
-                }
-            }
-        };
-    }
-
-    private static KeyAdapter adaptadorInputFecha(JTextField especieTF, JLabel errorEspecie) {
-        return new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = especieTF.getText();
-                if (value.length() >= 10 || (key.getKeyChar() < '0' || key.getKeyChar() > '9')) {
-                    especieTF.setEditable(false);
-                    especieTF.setText("");
-                    errorEspecie.setText("Por favor, introduce sólo números");
-                } else {
-                    especieTF.setEditable(true);
-                    errorEspecie.setText("");
-                    if (value.length() == 2 || value.length() == 5)
-                        especieTF.setText(value + '/');
-                }
-            }
-        };
-    }
-
-    private static void addToLista() {
+    private static void mockData() {
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
@@ -321,6 +78,11 @@ public class Aplicacion {
         });
     }
 
+    public static void addAnimal(Animal a) {
+        lista.add(new Controlador(a));
+        cargarPanelAnimales(new VentanaAnimales(lista));
+    }
+
     private static LocalDate getFechaAleatoria() {
         int rand2 = (int) ((Math.random() * (12 - 1)) + 1);
         StringBuilder fecha = new StringBuilder("2023-");
@@ -329,12 +91,13 @@ public class Aplicacion {
         return LocalDate.parse(fecha);
     }
 
+    public static void recargarVistas(Controlador c) {
+        cargarPanelAnimales(new VentanaAnimales(lista));
+        cargarPanelAnimal(new VentanaAnimal(c));
+    }
+
     public static void main(String[] args) {
-        addToLista();
-        ventanaPrincipal.setResizable(false);
-        ventanaPrincipal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        ventanaPrincipal.setSize(new Dimension(900, 1020));
-        ventanaPrincipal.setTitle("Aplicación del santuario");
-        cargarPanelAnimales();
+        mockData();
+        cargarPanelAnimales(new VentanaAnimales(lista));
     }
 }

@@ -11,8 +11,10 @@ import java.awt.*;
  * sólo a los que el controlador le pasa a la hora de redibujar el componente
  */
 public class Vista {
+
     JPanel vistaNormal;
     JPanel vistaDetalle;
+
 
     /**
      * Este atributo marca si el animal ya no está bajo el cuidado del santuario, es decir, si ha muerto
@@ -57,6 +59,19 @@ public class Vista {
         this.vistaDetalle.revalidate();
         this.vistaDetalle.repaint();
     }
+
+    public boolean isFueraDelSantuario() {
+        return fueraDelSantuario;
+    }
+
+    public JPanel getVistaNormal() {
+        return vistaNormal;
+    }
+
+    public JPanel getVistaDetalle() {
+        return vistaDetalle;
+    }
+
 
     private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
