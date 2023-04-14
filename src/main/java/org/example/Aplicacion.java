@@ -26,7 +26,7 @@ import static org.example.Persistencia.Ficheros.reconstruirLista;
  */
 public class Aplicacion {
 
-    //TODO: Javadoc, iconos, imágenes
+    //TODO: Javadoc, iconos, imágenes, comentar y limpiar código
 
     static JFrame ventanaPrincipal;
     static JFrame ventanaDetalle;
