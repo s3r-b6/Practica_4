@@ -16,6 +16,7 @@ public class VentanaAnimal extends JFrame {
         this.setResizable(false);
         this.setPreferredSize(new Dimension(720, 600));
         this.setTitle("Vista de animal");
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
 
         JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
         JButton botonBaja = new JButton("Baja");

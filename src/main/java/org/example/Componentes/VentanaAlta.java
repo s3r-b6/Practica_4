@@ -17,6 +17,7 @@ public class VentanaAlta extends JFrame {
         this.setResizable(false);
         this.setTitle("Panel alta de animales");
         this.setLayout(new BorderLayout());
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
 
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));

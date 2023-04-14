@@ -18,6 +18,8 @@ public class VentanaTratamiento extends JFrame {
         this.setTitle("Panel de tratamientos");
         this.setSize(450, 325);
         this.setResizable(false);
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
+
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         JPanel contenedorTratamiento = new JPanel(new BorderLayout());
         contenedorTratamiento.setBorder(padding);

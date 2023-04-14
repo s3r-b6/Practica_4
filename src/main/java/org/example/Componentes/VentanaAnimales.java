@@ -16,6 +16,8 @@ public class VentanaAnimales extends JFrame {
     public VentanaAnimales(ArrayList<Controlador> lista) {
         this.setLayout(new BorderLayout());
         this.setTitle("Ventana principal");
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         int size = 350 * (lista.size() / 3);
         this.setPreferredSize(new Dimension(Math.min(size, 1500), 850));
         JButton botonAlta = new JButton("Alta");
