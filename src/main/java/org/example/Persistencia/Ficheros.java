@@ -2,25 +2,13 @@ package org.example.Persistencia;
 
 import org.example.Controlador;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class Ficheros {
-/*
-    int id;
-    int peso;
-    LocalDate fechaEntrada;
-    LocalDate fechaSalida;
-    String especie;
-    Estado estado;
-    ArrayList<LocalDate[]> fechasTratamientos;
-    ArrayList<String> descripcionTratamientos;
- */
-
-//fecha1 fecha2 descripcion -> String[][]
-
+    static Path ruta = Path.of(System.getProperty("user.dir") + "/src/main/java/org/example/fichero.json");
 
     public static void guardarEstado(ArrayList<Controlador> lista) throws IOException {
         StringBuilder str = new StringBuilder();
@@ -28,16 +16,20 @@ public class Ficheros {
         str.deleteCharAt(str.length() - 1).deleteCharAt(str.length() - 1);
         String JSONarr = String.format("[\n%s\n]%n", str);
 
-        File fichero = new File(System.getProperty("user.dir") + "/src/main/java/org/example/fichero.json");
+        File fichero = new File(ruta.toUri());
         if (fichero.exists() && fichero.delete()) fichero.createNewFile();
 
         try (FileWriter writer = new FileWriter(fichero)) {
             writer.write(JSONarr);
         }
+
+        leerEstado();
+
     }
 
-    public static void leerEstado() {
-
+    public static void leerEstado() throws IOException {
+        String str = new String(Files.readAllBytes(ruta));
+        System.out.println(str);
     }
 
 }
