@@ -4,6 +4,7 @@ package org.example;
 import org.example.Modelo.Animal;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * El controlador  liga el modelo de datos con la vista. Los modelos son esencialmente animales únicos, con sus
@@ -50,4 +51,11 @@ public class Controlador {
                     animal.getHistorialTratamiento(), animal.getTipoLesion());
         }
     }
+
+
+    public String toJSON() {
+        return (this.animal.toJSON());
+    }
+
+
 }
