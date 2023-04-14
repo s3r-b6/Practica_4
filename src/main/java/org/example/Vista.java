@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+//TODO => Fixear vista de estado y de tipo de lesión (si el grid crece en columnas, se ve mal)
+
 /**
  * Esencialmente, un JPanel y las operaciones que se realizan sobre él.
  * Es la representación gráfica del modelo de datos. Cuando el Controlador actualiza el estado de algún dato, envía
