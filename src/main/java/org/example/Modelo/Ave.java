@@ -18,7 +18,7 @@ public class Ave extends Animal {
     public Ave(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado, String tipoLesion, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
         super(id, peso, fechaEntrada, fechaSalida, especie, estado, fechasTratamientos, descripcionTratamientos);
         //TODO !!!!!
-        this.tipoLesion = tipoLesion.equals("infeccion") ? Reptil.LesionReptil.Infeccion : Reptil.LesionReptil.Otro;
+        this.tipoLesion = tipoLesion.equals("Caza") ? LesionAve.Caza : LesionAve.Otro;
     }
 
     @Override

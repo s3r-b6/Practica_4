@@ -5,16 +5,12 @@ import org.example.Componentes.VentanaAnimal;
 import org.example.Componentes.VentanaAnimales;
 import org.example.Componentes.VentanaTratamiento;
 import org.example.Modelo.Animal;
-import org.example.Modelo.Ave;
-import org.example.Modelo.Mamifero;
-import org.example.Modelo.Reptil;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.example.Persistencia.Ficheros.guardarEstado;
+import static org.example.Persistencia.Ficheros.reconstruirLista;
 
 
 /**
@@ -30,10 +26,7 @@ import static org.example.Persistencia.Ficheros.guardarEstado;
  */
 public class Aplicacion {
 
-    /*
-    TODO: El adaptador es muy molesto. Mejorar estética y experiencia un poco. Después centrarse en buscar bugs.
-     Mejorar cómo se ven los tratamientos. Cambiar fotos.
-     */
+    //TODO: Javadoc, iconos, imágenes
 
     static JFrame ventanaPrincipal;
     static JFrame ventanaDetalle;
@@ -47,9 +40,16 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    public static void main(String[] args) {
-        cargarMockData();
+    public static void main(String[] args) throws IOException {
+        rebuildLista();
         cargarPanelAnimales(new VentanaAnimales(lista));
+    }
+
+    public static void rebuildLista() throws IOException {
+        ArrayList<Animal> listaAnimales = reconstruirLista();
+        ArrayList<Controlador> listaControlador = new ArrayList<>();
+        listaAnimales.forEach(animal -> listaControlador.add(new Controlador(animal)));
+        lista = listaControlador;
     }
 
     public static void cargarPanelAnimales(VentanaAnimales v) {
@@ -85,47 +85,5 @@ public class Aplicacion {
         cargarPanelAnimales(new VentanaAnimales(lista));
     }
 
-    private static void cargarMockData() {
-        //leerDatos -> array de animales. Aplicación: inicializa controladores y los almacena
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Reptil("Cocodrilo", lista.size() + 1, 18, true)));
-        lista.add(new Controlador(new Mamifero("Ciervo", lista.size() + 1, 25, true)));
-        lista.add(new Controlador(new Ave("Cigüeña", lista.size() + 1, 7, true)));
-        lista.add(new Controlador(new Reptil("Salamandra", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Mamifero("Gato", lista.size() + 1, 4, true)));
-        lista.add(new Controlador(new Ave("Paloma", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
-        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Reptil("Cocodrilo", lista.size() + 1, 18, true)));
-        lista.add(new Controlador(new Mamifero("Ciervo", lista.size() + 1, 25, true)));
-        lista.add(new Controlador(new Ave("Cigüeña", lista.size() + 1, 7, true)));
-        lista.add(new Controlador(new Reptil("Salamandra", lista.size() + 1, 1, true)));
-        lista.add(new Controlador(new Mamifero("Gato", lista.size() + 1, 4, true)));
-        lista.add(new Controlador(new Ave("Paloma", lista.size() + 1, 1, true)));
-        //Cargar algunos tratamientos de prueba
-        lista.forEach(e -> {
-            int rand1 = (int) ((Math.random() * 3) + 0);
-            if (rand1 >= 0) e.nuevoTratamientoControlador("Fisioterapia", getFechaAleatoria());
-            if (rand1 >= 1) e.nuevoTratamientoControlador("Medicina B", getFechaAleatoria());
-            if (rand1 >= 2) e.nuevoTratamientoControlador("Pastillas C", getFechaAleatoria());
-        });
 
-        try {
-            guardarEstado(lista);
-        } catch (IOException e) {
-            //TODO
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static LocalDate getFechaAleatoria() {
-        int rand2 = (int) ((Math.random() * (12 - 1)) + 1);
-        StringBuilder fecha = new StringBuilder("2023-");
-        if (rand2 < 10) fecha.append("0").append(rand2).append("-01");
-        else fecha.append(rand2).append("-01");
-        return LocalDate.parse(fecha);
-    }
 }

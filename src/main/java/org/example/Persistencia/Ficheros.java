@@ -2,7 +2,9 @@ package org.example.Persistencia;
 
 import org.example.Controlador;
 import org.example.Modelo.Animal;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,7 +14,6 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Ficheros {
     static Path ruta = Path.of(System.getProperty("user.dir") + "/src/main/java/org/example/fichero.json");
@@ -29,14 +30,12 @@ public class Ficheros {
         try (FileWriter writer = new FileWriter(fichero)) {
             writer.write(JSONarr);
         }
-
-        leerEstado();
-
     }
 
-    public static List<Animal> reconstruirLista() throws JSONException, IOException {
+    public static ArrayList<Animal> reconstruirLista() throws JSONException, IOException {
         String jsonString = new String(Files.readAllBytes(ruta));
-        List<Animal> datosAnimales = new ArrayList<>();
+//        System.out.println(jsonString);
+        ArrayList<Animal> datosAnimales = new ArrayList<>();
 
         JSONArray jsonArray = new JSONArray(jsonString);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -46,7 +45,11 @@ public class Ficheros {
             String tipo = jsonObject.getString("tipo");
             int peso = jsonObject.getInt("peso");
             LocalDate fechaEntrada = LocalDate.parse(jsonObject.getString("fechaEntrada"), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            LocalDate fechaSalida = LocalDate.parse(jsonObject.optString("fechaSalida"), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            String fechaSalidaStr = jsonObject.optString("fechaSalida");
+            LocalDate fechaSalida = null;
+            if (!fechaSalidaStr.isEmpty()) {
+                fechaSalida = LocalDate.parse(fechaSalidaStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
             String especie = jsonObject.getString("especie");
             String tipoLesion = jsonObject.getString("tipoLesion");
             String estado = jsonObject.getString("estado");
@@ -56,8 +59,8 @@ public class Ficheros {
             for (int j = 0; j < fechasTratamientosArray.length(); j++) {
                 JSONArray fechasTratamiento = fechasTratamientosArray.getJSONArray(j);
                 LocalDate[] fechas = new LocalDate[2];
-                fechas[0] = LocalDate.parse(fechasTratamiento.getString(0), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                fechas[1] = LocalDate.parse(fechasTratamiento.getString(1), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                fechas[0] = LocalDate.parse(fechasTratamiento.getString(0));
+                fechas[1] = LocalDate.parse(fechasTratamiento.getString(1));
                 fechasTratamientos[j] = fechas;
             }
 
@@ -73,11 +76,4 @@ public class Ficheros {
 
         return datosAnimales;
     }
-
-
-    public static void leerEstado() throws IOException {
-        String str = new String(Files.readAllBytes(ruta));
-        System.out.println(str);
-    }
-
 }

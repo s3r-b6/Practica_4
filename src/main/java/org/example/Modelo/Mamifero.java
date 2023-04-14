@@ -1,8 +1,6 @@
 package org.example.Modelo;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
 
 public class Mamifero extends Animal {
     LesionMamifero tipoLesion;
@@ -20,7 +18,7 @@ public class Mamifero extends Animal {
     public Mamifero(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado, String tipoLesion, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
         super(id, peso, fechaEntrada, fechaSalida, especie, estado, fechasTratamientos, descripcionTratamientos);
         //TODO !!!!!
-        this.tipoLesion = tipoLesion.equals("infeccion") ? Reptil.LesionReptil.Infeccion : Reptil.LesionReptil.Otro;
+        this.tipoLesion = tipoLesion.equals("Atropello") ? LesionMamifero.Atropello : LesionMamifero.Otro;
     }
 
     @Override

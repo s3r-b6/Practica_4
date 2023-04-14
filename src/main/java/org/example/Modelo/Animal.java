@@ -1,11 +1,9 @@
 package org.example.Modelo;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public abstract class Animal {
     int id;
@@ -30,11 +28,10 @@ public abstract class Animal {
     public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
         Estado st = null;
         switch (estado) {
-            case "Liberado" -> st = Estado.Fallecido;
-            case "Fallecido" -> st = Estado.Liberado;
+            case "Liberado" -> st = Estado.Liberado;
+            case "Fallecido" -> st = Estado.Fallecido;
             case "Tratamiento" -> st = Estado.Tratamiento;
         }
-
         this.id = id;
         this.peso = peso;
         this.fechaEntrada = fechaEntrada;
@@ -132,9 +129,9 @@ public abstract class Animal {
     public String toJSON() {
         String template = """
                 {
-                    "id": %d,
-                    "tipo": %s,
-                    "peso": %d,
+                    "id":%d,
+                    "tipo":"%s",
+                    "peso":%d,
                     "fechaEntrada":"%s",
                     "fechaSalida":"%s",
                     "especie":"%s",
