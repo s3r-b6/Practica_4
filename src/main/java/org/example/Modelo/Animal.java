@@ -91,27 +91,27 @@ public abstract class Animal {
     public String toJSON() {
         String template = """
                 {
-                    'id': %d,
-                    'peso': %d,
-                    'fechaEntrada':'%s',
-                    'fechaSalida':'%s',
-                    'especie':'%s',
-                    'estado':'%s',
-                    'fechasTratamientos':[%s],
-                    'descripcionTratamientos':[%s]
+                    "id": %d,
+                    "peso": %d,
+                    "fechaEntrada":"%s",
+                    "fechaSalida":"%s",
+                    "especie":"%s",
+                    "estado":"%s",
+                    "fechasTratamientos":[%s],
+                    "descripcionTratamientos":[%s]
                 },""";
 
         ArrayList<LocalDate[]> tratamientos = this.fechasTratamientos;
         StringBuilder fechasT = new StringBuilder();
         for (int i = 0; i < tratamientos.size(); i++) {
             LocalDate[] arr = tratamientos.get(i);
-            fechasT.append("['").append(arr[0]).append("','").append(arr[1]).append("'],");
+            fechasT.append("[\"").append(arr[0]).append("\",\"").append(arr[1]).append("\"],");
         }
         fechasT.deleteCharAt(fechasT.length() - 1);
 
         StringBuilder tratam = new StringBuilder();
         for (String t : descripcionTratamientos) {
-            tratam.append("'").append(t).append("',");
+            tratam.append("\"").append(t).append("\",");
         }
         tratam.deleteCharAt(tratam.length() - 1);
 

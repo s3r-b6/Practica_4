@@ -10,6 +10,7 @@ import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -112,7 +113,12 @@ public class Aplicacion {
             if (rand1 >= 2) e.nuevoTratamientoControlador("Pastillas C", getFechaAleatoria());
         });
 
-        guardarEstado(lista);
+        try {
+            guardarEstado(lista);
+        } catch (IOException e) {
+            //TODO
+            throw new RuntimeException(e);
+        }
     }
 
     private static LocalDate getFechaAleatoria() {
