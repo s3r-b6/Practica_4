@@ -91,6 +91,15 @@ public class Aplicacion {
         lista.add(new Controlador(new Reptil("Salamandra", lista.size() + 1, 1, true)));
         lista.add(new Controlador(new Mamifero("Gato", lista.size() + 1, 4, true)));
         lista.add(new Controlador(new Ave("Paloma", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
+        lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Reptil("Cocodrilo", lista.size() + 1, 18, true)));
+        lista.add(new Controlador(new Mamifero("Ciervo", lista.size() + 1, 25, true)));
+        lista.add(new Controlador(new Ave("Cigüeña", lista.size() + 1, 7, true)));
+        lista.add(new Controlador(new Reptil("Salamandra", lista.size() + 1, 1, true)));
+        lista.add(new Controlador(new Mamifero("Gato", lista.size() + 1, 4, true)));
+        lista.add(new Controlador(new Ave("Paloma", lista.size() + 1, 1, true)));
         //Cargar algunos tratamientos de prueba
         lista.forEach(e -> {
             int rand1 = (int) ((Math.random() * 3) + 0);
