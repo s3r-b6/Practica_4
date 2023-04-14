@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Ficheros {
-    static Path ruta = Path.of(System.getProperty("user.dir") + "/src/main/java/org/example/fichero.json");
+    static Path ruta = Path.of(System.getProperty("user.dir") + "/src/main/java/org/example/persistencia/fichero.json");
 
     public static void guardarEstado(ArrayList<Controlador> lista) throws IOException {
         StringBuilder str = new StringBuilder();
