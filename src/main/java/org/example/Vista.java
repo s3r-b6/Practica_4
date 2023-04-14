@@ -13,8 +13,10 @@ import java.awt.*;
  * sólo a los que el controlador le pasa a la hora de redibujar el componente
  */
 public class Vista {
+
     JPanel vistaNormal;
     JPanel vistaDetalle;
+
 
     /**
      * Este atributo marca si el animal ya no está bajo el cuidado del santuario, es decir, si ha muerto
@@ -31,20 +33,14 @@ public class Vista {
      * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
      * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
      */
-    public void actualizarVistas(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
+    Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
         fueraDelSantuario = estado.equals("Fallecido") || estado.equals("Liberado");
-        actualizarVistaNormal(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion));
-        actualizarVistaDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
+        this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion);
+        this.vistaDetalle = buildDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
     }
 
-    private void actualizarVistaNormal(JPanel contenedorCuerpo) {
-        this.vistaNormal = contenedorCuerpo;
-        this.vistaNormal.revalidate();
-        this.vistaNormal.repaint();
-    }
-
-    private void actualizarVistaDetalle(JPanel contenedorCuerpo, Object[][] historialTratamiento) {
-        DefaultTableModel model = new DefaultTableModel(historialTratamiento, new String[]{"Fecha-Inicio", "Tratamiento", "Fecha-Fin", "Completado"});
+    private JPanel buildDetalle(JPanel contenedorCuerpo, Object[][] historialTratamiento) {
+        DefaultTableModel model = new DefaultTableModel(historialTratamiento, new String[]{"Fecha-Inicio", "Fecha-Fin", "Tratamiento", "Completado"});
         JTable tabla = new JTable(model) {
             public Class getColumnClass(int column) {
                 return getValueAt(0, column).getClass();
@@ -53,12 +49,24 @@ public class Vista {
         tabla.setEnabled(false);
         tabla.setPreferredScrollableViewportSize(tabla.getPreferredSize());
         JScrollPane panelTratamientos = new JScrollPane(tabla);
-        this.vistaDetalle = new JPanel(new BorderLayout());
-        this.vistaDetalle.add(contenedorCuerpo, BorderLayout.NORTH);
-        this.vistaDetalle.add(panelTratamientos, BorderLayout.CENTER);
-        this.vistaDetalle.revalidate();
-        this.vistaDetalle.repaint();
+        JPanel cont = new JPanel(new BorderLayout());
+        cont.add(contenedorCuerpo, BorderLayout.NORTH);
+        cont.add(panelTratamientos, BorderLayout.CENTER);
+        return cont;
     }
+
+    public boolean isFueraDelSantuario() {
+        return fueraDelSantuario;
+    }
+
+    public JPanel getVistaNormal() {
+        return vistaNormal;
+    }
+
+    public JPanel getVistaDetalle() {
+        return vistaDetalle;
+    }
+
 
     private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
@@ -71,7 +79,7 @@ public class Vista {
         h2.add(new JLabel("Peso: " + peso + "kg"));
 
         JLabel img = getImgLabel(tipo, estado);
-        img.setSize(40, 40);
+        img.setSize(50, 50);
 
         JPanel headers = new JPanel(new GridLayout(2, 1));
         headers.add(h1);
@@ -103,7 +111,7 @@ public class Vista {
             case "Fallecido" -> imgPath.append("2.png");
             case "Liberado" -> imgPath.append("3.png");
         }
-        System.out.println(imgPath);
+        //System.out.println(imgPath);
         return new JLabel(new ImageIcon(String.valueOf(imgPath)));
     }
 }
