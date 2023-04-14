@@ -26,7 +26,6 @@ public class Controlador {
     }
 
     public Vista getVista() {
-        System.out.println(animal.toJSON());
         return this.vista;
     }
 

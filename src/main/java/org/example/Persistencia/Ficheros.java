@@ -21,11 +21,9 @@ public class Ficheros {
 
     public static void guardarEstado(ArrayList<Controlador> lista) {
         StringBuilder str = new StringBuilder();
-        for (Controlador c : lista) str.append(c.toJSON());
-
-        str.deleteCharAt(str.length() - 1);
-
-        System.out.println(str);
+        for (Controlador c : lista) str.append(c.toJSON()).append("\n");
+        str.deleteCharAt(str.length() - 1).deleteCharAt(str.length() - 1);
+        System.out.printf("[\n%s\n]%n", str);
 
     }
 
