@@ -85,6 +85,7 @@ public class Aplicacion {
     }
 
     private static void cargarMockData() {
+        //leerDatos -> array de animales. Aplicación: inicializa controladores y los almacena
         lista.add(new Controlador(new Reptil("Lagarto", lista.size() + 1, 1, true)));
         lista.add(new Controlador(new Mamifero("Perro", lista.size() + 1, 15, true)));
         lista.add(new Controlador(new Ave("Jilguero", lista.size() + 1, 1, true)));
