@@ -1,8 +1,11 @@
 package org.example.Modelo;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class Animal {
     int id;
@@ -22,6 +25,41 @@ public abstract class Animal {
         this.estado = Estado.Tratamiento;
         this.fechasTratamientos = new ArrayList<>();
         this.descripcionTratamientos = new ArrayList<>();
+    }
+
+    public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
+        Estado st = null;
+        switch (estado) {
+            case "Liberado" -> st = Estado.Fallecido;
+            case "Fallecido" -> st = Estado.Liberado;
+            case "Tratamiento" -> st = Estado.Tratamiento;
+        }
+
+        this.id = id;
+        this.peso = peso;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.especie = especie;
+        this.estado = st;
+        this.fechasTratamientos = new ArrayList<>(Arrays.asList(fechasTratamientos));
+        this.descripcionTratamientos = new ArrayList<>(Arrays.asList(descripcionTratamientos));
+    }
+
+    public static Animal rebuildFromData(int id, String tipo, int peso, LocalDate fechaEntrada, LocalDate fechaSalida,
+                                         String especie, String estado, String tipoLesion, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
+        switch (tipo) {
+            case "Ave" -> {
+                return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+            }
+            case "Mamifero" -> {
+                return new Mamifero(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+            }
+            case "Reptil" -> {
+                return new Reptil(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+            }
+        }
+
+        return null;
     }
 
     enum Estado {
@@ -87,16 +125,21 @@ public abstract class Animal {
         return true;
     }
 
+//    public Animal buildAnimal() {
+//
+//    }
 
     public String toJSON() {
         String template = """
                 {
                     "id": %d,
+                    "tipo": %s,
                     "peso": %d,
                     "fechaEntrada":"%s",
                     "fechaSalida":"%s",
                     "especie":"%s",
                     "estado":"%s",
+                    "tipoLesion": "%s",
                     "fechasTratamientos":[%s],
                     "descripcionTratamientos":[%s]
                 },""";
@@ -115,7 +158,8 @@ public abstract class Animal {
         }
         tratam.deleteCharAt(tratam.length() - 1);
 
-        return String.format(template, this.id, this.peso, this.getFechaEntrada(), this.getFechaSalida(), this.getEspecie(), this.getEstado(), fechasT, tratam);
+        return String.format(template, this.id, this.getClass().getSimpleName(), this.peso, this.getFechaEntrada(),
+                this.getFechaSalida(), this.getEspecie(), this.getEstado(), this.getTipoLesion(), fechasT, tratam);
     }
 
     public abstract String getTipoLesion();
