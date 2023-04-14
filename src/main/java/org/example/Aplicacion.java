@@ -13,6 +13,9 @@ import javax.swing.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static org.example.Persistencia.Ficheros.guardarEstado;
+
+
 /**
  * Esta clase contiene el main() y también contiene el punto de entrada a la interfaz, i.e., la ventana sobre
  * la que se insertan los animales.
@@ -107,6 +110,8 @@ public class Aplicacion {
             if (rand1 >= 1) e.nuevoTratamientoControlador("Medicina B", getFechaAleatoria());
             if (rand1 >= 2) e.nuevoTratamientoControlador("Pastillas C", getFechaAleatoria());
         });
+
+        guardarEstado(lista);
     }
 
     private static LocalDate getFechaAleatoria() {

@@ -25,9 +25,7 @@ public abstract class Animal {
     }
 
     enum Estado {
-        Liberado,
-        Tratamiento,
-        Fallecido
+        Liberado, Tratamiento, Fallecido
     }
 
     public int getId() {
@@ -62,12 +60,7 @@ public abstract class Animal {
             LocalDate[] fechasArray = fechasTratamientos.get(i);
             String descripcionTratamiento = descripcionTratamientos.get(i);
 
-            tratamientos[i] = new Object[]{
-                    fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    descripcionTratamiento,
-                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))
-            };
+            tratamientos[i] = new Object[]{fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), descripcionTratamiento, (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))};
         }
 
         return tratamientos;
@@ -80,8 +73,7 @@ public abstract class Animal {
 
 
     public boolean bajaAnimal() {
-        if (this.estado == Estado.Fallecido)
-            return false;
+        if (this.estado == Estado.Fallecido) return false;
         this.estado = Estado.Fallecido;
         this.fechaSalida = LocalDate.now();
         return true;
@@ -89,11 +81,41 @@ public abstract class Animal {
 
 
     public boolean liberacionAnimal() {
-        if (this.estado == Estado.Fallecido)
-            return false;
+        if (this.estado == Estado.Fallecido) return false;
         this.estado = Estado.Liberado;
         this.fechaSalida = LocalDate.now();
         return true;
+    }
+
+
+    public String toJSON() {
+        String template = """
+                {
+                    'id': %d,
+                    'peso': %d,
+                    'fechaEntrada':'%s',
+                    'fechaSalida':'%s',
+                    'especie':'%s',
+                    'estado':'%s',
+                    'fechasTratamientos':[%s],
+                    'descripcionTratamientos':[%s]
+                },""";
+
+        ArrayList<LocalDate[]> tratamientos = this.fechasTratamientos;
+        StringBuilder fechasT = new StringBuilder();
+        for (int i = 0; i < tratamientos.size(); i++) {
+            LocalDate[] arr = tratamientos.get(i);
+            fechasT.append("['").append(arr[0]).append("','").append(arr[1]).append("'],");
+        }
+        fechasT.deleteCharAt(fechasT.length() - 1);
+
+        StringBuilder tratam = new StringBuilder();
+        for (String t : descripcionTratamientos) {
+            tratam.append("'").append(t).append("',");
+        }
+        tratam.deleteCharAt(tratam.length() - 1);
+
+        return String.format(template, this.id, this.peso, this.getFechaEntrada(), this.getFechaSalida(), this.getEspecie(), this.getEstado(), fechasT, tratam);
     }
 
     public abstract String getTipoLesion();
