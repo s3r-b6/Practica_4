@@ -11,8 +11,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import static org.example.Aplicacion.recargarVistas;
+import static org.example.Aplicacion.recrearVentanas;
 
+/**
+ * Esta clase crea el JFrame de la "ventana de tratamientos" de la aplicación
+ */
 public class VentanaTratamiento extends JFrame {
     public VentanaTratamiento(Controlador c) {
         this.setTitle("Panel de tratamientos");
@@ -66,7 +69,7 @@ public class VentanaTratamiento extends JFrame {
         }
         c.nuevoTratamientoControlador(descripcionTexto, fechaParseada);
         ventanaTratamiento.dispose();
-        recargarVistas(c);
+        recrearVentanas(c);
     }
 
 

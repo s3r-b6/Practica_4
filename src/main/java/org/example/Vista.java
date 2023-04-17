@@ -5,38 +5,36 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 /**
- * Esencialmente, un JPanel y las operaciones que se realizan sobre él.
- * Es la representación gráfica del modelo de datos. Cuando el Controlador actualiza el estado de algún dato, envía
- * una señal a la vista del dato para que dibuje los nuevos datos. La vista no tiene acceso a los datos del modelo,
- * sólo a los que el controlador le pasa a la hora de redibujar el componente
+ * Es la representación de cara al usuario del modelo de datos. Cuando el Controlador actualiza el estado de
+ * algún dato, envía una señal a la vista del dato para que dibuje los nuevos datos. La vista no tiene acceso
+ * a los datos del modelo, sólo a los que el controlador le pasa a la hora de redibujar el componente
  */
 public class Vista {
 
+    /**
+     * JPanel que representa el estado general del animal
+     */
     JPanel vistaNormal;
+    /**
+     * JPanel que representa el estado general del animal, y, además, datos específicos como sus tratamientos
+     */
     JPanel vistaDetalle;
 
-
     /**
-     * Este atributo marca si el animal ya no está bajo el cuidado del santuario, es decir, si ha muerto
-     * o ha sido liberado. Si el animal ya no está bajo el control del mismo, no tiene sentido mostrar los
-     * botones para interactuar con él (liberarlo, declararlo como fallecido, o, cambiar su tratamiento).
-     */
-    boolean fueraDelSantuario;
-
-    /**
-     * Este método toma los atributos del tipo de dato Mamifero, Reptil o Ave y crea un JPanel con su representación
-     * para el usuario; cada vez que se llama a actualizarVista se reemplaza el atributo panel de la vista.
-     * Probablemente sería mejor -y más o menos sencillo- actualizar selectivamente la parte del panel que
-     * ha sido modificada, y, luego revalidar y repintar el componente.
-     * P.ej., si se modifica el estado, o bien borrar ese JLabel y volverlo a añadir en esa posición con el valor
-     * adecuado, o bien seleccionar el JLabel  y meter el nuevo estado.
+     * El constructor toma los datos del modelo y crea una vista normal y una vista detalle.
      */
     Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
-        fueraDelSantuario = estado.equals("Fallecido") || estado.equals("Liberado");
         this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion);
         this.vistaDetalle = buildDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
     }
 
+    /**
+     * Toma un cuerpo y la representación de tabla del historialTratamiento
+     *
+     * @param contenedorCuerpo     El cuerpo "normal" del componente. Una llamada a buildCuerpo
+     * @param historialTratamiento La representación de los tratamientos como un array de arrays de objetos (strings)
+     * @return Devuelve el JPanel que representa "en detalle" al animal
+     */
     private JPanel buildDetalle(JPanel contenedorCuerpo, Object[][] historialTratamiento) {
         DefaultTableModel model = new DefaultTableModel(historialTratamiento, new String[]{"Fecha-Inicio", "Fecha-Fin", "Tratamiento", "Completado"});
         JTable tabla = new JTable(model) {
@@ -53,10 +51,6 @@ public class Vista {
         return cont;
     }
 
-    public boolean isFueraDelSantuario() {
-        return fueraDelSantuario;
-    }
-
     public JPanel getVistaNormal() {
         return vistaNormal;
     }
@@ -66,6 +60,19 @@ public class Vista {
     }
 
 
+    /**
+     * A partir de los datos se construye un cuerpo (un JPanel) que muestra todos los datos del animal
+     *
+     * @param tipo         El tipo de animal
+     * @param id           El id del animal
+     * @param especie      La especie del animal
+     * @param fechaEntrada La fecha en que entró al centros
+     * @param fechaSalida  La fecha en que salió del centro (liberación/fallecimiento)
+     * @param estado       El estado en que se encuentra
+     * @param peso         El peso del animal
+     * @param tipoLesion   El tipo de lesión por que fue ingresado
+     * @return Devuelve el JPanel que representa los datos del animal
+     */
     private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, String tipoLesion) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
         JPanel h1 = new JPanel(new GridLayout(1, 2));
@@ -96,20 +103,27 @@ public class Vista {
         return contenedorCuerpo;
     }
 
+    /**
+     * Devuelve un JLabel con una imagen u otra según el estado y tipo del animal
+     *
+     * @param tipo   El tipo del animal
+     * @param estado El estado en que se encuentra
+     * @return La imagen que representa ambos datos
+     */
     private static JLabel getImgLabel(String tipo, String estado) {
         StringBuilder imgPath = new StringBuilder("src/main/java/org/example/IMG/");
         switch (tipo) {
             case "Ave" -> imgPath.append("ave_");
             case "Mamifero" -> imgPath.append("mam_");
             case "Reptil" -> imgPath.append("rep_");
+            default -> throw new IllegalStateException("Valor inesperado: " + tipo);
         }
-
         switch (estado) {
             case "Tratamiento" -> imgPath.append("1.png");
             case "Fallecido" -> imgPath.append("2.png");
             case "Liberado" -> imgPath.append("3.png");
+            default -> throw new IllegalStateException("Valor inesperado: " + estado);
         }
-        //System.out.println(imgPath);
         return new JLabel(new ImageIcon(String.valueOf(imgPath)));
     }
 }

@@ -15,9 +15,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Esta clase gestiona la persistencia de la aplicación. Se realiza a través de un fichero json
+ */
 public class Ficheros {
     static Path ruta = Path.of(System.getProperty("user.dir") + "/src/main/java/org/example/persistencia/fichero.json");
 
+    /**
+     * Este método guarda el estado de la lista en el fichero
+     *
+     * @param lista La lista de animales (sus controladores) que van a guardarse
+     * @throws IOException
+     */
     public static void guardarEstado(ArrayList<Controlador> lista) throws IOException {
         StringBuilder str = new StringBuilder();
         for (Controlador c : lista) str.append(c.toJSON()).append("\n");
@@ -32,6 +41,13 @@ public class Ficheros {
         }
     }
 
+    /**
+     * Este método reconstruye la lista de animales a partir del fichero json
+     *
+     * @return Una lista de animales reconstruida
+     * @throws JSONException
+     * @throws IOException
+     */
     public static ArrayList<Animal> reconstruirLista() throws JSONException, IOException {
         String jsonString = new String(Files.readAllBytes(ruta));
 //        System.out.println(jsonString);
