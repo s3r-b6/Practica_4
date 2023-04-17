@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 
 /**
+ * @author Sergio Bermejo de las Heras
  * Esta clase es el punto de entrada a la aplicación. Tiene como atributos las diferentes ventanas de la aplicación.
  */
 public class Aplicacion {
