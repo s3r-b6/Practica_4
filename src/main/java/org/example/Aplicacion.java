@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class Aplicacion {
 
-    //TODO: Javadoc, iconos, imágenes, comentar y limpiar código
+    //TODO: comentar y limpiar código
 
     static JFrame ventanaPrincipal;
     static JFrame ventanaDetalle;
