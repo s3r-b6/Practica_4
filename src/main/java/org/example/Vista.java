@@ -51,10 +51,16 @@ public class Vista {
         return cont;
     }
 
+    /**
+     * @return La vista normal
+     */
     public JPanel getVistaNormal() {
         return vistaNormal;
     }
 
+    /**
+     * @return La vista detalle
+     */
     public JPanel getVistaDetalle() {
         return vistaDetalle;
     }

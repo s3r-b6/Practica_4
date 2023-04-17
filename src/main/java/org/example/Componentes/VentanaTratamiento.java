@@ -14,9 +14,14 @@ import java.time.format.DateTimeParseException;
 import static org.example.Aplicacion.recrearVentanas;
 
 /**
- * Esta clase crea el JFrame de la "ventana de tratamientos" de la aplicación
+ * Esta clase representa el JFrame de la "ventana de tratamientos" de la aplicación
  */
 public class VentanaTratamiento extends JFrame {
+    /**
+     * El constructor del la ventana para añadir nuevos tratamientos a un animal.
+     *
+     * @param c El controlador del animal para el que se va a crear un tratamiento
+     */
     public VentanaTratamiento(Controlador c) {
         this.setTitle("Panel de tratamientos");
         this.setSize(450, 325);
@@ -51,6 +56,15 @@ public class VentanaTratamiento extends JFrame {
         this.setVisible(true);
     }
 
+    /**
+     * La acción que trata de añadir un nuevo tratamiento desde la ventana. Sólo envía la señal de guardar
+     * el nuevo tratamiento si los valores son validados correctamentes
+     *
+     * @param ventanaTratamiento Un puntero a la ventana, para cerrarla si tiene éxito
+     * @param c                  El controlador del animal
+     * @param fecha              El contenedor en que se introduce la fecha de fin del tratamiento
+     * @param textArea           El contenedor en que se introduce la descripción del tratamiento
+     */
     public static void accionAddTratamiento(VentanaTratamiento ventanaTratamiento, Controlador c, JTextField fecha, JTextArea textArea) {
         String fechaTexto = fecha.getText().trim();
         String descripcionTexto = textArea.getText().trim();

@@ -11,7 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
- * Esta clase crea el JFrame de la "ventana de alta de animales" de la aplicación
+ * Esta clase representa el JFrame de la "ventana de alta de animales" de la aplicación
  */
 public class VentanaAlta extends JFrame {
     /**

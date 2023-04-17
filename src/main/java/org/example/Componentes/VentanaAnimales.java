@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.example.Aplicacion.cargarVentanaDetalle;
 
 /**
- * Esta clase crea el JFrame de la "ventana principal" de la aplicación
+ * Esta clase representa el JFrame de la "ventana principal" de la aplicación
  */
 public class VentanaAnimales extends JFrame {
     /**

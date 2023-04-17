@@ -10,7 +10,7 @@ import java.awt.*;
 import static org.example.Aplicacion.cargarVentanaTratamiento;
 
 /**
- * Esta clase crea el JFrame de la "ventana de vista de detalle" de la aplicación
+ * Esta clase representa el JFrame de la "ventana de vista de detalle" de la aplicación
  */
 public class VentanaAnimal extends JFrame {
 
