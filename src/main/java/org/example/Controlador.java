@@ -86,4 +86,12 @@ public class Controlador {
     public String getEstado() {
         return this.animal.getEstado();
     }
+
+
+    /**
+     * @return La vista del animal
+     */
+    public String getFamilia() {
+        return this.vista.getFamilia();
+    }
 }

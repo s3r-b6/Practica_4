@@ -61,16 +61,89 @@ public class Aplicacion {
     public static void cargarVentanaPrincipal(VentanaAnimales v) {
         if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         ventanaPrincipal = v;
+
+        ButtonGroup especieRButtons = new ButtonGroup();
+        ButtonGroup estadoRButtons = new ButtonGroup();
+
+        JPanel contReptil = new JPanel(new FlowLayout());
+        JPanel contAve = new JPanel(new FlowLayout());
+        JPanel contMamifero = new JPanel(new FlowLayout());
+        JRadioButton ave = new JRadioButton();
+        JRadioButton mamifero = new JRadioButton();
+        JRadioButton reptil = new JRadioButton();
+        ave.setActionCommand("Ave");
+        mamifero.setActionCommand("Mamifero");
+        reptil.setActionCommand("Reptil");
+        contReptil.add(new JLabel("Reptil"));
+        contReptil.add(reptil);
+        contAve.add(new JLabel("Ave"));
+        contAve.add(ave);
+        contMamifero.add(new JLabel("Mamifero"));
+        contMamifero.add(mamifero);
+
+        especieRButtons.add(ave);
+        especieRButtons.add(mamifero);
+        especieRButtons.add(reptil);
+
+        JPanel contTratamiento = new JPanel(new FlowLayout());
+        JPanel contLiberados = new JPanel(new FlowLayout());
+        JPanel contFallecidos = new JPanel(new FlowLayout());
+        JRadioButton tratamiento = new JRadioButton();
+        JRadioButton liberados = new JRadioButton();
+        JRadioButton fallecidos = new JRadioButton();
+        tratamiento.setActionCommand("Tratamiento");
+        liberados.setActionCommand("Liberado");
+        fallecidos.setActionCommand("Fallecido");
+        contTratamiento.add(new JLabel("Tratamiento"));
+        contTratamiento.add(tratamiento);
+        contLiberados.add(new JLabel("Liberado"));
+        contLiberados.add(liberados);
+        contFallecidos.add(new JLabel("Fallecido"));
+        contFallecidos.add(fallecidos);
+        estadoRButtons.add(tratamiento);
+        estadoRButtons.add(liberados);
+        estadoRButtons.add(fallecidos);
+
+        JPanel contenedorChecks = new JPanel(new GridLayout(1, 6));
+        contenedorChecks.add(contMamifero);
+        contenedorChecks.add(contReptil);
+        contenedorChecks.add(contAve);
+        contenedorChecks.add(contTratamiento);
+        contenedorChecks.add(contLiberados);
+        contenedorChecks.add(contFallecidos);
+
         JButton botonAlta = new JButton("Alta");
         JButton botonGuardar = new JButton("Guardar");
+        JButton botonBuscar = new JButton("Buscar");
         JPanel contenedorBotones = new JPanel(new FlowLayout());
+        botonBuscar.addActionListener(e -> accionBuscar(especieRButtons, estadoRButtons));
 
         botonAlta.addActionListener(e -> cargarVentanaAlta(new VentanaAlta(lista.size())));
         botonGuardar.addActionListener(e -> accionGuardar(lista));
-        contenedorBotones.add(botonAlta);
+        contenedorBotones.add(contenedorChecks);
+        contenedorBotones.add(botonBuscar);
         contenedorBotones.add(botonGuardar);
-
+        contenedorBotones.add(botonAlta);
         v.getContentPane().add(contenedorBotones, BorderLayout.SOUTH);
+    }
+
+    private static void accionBuscar(ButtonGroup especieRButtons, ButtonGroup estadoRButtons) {
+        ButtonModel especieSelecc = especieRButtons.getSelection();
+        ButtonModel estadoSelecc = estadoRButtons.getSelection();
+
+        if (especieSelecc == null && estadoSelecc == null) {
+            cargarVentanaPrincipal(new VentanaAnimales(lista));
+            return;
+        }
+
+        //Si el alguno de los botones no está seleccionado, enviar un string vacío para gestionarlo
+        // dentro del constructor, else, enviar la opción
+        String[] filtro = {
+                especieSelecc == null ? "" : especieSelecc.getActionCommand(),
+                estadoSelecc == null ? "" : estadoSelecc.getActionCommand()
+        };
+
+        cargarVentanaPrincipal(new VentanaAnimales(lista, filtro));
     }
 
     /**

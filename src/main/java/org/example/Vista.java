@@ -21,11 +21,24 @@ public class Vista {
     JPanel vistaDetalle;
 
     /**
+     * Este atributo expone la especie del Animal
+     */
+    String familia;
+
+    /**
      * El constructor toma los datos del modelo y crea una vista normal y una vista detalle.
      */
     Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
         this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion);
         this.vistaDetalle = buildDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
+        this.familia = tipo;
+    }
+
+    /**
+     * @return La familia del animal
+     */
+    public String getFamilia() {
+        return this.familia;
     }
 
     /**

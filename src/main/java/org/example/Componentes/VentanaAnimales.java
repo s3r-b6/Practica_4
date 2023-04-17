@@ -58,4 +58,60 @@ public class VentanaAnimales extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
+
+    public VentanaAnimales(ArrayList<Controlador> lista, String[] filtro) {
+        this.setLayout(new BorderLayout());
+        this.setTitle("Ventana principal");
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        int size = 350 * (lista.size() / 3);
+        this.setPreferredSize(new Dimension(Math.min(size, 1500), 850));
+
+        GridLayout gl = new GridLayout(3, lista.size() / 3);
+        JPanel gridPane = new JPanel(gl);
+        gl.setHgap(25);
+        gl.setVgap(25);
+
+        int items = 0;
+
+        for (Controlador c : lista) {
+            String filtroEsp = filtro[0];
+            String filtroEst = filtro[1];
+
+            if (!filtroEsp.equals("") && !c.getFamilia().equals(filtroEsp)) continue;
+            if (!filtroEst.equals("") && !c.getEstado().equals(filtroEst)) continue;
+
+            items += 1;
+
+            JPanel contenedorAnimal = new JPanel(new BorderLayout());
+            JButton botonDetalle = new JButton("Detalles");
+            botonDetalle.addActionListener(actionEvent -> cargarVentanaDetalle(new VentanaAnimal(c)));
+
+            Vista vistas = c.getVista();
+
+            contenedorAnimal.add(vistas.getVistaNormal(), BorderLayout.CENTER);
+            contenedorAnimal.add(botonDetalle, BorderLayout.SOUTH);
+
+            gridPane.add(contenedorAnimal);
+        }
+
+        gridPane.setPreferredSize(new Dimension(245 * (items / 2), 725));
+        this.add(gridPane, BorderLayout.CENTER);
+
+        JLabel filtroLabel = new JLabel("Búsqueda por: " + filtro[0] + " " + filtro[1]);
+        filtroLabel.setFont(new Font("Arial", Font.BOLD, 22));
+
+        filtroLabel.setHorizontalAlignment(JLabel.CENTER);
+        this.add(filtroLabel, BorderLayout.NORTH);
+
+        JScrollPane scroll = new JScrollPane(gridPane);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        this.getContentPane().add(scroll);
+
+        //centrar la ventana
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+    }
 }
