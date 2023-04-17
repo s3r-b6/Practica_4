@@ -128,12 +128,18 @@ public class Aplicacion {
         cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
 
+    /**
+     * El método desencadenado por el botón de guardar. Envía la lista de controladores al método que se encarga
+     * de persistir los datos, si el usuario confirma que desea hacerlo.
+     *
+     * @param lista La lista de controladores
+     */
     private static void accionGuardar(ArrayList<Controlador> lista) {
         Object[] opt = {"Sí", "No"};
         if (JOptionPane.showOptionDialog(null,
-                "¿Seguro que deseas guardar? Esta acción es irreversible",
+                "¿Seguro que deseas guardar?\n Esta acción es irreversible",
                 "Confirmación de guardado",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
                 null, opt, opt[0]) != JOptionPane.YES_OPTION) {
             return;
         }
