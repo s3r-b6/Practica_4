@@ -41,7 +41,7 @@ public class VentanaAnimal extends JFrame {
         Vista v = c.getVista();
         this.add(v.getVistaDetalle(), BorderLayout.CENTER);
         String estado = c.getEstado();
-        if (estado.equals("Fallecido") || estado.equals("Liberado")) this.add(contenedorBotones, BorderLayout.SOUTH);
+        if (!(estado.equals("Fallecido") || estado.equals("Liberado"))) this.add(contenedorBotones, BorderLayout.SOUTH);
         //centrar la ventana
         this.pack();
         this.setLocationRelativeTo(null);
