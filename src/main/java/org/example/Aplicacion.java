@@ -62,8 +62,26 @@ public class Aplicacion {
         if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         ventanaPrincipal = v;
 
+        JButton botonAlta = new JButton("Alta");
+        JButton botonGuardar = new JButton("Guardar");
+        JPanel contenedorBotones = new JPanel(new FlowLayout());
+
+        botonAlta.addActionListener(e -> cargarVentanaAlta(new VentanaAlta(lista.size())));
+        botonGuardar.addActionListener(e -> accionGuardar(lista));
+
+        attachFiltros(contenedorBotones);
+        contenedorBotones.add(botonGuardar);
+        contenedorBotones.add(botonAlta);
+        v.getContentPane().add(contenedorBotones, BorderLayout.SOUTH);
+
+        contenedorBotones.revalidate();
+        contenedorBotones.repaint();
+    }
+
+    public static void attachFiltros(JPanel contenedorBotones) {
         ButtonGroup especieRButtons = new ButtonGroup();
         ButtonGroup estadoRButtons = new ButtonGroup();
+        JButton botonBuscar = new JButton("Buscar");
 
         JPanel contReptil = new JPanel(new FlowLayout());
         JPanel contAve = new JPanel(new FlowLayout());
@@ -112,19 +130,9 @@ public class Aplicacion {
         contenedorChecks.add(contLiberados);
         contenedorChecks.add(contFallecidos);
 
-        JButton botonAlta = new JButton("Alta");
-        JButton botonGuardar = new JButton("Guardar");
-        JButton botonBuscar = new JButton("Buscar");
-        JPanel contenedorBotones = new JPanel(new FlowLayout());
         botonBuscar.addActionListener(e -> accionBuscar(especieRButtons, estadoRButtons));
-
-        botonAlta.addActionListener(e -> cargarVentanaAlta(new VentanaAlta(lista.size())));
-        botonGuardar.addActionListener(e -> accionGuardar(lista));
         contenedorBotones.add(contenedorChecks);
         contenedorBotones.add(botonBuscar);
-        contenedorBotones.add(botonGuardar);
-        contenedorBotones.add(botonAlta);
-        v.getContentPane().add(contenedorBotones, BorderLayout.SOUTH);
     }
 
     private static void accionBuscar(ButtonGroup especieRButtons, ButtonGroup estadoRButtons) {
