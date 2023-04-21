@@ -7,6 +7,8 @@ import org.example.Modelo.Reptil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -34,6 +36,7 @@ public class VentanaAlta extends JFrame {
         JPanel contenedorTipo = new JPanel(new GridLayout(1, 1));
         JPanel contenedorGravedad = new JPanel(new GridLayout(1, 1));
 
+        JLabel labelTipoLesion = new JLabel("Caza / Atropello / Infeccion: ");
         JLabel errorPeso = new JLabel();
 
         JTextField especie = new JTextField(10);
@@ -48,6 +51,16 @@ public class VentanaAlta extends JFrame {
         mamiferoBoton.setActionCommand("Mamífero");
         JRadioButton reptilBoton = new JRadioButton("Reptil");
         reptilBoton.setActionCommand("Reptil");
+
+        aveBoton.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Caza");
+        });
+        mamiferoBoton.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Atropello");
+        });
+        reptilBoton.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Infección");
+        });
 
         JRadioButton gravedadAlta = new JRadioButton("Alta");
         gravedadAlta.setActionCommand("Alta");
@@ -89,7 +102,7 @@ public class VentanaAlta extends JFrame {
         contenedorLabelPeso.add(errorPeso);
         contenedorPeso.add(contenedorLabelPeso);
         contenedorPeso.add(pesoTF);
-        contenedorLesiones.add(new JLabel("Caza / Atropello / Infeccion: "));
+        contenedorLesiones.add(labelTipoLesion);
         contenedorLesiones.add(tipoLesion);
 
         contenedorCampos.add(contenedorTipo);
