@@ -15,6 +15,7 @@ public abstract class Animal {
     LocalDate fechaSalida;
     String especie;
     Estado estado;
+    Gravedad gravedad;
     ArrayList<LocalDate[]> fechasTratamientos;
     ArrayList<String> descripcionTratamientos;
 
@@ -26,7 +27,8 @@ public abstract class Animal {
      * @param peso    El peso
      * @param especie La especie
      */
-    public Animal(int id, int peso, String especie) {
+    public Animal(int id, int peso, String especie, String gravedad) {
+        System.out.println(gravedad);
         this.id = id;
         this.peso = peso;
         this.fechaEntrada = LocalDate.now();
@@ -34,6 +36,50 @@ public abstract class Animal {
         this.estado = Estado.Tratamiento;
         this.fechasTratamientos = new ArrayList<>();
         this.descripcionTratamientos = new ArrayList<>();
+        switch (gravedad) {
+            case "Alta" -> this.gravedad = Gravedad.Alta;
+            case "Media" -> this.gravedad = Gravedad.Media;
+            case "Baja" -> this.gravedad = Gravedad.Baja;
+            case "N/A" -> this.gravedad = Gravedad.NA;
+        }
+    }
+
+    public boolean aumentarGravedad() {
+        switch (this.gravedad) {
+            case Alta -> {
+                return false;
+            }
+            case Media -> {
+                this.gravedad = Gravedad.Alta;
+                return true;
+            }
+            case Baja -> {
+                this.gravedad = Gravedad.Media;
+                return true;
+            }
+            default -> {
+                this.gravedad = Gravedad.Baja;
+                return true;
+            }
+        }
+
+    }
+
+    public boolean disminuirGravedad() {
+        switch (gravedad) {
+            case Alta -> {
+                this.gravedad = Gravedad.Media;
+                return true;
+            }
+            case Baja -> {
+                this.gravedad = Gravedad.NA;
+                return true;
+            }
+            default -> {
+                this.gravedad = Gravedad.Baja;
+                return true;
+            }
+        }
     }
 
     /**
@@ -49,19 +95,18 @@ public abstract class Animal {
      * @param fechasTratamientos      Array de arrays. Las fechas de inicio[x][0] y fin[x][1] de los tratamientos
      * @param descripcionTratamientos Las descripciones de los diferentes tratamientos
      */
-    public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
-        Estado st = null;
+    public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado,
+                  LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
         switch (estado) {
-            case "Liberado" -> st = Estado.Liberado;
-            case "Fallecido" -> st = Estado.Fallecido;
-            case "Tratamiento" -> st = Estado.Tratamiento;
+            case "Liberado" -> this.estado = Estado.Liberado;
+            case "Fallecido" -> this.estado = Estado.Fallecido;
+            case "Tratamiento" -> this.estado = Estado.Tratamiento;
         }
         this.id = id;
         this.peso = peso;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.especie = especie;
-        this.estado = st;
         this.fechasTratamientos = new ArrayList<>(Arrays.asList(fechasTratamientos));
         this.descripcionTratamientos = new ArrayList<>(Arrays.asList(descripcionTratamientos));
     }
@@ -79,19 +124,21 @@ public abstract class Animal {
      * @param fechasTratamientos      Array de arrays. Las fechas de inicio[x][0] y fin[x][1] de los tratamientos
      * @param descripcionTratamientos Las descripciones de los diferentes tratamientos
      * @param tipoLesion              El tipo de lesión del animal
+     * @param gravedad                El grado de importancia de la lesión
      * @return Devuelve un Animal
      */
     public static Animal rebuildFromData(int id, String tipo, int peso, LocalDate fechaEntrada, LocalDate fechaSalida,
-                                         String especie, String estado, String tipoLesion, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
+                                         String especie, String estado, String tipoLesion, LocalDate[][] fechasTratamientos,
+                                         String[] descripcionTratamientos, String gravedad) {
         switch (tipo) {
             case "Ave" -> {
-                return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+                return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos, gravedad);
             }
             case "Mamifero" -> {
-                return new Mamifero(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+                return new Mamifero(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos, gravedad);
             }
             case "Reptil" -> {
-                return new Reptil(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos);
+                return new Reptil(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos, gravedad);
             }
         }
 
@@ -99,10 +146,18 @@ public abstract class Animal {
     }
 
     /**
-     * Este tipo representa los 3 posibles estados del animal
+     * Este tipo representa los 3 posibles estados del animal. NA significa que por cualquier razón no se asignó
+     * una gravedad
      */
     enum Estado {
         Liberado, Tratamiento, Fallecido
+    }
+
+    /**
+     * Este tipo representa las gravedades válidas del tipo de lesión
+     */
+    enum Gravedad {
+        Alta, Media, Baja, NA
     }
 
     /**
@@ -222,6 +277,7 @@ public abstract class Animal {
                     "especie":"%s",
                     "estado":"%s",
                     "tipoLesion": "%s",
+                    "gravedad": "%s",
                     "fechasTratamientos":[%s],
                     "descripcionTratamientos":[%s]
                 },""";
@@ -238,8 +294,26 @@ public abstract class Animal {
         }
         tratam.deleteCharAt(tratam.length() - 1);
 
-        return String.format(plantilla, this.id, this.getClass().getSimpleName(), this.peso, this.getFechaEntrada(),
-                this.getFechaSalida(), this.getEspecie(), this.getEstado(), this.getTipoLesion(), fechasT, tratam);
+        return String.format(plantilla, this.getId(), this.getClass().getSimpleName(), this.getPeso(), this.getFechaEntrada(),
+                this.getFechaSalida(), this.getEspecie(), this.getEstado(), this.getTipoLesion(), this.getGravedad(), fechasT, tratam);
+    }
+
+    public String getGravedad() {
+        switch (gravedad) {
+            case Alta -> {
+                return "Alta";
+            }
+            case Media -> {
+                return "Media";
+            }
+            case Baja -> {
+                return "Baja";
+            }
+            default -> {
+                return "N/a";
+            }
+        }
+
     }
 
     /**

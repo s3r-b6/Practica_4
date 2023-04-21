@@ -28,9 +28,10 @@ public class Vista {
     /**
      * El constructor toma los datos del modelo y crea una vista normal y una vista detalle.
      */
-    Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, Object[][] historialTratamiento, String tipoLesion) {
-        this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion);
-        this.vistaDetalle = buildDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion), historialTratamiento);
+    Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso,
+          Object[][] historialTratamiento, String tipoLesion, String gravedad) {
+        this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion, gravedad);
+        this.vistaDetalle = buildDetalle(buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion, gravedad), historialTratamiento);
         this.familia = tipo;
     }
 
@@ -92,7 +93,8 @@ public class Vista {
      * @param tipoLesion   El tipo de lesión por que fue ingresado
      * @return Devuelve el JPanel que representa los datos del animal
      */
-    private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso, String tipoLesion) {
+    private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida,
+                               String estado, int peso, String tipoLesion, String gravedad) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
         JPanel h1 = new JPanel(new GridLayout(1, 2));
         h1.add(new JLabel("Familia: " + tipo));
@@ -114,7 +116,16 @@ public class Vista {
         JLabel labelFechaSalida = new JLabel();
         if (!fechaSalida.equals("")) labelFechaSalida.setText("Fecha baja: " + fechaSalida);
         datosEntrada.add(labelFechaSalida);
-        datosEntrada.add(new JLabel("Tipo lesión: " + tipoLesion));
+        JLabel labelLesion = new JLabel("Tipo lesión: " + tipoLesion);
+        if (!estado.equals("Fallecido") && !estado.equals("Liberado")) {
+            switch (gravedad) {
+                case "Alta" -> labelLesion.setForeground(Color.RED);
+                case "Media" -> labelLesion.setForeground(Color.YELLOW);
+                case "Baja" -> labelLesion.setForeground(Color.GREEN);
+                default -> labelLesion.setForeground(Color.BLACK);
+            }
+        }
+        datosEntrada.add(labelLesion);
         datosEntrada.add(new JLabel("Estado " + estado));
         contenedorCuerpo.add(headers, BorderLayout.NORTH);
         contenedorCuerpo.add(img, BorderLayout.CENTER);

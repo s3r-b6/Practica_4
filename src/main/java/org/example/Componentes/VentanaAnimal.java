@@ -26,7 +26,7 @@ public class VentanaAnimal extends JFrame {
         this.setTitle("Vista de animal");
         this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
 
-        JPanel contenedorBotones = new JPanel(new GridLayout(1, 3));
+        JPanel contenedorBotones = new JPanel(new GridLayout(1, 4));
         JButton botonBaja = new JButton("Baja");
         JButton botonLiberar = new JButton("Liberar");
         JButton botonTratamiento = new JButton("Tratamiento");
@@ -34,6 +34,23 @@ public class VentanaAnimal extends JFrame {
         botonLiberar.addActionListener(e -> accionLiberar(c));
         botonTratamiento.addActionListener(e -> cargarVentanaTratamiento(new VentanaTratamiento(c)));
 
+        JPanel contenedorGravedad = new JPanel(new FlowLayout());
+        JLabel labelGravedad = new JLabel("Gravedad");
+        labelGravedad.setVerticalAlignment(SwingConstants.CENTER);
+        contenedorGravedad.add(labelGravedad);
+
+        JPanel contBtnGravedad = new JPanel(new GridLayout(2, 1));
+        JButton aumentarGrav = new JButton("⬆");
+        JButton dismGravedad = new JButton("⬇");
+
+        aumentarGrav.addActionListener(e -> accionAugmGrav(c));
+        dismGravedad.addActionListener(e -> accionDismGravedad(c));
+
+        contBtnGravedad.add(aumentarGrav);
+        contBtnGravedad.add(dismGravedad);
+        contenedorGravedad.add(contBtnGravedad);
+
+        contenedorBotones.add(contenedorGravedad);
         contenedorBotones.add(botonBaja);
         contenedorBotones.add(botonLiberar);
         contenedorBotones.add(botonTratamiento);
@@ -46,6 +63,16 @@ public class VentanaAnimal extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+    }
+
+    private static void accionAugmGrav(Controlador c) {
+        c.aumentarGravedadCont();
+        Aplicacion.recrearVentanas(c);
+    }
+
+    private static void accionDismGravedad(Controlador c) {
+        c.dismGravedadCont();
+        Aplicacion.recrearVentanas(c);
     }
 
 

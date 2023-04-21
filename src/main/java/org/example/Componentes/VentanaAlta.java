@@ -32,6 +32,7 @@ public class VentanaAlta extends JFrame {
         JPanel contenedorFechaEntrada = new JPanel(new GridLayout(2, 2));
         JPanel contenedorLesiones = new JPanel(new GridLayout(1, 2));
         JPanel contenedorTipo = new JPanel(new GridLayout(1, 1));
+        JPanel contenedorGravedad = new JPanel(new GridLayout(1, 1));
 
         JLabel errorPeso = new JLabel();
 
@@ -39,6 +40,8 @@ public class VentanaAlta extends JFrame {
         JTextField pesoTF = new JTextField(4);
 
         ButtonGroup familiasBtn = new ButtonGroup();
+        ButtonGroup gravedadBtn = new ButtonGroup();
+
         JRadioButton aveBoton = new JRadioButton("Ave");
         aveBoton.setActionCommand("Ave");
         JRadioButton mamiferoBoton = new JRadioButton("Mamífero");
@@ -46,13 +49,20 @@ public class VentanaAlta extends JFrame {
         JRadioButton reptilBoton = new JRadioButton("Reptil");
         reptilBoton.setActionCommand("Reptil");
 
+        JRadioButton gravedadAlta = new JRadioButton("Alta");
+        gravedadAlta.setActionCommand("Alta");
+        JRadioButton gravedadMedia = new JRadioButton("Media");
+        gravedadMedia.setActionCommand("Media");
+        JRadioButton gravedadBaja = new JRadioButton("Baja");
+        gravedadBaja.setActionCommand("Baja");
+
         JCheckBox tipoLesion = new JCheckBox();
         JButton botonAddAnimal = new JButton("Añadir");
 
         errorPeso.setForeground(Color.RED);
         pesoTF.addKeyListener(adaptadorInputPeso(pesoTF, errorPeso));
 
-        botonAddAnimal.addActionListener(e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, listaSize));
+        botonAddAnimal.addActionListener(e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, gravedadBtn, listaSize));
 
         familiasBtn.add(mamiferoBoton);
         familiasBtn.add(aveBoton);
@@ -64,6 +74,16 @@ public class VentanaAlta extends JFrame {
         contenedorTipo.add(aveBoton);
         contenedorTipo.add(mamiferoBoton);
         contenedorTipo.add(reptilBoton);
+
+        gravedadBtn.add(gravedadAlta);
+        gravedadBtn.add(gravedadMedia);
+        gravedadBtn.add(gravedadBaja);
+
+        contenedorGravedad.add(new JLabel("Gravedad: "));
+        contenedorGravedad.add(gravedadAlta);
+        contenedorGravedad.add(gravedadMedia);
+        contenedorGravedad.add(gravedadBaja);
+
         JPanel contenedorLabelPeso = new JPanel(new FlowLayout(FlowLayout.LEFT));
         contenedorLabelPeso.add(new JLabel("Peso: "));
         contenedorLabelPeso.add(errorPeso);
@@ -76,6 +96,7 @@ public class VentanaAlta extends JFrame {
         contenedorCampos.add(contenedorFechaEntrada);
         contenedorCampos.add(contenedorPeso);
         contenedorCampos.add(contenedorLesiones);
+        contenedorCampos.add(contenedorGravedad);
 
         this.add(contenedorCampos, BorderLayout.CENTER);
         this.add(botonAddAnimal, BorderLayout.SOUTH);
@@ -96,7 +117,7 @@ public class VentanaAlta extends JFrame {
      * @param tipoLesion  El JCheckbox que marca si el tipo de lesión es la característica de la especie, o no
      * @param listaSize   El tamaño actual de la lista (listaSize+1 será la ID del animal nuevo)
      */
-    private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion, int listaSize) {
+    private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion, ButtonGroup gravedadBtn, int listaSize) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
 
@@ -105,18 +126,19 @@ public class VentanaAlta extends JFrame {
             return;
         }
         String familia = familiasBtn.getSelection().getActionCommand();
-
+        String gravedad = gravedadBtn.getSelection().getActionCommand();
+        if (gravedad == null) gravedad = "N/A";
         switch (familia) {
             case "Ave" -> {
-                Aplicacion.addAnimal(new Ave(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                Aplicacion.addAnimal(new Ave(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
                 ventanaAlta.dispose();
             }
             case "Mamífero" -> {
-                Aplicacion.addAnimal(new Mamifero(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                Aplicacion.addAnimal(new Mamifero(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
                 ventanaAlta.dispose();
             }
             case "Reptil" -> {
-                Aplicacion.addAnimal(new Reptil(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected()));
+                Aplicacion.addAnimal(new Reptil(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
                 ventanaAlta.dispose();
             }
             default -> throw new IllegalStateException("Valor inesperado: " + familia);

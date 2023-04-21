@@ -1,218 +1,482 @@
 [
-{
-    "id":1,
-    "tipo":"Reptil",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"14/04/2023",
-    "especie":"Lagarto",
-    "estado":"Liberado",
+  {
+    "id": 1,
+    "tipo": "Reptil",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "14/04/2023",
+    "especie": "Lagarto",
+    "estado": "Liberado",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-11-01"],["2023-04-14","2023-10-01"],["2023-04-14","2023-11-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":2,
-    "tipo":"Mamifero",
-    "peso":15,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"14/04/2023",
-    "especie":"Perro",
-    "estado":"Fallecido",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-10-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 2,
+    "tipo": "Mamifero",
+    "peso": 15,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "14/04/2023",
+    "especie": "Perro",
+    "estado": "Fallecido",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-14","2023-11-01"],["2023-04-14","2023-09-01"],["2023-04-14","2023-04-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":3,
-    "tipo":"Ave",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"14/04/2023",
-    "especie":"Jilguero",
-    "estado":"Fallecido",
+    "gravedad": "Alta",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-09-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-04-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 3,
+    "tipo": "Ave",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "14/04/2023",
+    "especie": "Jilguero",
+    "estado": "Fallecido",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-06-01"],["2023-04-14","2023-11-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-},
-{
-    "id":4,
-    "tipo":"Reptil",
-    "peso":18,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Cocodrilo",
-    "estado":"Tratamiento",
+    "gravedad": "Alta",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-06-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  },
+  {
+    "id": 4,
+    "tipo": "Reptil",
+    "peso": 18,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Cocodrilo",
+    "estado": "Tratamiento",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-02-01"],["2023-04-14","2023-04-01"],["2023-04-14","2023-08-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":5,
-    "tipo":"Mamifero",
-    "peso":25,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Ciervo",
-    "estado":"Tratamiento",
+    "gravedad": "Media",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-02-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-04-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-08-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 5,
+    "tipo": "Mamifero",
+    "peso": 25,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Ciervo",
+    "estado": "Tratamiento",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-12","2023-07-01"],["2023-04-14","2023-08-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-},
-{
-    "id":6,
-    "tipo":"Ave",
-    "peso":7,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Cigüeña",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-12",
+        "2023-07-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-08-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  },
+  {
+    "id": 6,
+    "tipo": "Ave",
+    "peso": 7,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Cigüeña",
+    "estado": "Tratamiento",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-05-01"],["2023-04-14","2023-06-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-},
-{
-    "id":7,
-    "tipo":"Reptil",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"14/04/2023",
-    "especie":"Salamandra",
-    "estado":"Liberado",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-06-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  },
+  {
+    "id": 7,
+    "tipo": "Reptil",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "14/04/2023",
+    "especie": "Salamandra",
+    "estado": "Liberado",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-07-01"],["2023-04-14","2023-05-01"],["2023-04-14","2023-08-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":8,
-    "tipo":"Mamifero",
-    "peso":4,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Gato",
-    "estado":"Tratamiento",
+    "gravedad": "N/A",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-07-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-08-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 8,
+    "tipo": "Mamifero",
+    "peso": 4,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Gato",
+    "estado": "Tratamiento",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-14","2023-05-01"],["2023-04-14","2023-10-01"],["2023-04-14","2023-08-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":9,
-    "tipo":"Ave",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Paloma",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-10-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-08-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 9,
+    "tipo": "Ave",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Paloma",
+    "estado": "Tratamiento",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-11-01"]],
-    "descripcionTratamientos":["Fisioterapia"]
-},
-{
-    "id":10,
-    "tipo":"Reptil",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Lagarto",
-    "estado":"Tratamiento",
+    "gravedad": "Media",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia"
+    ]
+  },
+  {
+    "id": 10,
+    "tipo": "Reptil",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Lagarto",
+    "estado": "Tratamiento",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-05-01"],["2023-04-14","2023-02-01"],["2023-04-14","2023-01-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":11,
-    "tipo":"Mamifero",
-    "peso":15,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Perro",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-02-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-01-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 11,
+    "tipo": "Mamifero",
+    "peso": 15,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Perro",
+    "estado": "Tratamiento",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-14","2023-09-01"]],
-    "descripcionTratamientos":["Fisioterapia"]
-},
-{
-    "id":12,
-    "tipo":"Ave",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Jilguero",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-09-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia"
+    ]
+  },
+  {
+    "id": 12,
+    "tipo": "Ave",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Jilguero",
+    "estado": "Tratamiento",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-05-01"],["2023-04-14","2023-11-01"],["2023-04-14","2023-05-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":13,
-    "tipo":"Reptil",
-    "peso":18,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Cocodrilo",
-    "estado":"Tratamiento",
+    "gravedad": "N/A",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-05-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 13,
+    "tipo": "Reptil",
+    "peso": 18,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Cocodrilo",
+    "estado": "Tratamiento",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-03-01"],["2023-04-14","2023-04-01"],["2023-04-14","2023-10-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":14,
-    "tipo":"Mamifero",
-    "peso":25,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Ciervo",
-    "estado":"Tratamiento",
+    "gravedad": "Media",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-03-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-04-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-10-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 14,
+    "tipo": "Mamifero",
+    "peso": 25,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Ciervo",
+    "estado": "Tratamiento",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-14","2023-01-01"],["2023-04-14","2023-11-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-},
-{
-    "id":15,
-    "tipo":"Ave",
-    "peso":7,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Cigüeña",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-01-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-11-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  },
+  {
+    "id": 15,
+    "tipo": "Ave",
+    "peso": 7,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Cigüeña",
+    "estado": "Tratamiento",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-06-01"],["2023-04-14","2023-01-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-},
-{
-    "id":16,
-    "tipo":"Reptil",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Salamandra",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-06-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-01-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  },
+  {
+    "id": 16,
+    "tipo": "Reptil",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Salamandra",
+    "estado": "Tratamiento",
     "tipoLesion": "Otro",
-    "fechasTratamientos":[["2023-04-14","2023-03-01"],["2023-04-14","2023-06-01"],["2023-04-14","2023-06-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B","Pastillas C"]
-},
-{
-    "id":17,
-    "tipo":"Mamifero",
-    "peso":4,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Gato",
-    "estado":"Tratamiento",
+    "gravedad": "Baja",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-03-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-06-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-06-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B",
+      "Pastillas C"
+    ]
+  },
+  {
+    "id": 17,
+    "tipo": "Mamifero",
+    "peso": 4,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Gato",
+    "estado": "Tratamiento",
     "tipoLesion": "Atropello",
-    "fechasTratamientos":[["2023-04-14","2023-03-01"]],
-    "descripcionTratamientos":["Fisioterapia"]
-},
-{
-    "id":18,
-    "tipo":"Ave",
-    "peso":1,
-    "fechaEntrada":"14/04/2023",
-    "fechaSalida":"",
-    "especie":"Paloma",
-    "estado":"Tratamiento",
+    "gravedad": "Alta",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-03-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia"
+    ]
+  },
+  {
+    "id": 18,
+    "tipo": "Ave",
+    "peso": 1,
+    "fechaEntrada": "14/04/2023",
+    "fechaSalida": "",
+    "especie": "Paloma",
+    "estado": "Tratamiento",
     "tipoLesion": "Caza",
-    "fechasTratamientos":[["2023-04-14","2023-04-01"],["2023-04-14","2023-07-01"]],
-    "descripcionTratamientos":["Fisioterapia","Medicina B"]
-}
+    "gravedad": "Alta",
+    "fechasTratamientos": [
+      [
+        "2023-04-14",
+        "2023-04-01"
+      ],
+      [
+        "2023-04-14",
+        "2023-07-01"
+      ]
+    ],
+    "descripcionTratamientos": [
+      "Fisioterapia",
+      "Medicina B"
+    ]
+  }
 ]

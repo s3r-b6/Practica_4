@@ -23,9 +23,13 @@ public class Controlador {
      */
     Controlador(Animal modelo) {
         this.animal = modelo;
-        this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+        this.vista = construirVista();
+    }
+
+    private Vista construirVista() {
+        return new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                 animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
-                animal.getHistorialTratamiento(), animal.getTipoLesion());
+                animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
     }
 
     /**
@@ -44,9 +48,7 @@ public class Controlador {
      */
     public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.addTratamiento(tratamiento, fechaFin);
-        this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
-                animal.getHistorialTratamiento(), animal.getTipoLesion());
+        this.vista = construirVista();
     }
 
     /**
@@ -56,7 +58,7 @@ public class Controlador {
         if (animal.liberacionAnimal()) {
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
-                    animal.getHistorialTratamiento(), animal.getTipoLesion());
+                    animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
 
@@ -67,10 +69,25 @@ public class Controlador {
         if (animal.bajaAnimal()) {
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
-                    animal.getHistorialTratamiento(), animal.getTipoLesion());
+                    animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
 
+    public void aumentarGravedadCont() {
+        if (animal.aumentarGravedad()) {
+            this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                    animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                    animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
+        }
+    }
+
+    public void dismGravedadCont() {
+        if (animal.disminuirGravedad()) {
+            this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                    animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                    animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
+        }
+    }
 
     /**
      * @return Devuelve la representación en JSON del modelo de datos

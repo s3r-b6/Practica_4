@@ -69,6 +69,7 @@ public class Ficheros {
             String especie = jsonObject.getString("especie");
             String tipoLesion = jsonObject.getString("tipoLesion");
             String estado = jsonObject.getString("estado");
+            String gravedad = jsonObject.getString("gravedad");
 
             JSONArray fechasTratamientosArray = jsonObject.getJSONArray("fechasTratamientos");
             LocalDate[][] fechasTratamientos = new LocalDate[fechasTratamientosArray.length()][2];
@@ -87,7 +88,10 @@ public class Ficheros {
                 descripcionTratamientos[j] = descripcionTratamiento;
             }
 
-            datosAnimales.add(Animal.rebuildFromData(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos, descripcionTratamientos));
+            Animal a = Animal.rebuildFromData(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado,
+                    tipoLesion, fechasTratamientos, descripcionTratamientos, gravedad);
+
+            datosAnimales.add(a);
         }
 
         return datosAnimales;
