@@ -119,9 +119,9 @@ public class Vista {
         JLabel labelLesion = new JLabel("Tipo lesión: " + tipoLesion);
         if (!estado.equals("Fallecido") && !estado.equals("Liberado")) {
             switch (gravedad) {
-                case "Alta" -> labelLesion.setForeground(Color.RED);
-                case "Media" -> labelLesion.setForeground(Color.YELLOW);
-                case "Baja" -> labelLesion.setForeground(Color.GREEN);
+                case "Alta" -> labelLesion.setForeground(new Color(211, 33, 44));
+                case "Media" -> labelLesion.setForeground(new Color(255, 152, 14));
+                case "Baja" -> labelLesion.setForeground(new Color(6, 156, 86));
                 default -> labelLesion.setForeground(Color.BLACK);
             }
         }

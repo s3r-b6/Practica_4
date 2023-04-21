@@ -72,7 +72,9 @@ public class Controlador {
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
-
+    /**
+     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea una nueva vista.
+     */
     public void aumentarGravedadCont() {
         if (animal.aumentarGravedad()) {
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
@@ -80,7 +82,9 @@ public class Controlador {
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
-
+    /**
+     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea una nueva vista.
+     */
     public void dismGravedadCont() {
         if (animal.disminuirGravedad()) {
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
