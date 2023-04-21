@@ -33,7 +33,7 @@ public class Aplicacion {
 
     public static void main(String[] args) throws IOException {
         rebuildLista();
-        cargarVentanaPrincipal(new VentanaAnimales(lista), false);
+        cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
 
     /**
@@ -55,19 +55,18 @@ public class Aplicacion {
      *
      * @param v Un objeto del tipo VentanaAnimales
      */
-    public static void cargarVentanaPrincipal(VentanaAnimales v, boolean filtro) {
+    public static void cargarVentanaPrincipal(VentanaAnimales v) {
         if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         ventanaPrincipal = v;
 
         JButton botonAlta = new JButton("Alta");
         JButton botonGuardar = new JButton("Guardar");
-
         JPanel contenedorBotones = new JPanel(new FlowLayout());
 
         botonAlta.addActionListener(e -> cargarVentanaAlta(new VentanaAlta(lista.size())));
         botonGuardar.addActionListener(e -> accionGuardar(lista));
 
-        attachFiltros(contenedorBotones, filtro);
+        attachFiltros(contenedorBotones);
         contenedorBotones.add(botonGuardar);
         contenedorBotones.add(botonAlta);
         v.getContentPane().add(contenedorBotones, BorderLayout.SOUTH);
@@ -76,10 +75,10 @@ public class Aplicacion {
         contenedorBotones.repaint();
     }
 
-    public static void attachFiltros(JPanel contenedorBotones, boolean filtro) {
+    public static void attachFiltros(JPanel contenedorBotones) {
         ButtonGroup especieRButtons = new ButtonGroup();
         ButtonGroup estadoRButtons = new ButtonGroup();
-        JButton botonBuscar = new JButton(filtro ? "Volver" : "Buscar");
+        JButton botonBuscar = new JButton("Buscar");
 
         JPanel contReptil = new JPanel(new FlowLayout());
         JPanel contAve = new JPanel(new FlowLayout());
@@ -128,17 +127,17 @@ public class Aplicacion {
         contenedorChecks.add(contLiberados);
         contenedorChecks.add(contFallecidos);
 
-        botonBuscar.addActionListener(e -> accionBuscar(especieRButtons, estadoRButtons, botonBuscar));
+        botonBuscar.addActionListener(e -> accionBuscar(especieRButtons, estadoRButtons));
         contenedorBotones.add(contenedorChecks);
         contenedorBotones.add(botonBuscar);
     }
 
-    private static void accionBuscar(ButtonGroup especieRButtons, ButtonGroup estadoRButtons, JButton botonBuscar) {
+    private static void accionBuscar(ButtonGroup especieRButtons, ButtonGroup estadoRButtons) {
         ButtonModel especieSelecc = especieRButtons.getSelection();
         ButtonModel estadoSelecc = estadoRButtons.getSelection();
 
         if (especieSelecc == null && estadoSelecc == null) {
-            cargarVentanaPrincipal(new VentanaAnimales(lista), false);
+            cargarVentanaPrincipal(new VentanaAnimales(lista));
             return;
         }
 
@@ -149,7 +148,7 @@ public class Aplicacion {
                 estadoSelecc == null ? "" : estadoSelecc.getActionCommand()
         };
 
-        cargarVentanaPrincipal(new VentanaAnimales(lista), true);
+        cargarVentanaPrincipal(new VentanaAnimales(lista, filtro));
     }
 
     /**
@@ -194,7 +193,7 @@ public class Aplicacion {
     public static void recrearVentanas(Controlador c) {
         if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         if (ventanaDetalle != null) ventanaDetalle.dispose();
-        cargarVentanaPrincipal(new VentanaAnimales(lista), false);
+        cargarVentanaPrincipal(new VentanaAnimales(lista));
         cargarVentanaDetalle(new VentanaAnimal(c));
     }
 
@@ -205,7 +204,7 @@ public class Aplicacion {
      */
     public static void addAnimal(Animal a) {
         lista.add(new Controlador(a));
-        cargarVentanaPrincipal(new VentanaAnimales(lista), false);
+        cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
 
     /**
