@@ -18,9 +18,6 @@ import java.util.ArrayList;
  * Esta clase es el punto de entrada a la aplicación. Tiene como atributos las diferentes ventanas de la aplicación.
  */
 public class Aplicacion {
-
-    //TODO: comentar y limpiar código
-
     static JFrame ventanaPrincipal;
     static JFrame ventanaDetalle;
     static JFrame ventanaAlta;

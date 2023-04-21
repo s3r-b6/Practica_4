@@ -73,7 +73,6 @@ public class VentanaAlta extends JFrame {
         JButton botonAddAnimal = new JButton("Añadir");
 
         errorPeso.setForeground(Color.RED);
-        pesoTF.addKeyListener(adaptadorInputPeso(pesoTF, errorPeso));
 
         botonAddAnimal.addActionListener(e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, gravedadBtn, listaSize));
 
@@ -130,11 +129,13 @@ public class VentanaAlta extends JFrame {
      * @param tipoLesion  El JCheckbox que marca si el tipo de lesión es la característica de la especie, o no
      * @param listaSize   El tamaño actual de la lista (listaSize+1 será la ID del animal nuevo)
      */
-    private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF, ButtonGroup familiasBtn, JCheckBox tipoLesion, ButtonGroup gravedadBtn, int listaSize) {
+    private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF,
+                                        ButtonGroup familiasBtn, JCheckBox tipoLesion, ButtonGroup gravedadBtn, int listaSize) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
 
-        if (pesoTF.getText().equals("") || especie.equals("") || familiasBtn.getSelection() == null) {
+        if (pesoTF.getText().equals("") || especie.equals("") || familiasBtn.getSelection() == null
+                || peso.matches("[^0-9]*") || peso.length() > 5) {
             JOptionPane.showMessageDialog(null, "Por favor, introduce valores en los campos", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -157,33 +158,4 @@ public class VentanaAlta extends JFrame {
             default -> throw new IllegalStateException("Valor inesperado: " + familia);
         }
     }
-
-
-    /**
-     * Este metodo devuelve el KeyAdapter que controla los keyPresses del input de peso
-     *
-     * @param pesoTF  El JTextField en el que se introduce el peso
-     * @param errores Un JLabel sobre el que se escriben errores (tiene color rojo)
-     * @return
-     */
-    static KeyAdapter adaptadorInputPeso(JTextField pesoTF, JLabel errores) {
-        return new KeyAdapter() {
-            public void keyPressed(KeyEvent key) {
-                String value = pesoTF.getText();
-                if (key.getKeyChar() >= '0' && key.getKeyChar() <= '9') {
-                    pesoTF.setEditable(true);
-                    errores.setText("");
-                } else if (value.length() > 4) {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errores.setText("Por favor, introduce un valor válido (muy largo)");
-                } else {
-                    pesoTF.setEditable(false);
-                    pesoTF.setText("");
-                    errores.setText("Por favor, introduce sólo números");
-                }
-            }
-        };
-    }
-
 }
