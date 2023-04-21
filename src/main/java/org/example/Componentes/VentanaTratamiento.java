@@ -71,8 +71,10 @@ public class VentanaTratamiento extends JFrame {
         LocalDate fechaParseada;
         try {
             fechaParseada = LocalDate.parse(fechaTexto, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(null, "Por favor introduce una fecha válida, p.ej: 12/02/2023", "Error", JOptionPane.ERROR_MESSAGE);
+            if (fechaParseada.getYear() < 2023) throw new Exception();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Por favor introduce una fecha válida, p.ej: 12/02/2023\n" +
+                    "El año mínimo es 2023", "Error", JOptionPane.ERROR_MESSAGE);
             fecha.setText("");
             return;
         }
