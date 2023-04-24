@@ -80,8 +80,7 @@ public class Conexion {
                     for (String q : queriesCrear) st2.executeUpdate(q);
                 }
             } catch (Exception e2) {
-                System.out.println("La conexión a la base de datos falló." +
-                                   "\nAsegúrate de que el servidor está funcionando");
+                System.out.println("La conexión a la base de datos falló." + "\nAsegúrate de que el servidor está funcionando");
                 System.out.println(e2.getLocalizedMessage());
                 throw new RuntimeException(e2);
             }
@@ -121,5 +120,27 @@ public class Conexion {
             throw new RuntimeException(e);
         }
     }
+
+    public static void poblarDB() {
+        String query = String.format("""
+                INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
+                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+                """, id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad);
+        String[][] fechasTratamientos = {
+                new String[]{"2023-04-14", "2023-11-01"},
+                new String[]{"2023-04-14", "2023-11-01"},
+                new String[]{"2023-04-14", "2023-11-01"}
+        };
+        String[] descripcionTratamientos = {
+                "Fisioterapia", "Medicina B", "Pastillas C"
+        };
+
+        for (int j = 0; j < descripcionTratamientos.length; j++) {
+            String queryT = String.format("""
+                    INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%s, %s, %s, %s)
+                    """, id, fechasTratamientos[j][0], fechasTratamientos[j][1], descripcionTratamientos[j]);
+        }
+    }
+}
 
 }
