@@ -23,19 +23,19 @@ public class Conexion {
             """;
     static final List<String> queriesCrear = Arrays.asList("""
             CREATE TABLE familias (
-                id INT UNIQUE NOT NULL,
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
                 nombre VARCHAR(10) UNIQUE NOT NULL,
                 PRIMARY KEY (id)
             );
             """, """
             CREATE TABLE estados (
-                id INT UNIQUE NOT NULL,
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
                 nombre VARCHAR(10) UNIQUE NOT NULL,
                 PRIMARY KEY (id)
             );
             """, """
             CREATE TABLE gravedad (
-                id INT UNIQUE NOT NULL,
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
                 nombre VARCHAR(10) UNIQUE NOT NULL,
                 PRIMARY KEY (id)
             );
@@ -51,7 +51,7 @@ public class Conexion {
             );
             """, """
             CREATE TABLE animales (
-                id INT UNIQUE NOT NULL,
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
                 tipo_familia INT NOT NULL,
                 tipo_estado INT NOT NULL,
                 tipo_gravedad INT NOT NULL,
