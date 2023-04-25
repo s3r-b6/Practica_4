@@ -2,10 +2,21 @@ package org.example.Persistencia;
 
 import java.sql.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Conexion {
+    static HashMap<Integer, String> estados = new HashMap<>();
+    static HashMap<Integer, String> familias = new HashMap<>();
+    static HashMap<Integer, String> gravedades = new HashMap<>();
     static final String URL = "jdbc:mysql://localhost:3306/db_animales";
+    static final String INSERT_ANIMAL = """
+            INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
+            VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+            """;
+    static final String INSERT_TRATAM = """
+            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%s, %s, %s, %s)
+            """;
 
     static final String QUERY_FAMILIA = """
             SELECT * FROM animales WHERE tipo = (
@@ -28,43 +39,70 @@ public class Conexion {
                 PRIMARY KEY (id)
             );
             """, """
+            INSERT INTO familias(nombre)
+            VALUES(mamifero), (reptil), (ave)
+            """, """
             CREATE TABLE estados (
                 id INT UNIQUE NOT NULL AUTO_INCREMENT,
                 nombre VARCHAR(10) UNIQUE NOT NULL,
                 PRIMARY KEY (id)
             );
             """, """
-            CREATE TABLE gravedad (
-                id INT UNIQUE NOT NULL AUTO_INCREMENT,
-                nombre VARCHAR(10) UNIQUE NOT NULL,
-                PRIMARY KEY (id)
+            INSERT INTO estados(nombre)
+            VALUES(liberado), (fallecido), (tratamiento)
+            """, """
+            CREATE TABLE gravedad(
+                    id INT UNIQUE NOT NULL AUTO_INCREMENT,
+                    nombre VARCHAR(10)UNIQUE NOT NULL,
+                    PRIMARY KEY(id)
             );
                                         
             """, """
-            CREATE TABLE tratamientos (
-                id_animal INT NOT NULL,
-                id_tratamiento INT AUTO_INCREMENT,
-                fechaInicioT DATE NOT NULL,
-                fechaFinT DATE NOT NULL,
-                descripcion VARCHAR(200),
-                FOREIGN KEY (id) REFERENCES id_animal
-            );
+            INSERT INTO gravedad(nombre)
+            VALUES(alta), (media), (baja)
             """, """
-            CREATE TABLE animales (
-                id INT UNIQUE NOT NULL AUTO_INCREMENT,
-                tipo_familia INT NOT NULL,
-                tipo_estado INT NOT NULL,
-                tipo_gravedad INT NOT NULL,
-                especie VARCHAR(10) NOT NULL,
-                tipoLesion BOOLEAN NOT NULL,
-                fechaIngreso DATE NOT NULL,
-                fechaSalida DATE,
-                FOREIGN KEY familias(id) REFERENCES tipo_familia,
-                FOREIGN KEY estados(id) REFERENCES tipo_estado,
-                FOREIGN KEY gravedad(id) REFERENCES tipo_gravedad,
-                PRIMARY KEY (id)
-            );
-            """);
+            CREATE TABLE
+
+            tratamientos(
+                    id_animal INT NOT NULL,
+                    id_tratamiento INT AUTO_INCREMENT,
+                    fechaInicioT DATE NOT NULL,
+                    fechaFinT DATE NOT NULL,
+                    descripcion VARCHAR(200),
+
+            FOREIGN KEY(id) REFERENCES id_animal
+                    );
+                    """, """
+            CREATE TABLE
+
+            animales(
+                    id INT UNIQUE NOT NULL AUTO_INCREMENT,
+                    tipo_familia INT NOT NULL,
+                    tipo_estado INT NOT NULL,
+                    tipo_gravedad INT NOT NULL,
+                    especie VARCHAR(10) NOT NULL,
+
+            tipoLesion BOOLEAN
+            NOT NULL,
+            fechaIngreso DATE
+            NOT NULL,
+            fechaSalida DATE,
+            FOREIGN KEY
+
+            familias(id) REFERENCES tipo_familia,
+
+            FOREIGN KEY
+
+            estados(id) REFERENCES tipo_estado,
+
+            FOREIGN KEY
+
+            gravedad(id) REFERENCES tipo_gravedad,
+
+            PRIMARY KEY(id)
+                    );
+                    """);
+
 
     public static void checkDatabase() {
         try {
@@ -110,6 +148,36 @@ public class Conexion {
         }
     }
 
+
+    public static void poblarMockData() {
+        try (Connection c = DriverManager.getConnection(URL, "root", "")) {
+            Statement st = c.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM estados");
+            while (rs.next()) {
+                estados.put(rs.getInt(1), rs.getString(2));
+            }
+            rs = st.executeQuery("SELECT * FROM familias");
+            while (rs.next()) {
+                familias.put(rs.getInt(1), rs.getString(2));
+            }
+            rs = st.executeQuery("SELECT * FROM gravedad");
+            while (rs.next()) {
+                gravedades.put(rs.getInt(1), rs.getString(2));
+            }
+
+            String insertAnimalQuery = String.format("""
+                            INSERT INTO animales(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad)
+                            VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');""", 1, "Ave", 2.3, "2023-04-23", null,
+                    "Canario", estados.get("tratamiento"), true, gravedades.get("alta"));
+            String insertTratamQuery = String.format("""
+                            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%d, '%s', '%s', '%s')""",
+                    1, "2023-04-20", "2023-05-01", "Administración de medicamento");
+        } catch (SQLException e) {
+            System.err.println(e.getLocalizedMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
     public static ResultSet busquedaGeneral() {
         try (Connection c = DriverManager.getConnection(URL, "root", "")) {
             Statement st = c.createStatement();
@@ -120,27 +188,5 @@ public class Conexion {
             throw new RuntimeException(e);
         }
     }
-
-    public static void poblarDB() {
-        String query = String.format("""
-                INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
-                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-                """, id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad);
-        String[][] fechasTratamientos = {
-                new String[]{"2023-04-14", "2023-11-01"},
-                new String[]{"2023-04-14", "2023-11-01"},
-                new String[]{"2023-04-14", "2023-11-01"}
-        };
-        String[] descripcionTratamientos = {
-                "Fisioterapia", "Medicina B", "Pastillas C"
-        };
-
-        for (int j = 0; j < descripcionTratamientos.length; j++) {
-            String queryT = String.format("""
-                    INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%s, %s, %s, %s)
-                    """, id, fechasTratamientos[j][0], fechasTratamientos[j][1], descripcionTratamientos[j]);
-        }
-    }
 }
 
-}

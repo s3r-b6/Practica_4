@@ -96,10 +96,22 @@ public class Controlador {
     /**
      * @return Devuelve la representación en JSON del modelo de datos
      */
-    public String toJSON() {
-        return (this.animal.toJSON());
+    public String getInsert() {
+        return String.format("""
+                INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
+                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+                """,animal.getId(),animal.getClass().getSimpleName(),  animal.getPeso(),animal.getFechaEntrada(),
+                    animal.getFechaSalida(), animal.getEspecie(), animal.getEstado(), animal.getTipoLesion(),
+                    animal.getGravedad());
     }
-
+    public String getTratamientosInsert() {
+        return String.format("""
+                INSERT INTO tratamientos(id, fechaInicio, fechaFin)
+                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+                """, animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
+                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                animal.getTipoLesion(), animal.getGravedad());
+    }
 
     /**
      * @return El estado del animal
