@@ -52,55 +52,36 @@ public class Conexion {
             VALUES(liberado), (fallecido), (tratamiento)
             """, """
             CREATE TABLE gravedad(
-                    id INT UNIQUE NOT NULL AUTO_INCREMENT,
-                    nombre VARCHAR(10)UNIQUE NOT NULL,
-                    PRIMARY KEY(id)
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
+                nombre VARCHAR(10)UNIQUE NOT NULL,
+                PRIMARY KEY(id)
             );
                                         
             """, """
             INSERT INTO gravedad(nombre)
             VALUES(alta), (media), (baja)
             """, """
-            CREATE TABLE
-
-            tratamientos(
-                    id_animal INT NOT NULL,
-                    id_tratamiento INT AUTO_INCREMENT,
-                    fechaInicioT DATE NOT NULL,
-                    fechaFinT DATE NOT NULL,
-                    descripcion VARCHAR(200),
-
+            CREATE TABLE tratamientos(
+                id_animal INT NOT NULL,
+                id_tratamiento INT AUTO_INCREMENT,
+                fechaInicioT DATE NOT NULL,
+                fechaFinT DATE NOT NULL,
+                descripcion VARCHAR(200),
             FOREIGN KEY(id) REFERENCES id_animal
-                    );
-                    """, """
-            CREATE TABLE
-
-            animales(
-                    id INT UNIQUE NOT NULL AUTO_INCREMENT,
-                    tipo_familia INT NOT NULL,
-                    tipo_estado INT NOT NULL,
-                    tipo_gravedad INT NOT NULL,
-                    especie VARCHAR(10) NOT NULL,
-
-            tipoLesion BOOLEAN
-            NOT NULL,
-            fechaIngreso DATE
-            NOT NULL,
-            fechaSalida DATE,
-            FOREIGN KEY
-
-            familias(id) REFERENCES tipo_familia,
-
-            FOREIGN KEY
-
-            estados(id) REFERENCES tipo_estado,
-
-            FOREIGN KEY
-
-            gravedad(id) REFERENCES tipo_gravedad,
-
-            PRIMARY KEY(id)
-                    );
+                );
+                """, """
+            CREATE TABLE animales(
+                id INT UNIQUE NOT NULL AUTO_INCREMENT,
+                tipo_familia INT NOT NULL,
+                tipo_estado INT NOT NULL,
+                tipo_gravedad INT NOT NULL,
+                especie VARCHAR(10) NOT NULL,
+                tipoLesion BOOLEAN NOT NULL, fechaIngreso DATE NOT NULL, 
+                fechaSalida DATE, 
+                FOREIGN KEY familias(id) REFERENCES tipo_familia,
+                FOREIGN KEY estados(id) REFERENCES tipo_estado,
+                FOREIGN KEY gravedad(id) REFERENCES tipo_gravedad,
+                PRIMARY KEY(id) );
                     """);
 
 
@@ -152,26 +133,37 @@ public class Conexion {
     public static void poblarMockData() {
         try (Connection c = DriverManager.getConnection(URL, "root", "")) {
             Statement st = c.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM estados");
-            while (rs.next()) {
-                estados.put(rs.getInt(1), rs.getString(2));
-            }
-            rs = st.executeQuery("SELECT * FROM familias");
-            while (rs.next()) {
-                familias.put(rs.getInt(1), rs.getString(2));
-            }
-            rs = st.executeQuery("SELECT * FROM gravedad");
-            while (rs.next()) {
-                gravedades.put(rs.getInt(1), rs.getString(2));
-            }
 
-            String insertAnimalQuery = String.format("""
+            ResultSet rs = st.executeQuery("SELECT * FROM estados");
+            while (rs.next()) estados.put(rs.getInt(1), rs.getString(2));
+            rs = st.executeQuery("SELECT * FROM familias");
+            while (rs.next()) familias.put(rs.getInt(1), rs.getString(2));
+            rs = st.executeQuery("SELECT * FROM gravedad");
+            while (rs.next()) gravedades.put(rs.getInt(1), rs.getString(2));
+
+            String insertAnimalQuery[] = {
+                    String.format("""
                             INSERT INTO animales(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad)
-                            VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');""", 1, "Ave", 2.3, "2023-04-23", null,
-                    "Canario", estados.get("tratamiento"), true, gravedades.get("alta"));
-            String insertTratamQuery = String.format("""
-                            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%d, '%s', '%s', '%s')""",
-                    1, "2023-04-20", "2023-05-01", "Administración de medicamento");
+                            VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');""", 1, familias.get("ave"), 2.3, "2023-04-23", null, "Canario", estados.get("tratamiento"), true, gravedades.get("alta")),
+                    String.format("""
+                            INSERT INTO animales(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad)
+                            VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');""", 2, familias.get("mamifero"), 180.0, "2023-04-21", null, "Tigre", estados.get("tratamiento"), "Herida de garra", gravedades.get("media")),
+                    String.format("""
+                            INSERT INTO animales(id, tipo, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, gravedad)
+                            VALUES('%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');""", 3, familias.get("reptil"), 3.5, "2023-04-22", "2023-04-24", "Cocodrilo", estados.get("libertad"), null, null)
+            };
+
+
+            String insertTratamQuery[] = {
+                    String.format("""
+                            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion)
+                            VALUES (%d, '%s', '%s', '%s')""", 1, "2023-04-20", "2023-05-01", "Administración de medicamento"),
+                    String.format("""
+                            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion)
+                            VALUES (%d, '%s', '%s', '%s')""", 2, "2023-04-22", "2023-05-05", "Cirugía de urgencia"),
+                    String.format("""
+                            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion)
+                            VALUES (%d, '%s', '%s', '%s')""", 3, "2023-04-23", "2023-04-24", "Administración de antibióticos")};
         } catch (SQLException e) {
             System.err.println(e.getLocalizedMessage());
             throw new RuntimeException(e);
