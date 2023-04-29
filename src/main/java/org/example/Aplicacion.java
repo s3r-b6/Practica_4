@@ -5,10 +5,12 @@ import org.example.Componentes.VentanaAnimal;
 import org.example.Componentes.VentanaAnimales;
 import org.example.Componentes.VentanaTratamiento;
 import org.example.Modelo.Animal;
+import org.example.Persistencia.GestionDatos;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +29,9 @@ public class Aplicacion {
     public static HashMap<String, Integer> familias = new HashMap<>();
     public static HashMap<String, Integer> gravedades = new HashMap<>();
 
+    public static HashMap<Integer, String> estados_id = new HashMap<>();
+    public static HashMap<Integer, String> familias_id = new HashMap<>();
+    public static HashMap<Integer, String> gravedades_id = new HashMap<>();
     /**
      * La lista de animales contiene los controladores para cada uno de los
      * animales.
@@ -40,7 +45,7 @@ public class Aplicacion {
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         rebuildLista();
         cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
@@ -52,10 +57,13 @@ public class Aplicacion {
      * contrladores.
      *
      * @throws IOException
+     * @throws SQLException
      */
-    public static void rebuildLista() throws IOException {
-        ArrayList<Animal> listaAnimales = Ficheros.reconstruirLista();
+
+    public static void rebuildLista() throws IOException, SQLException {
+        ArrayList<Animal> listaAnimales = GestionDatos.buildListaFromResultSet();
         ArrayList<Controlador> listaControladores = new ArrayList<>();
+
         listaAnimales.forEach(animal -> listaControladores.add(new Controlador(animal)));
         lista = listaControladores;
     }
@@ -251,10 +259,7 @@ public class Aplicacion {
                 null, opt, opt[0]) != JOptionPane.YES_OPTION) {
             return;
         }
-        try {
-            Ficheros.guardarEstado(lista);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // TODO: accion guardar
+        // Ficheros.guardarEstado(lista);
     }
 }
