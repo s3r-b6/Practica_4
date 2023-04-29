@@ -1,20 +1,20 @@
 package org.example;
 
-
 import org.example.Modelo.Animal;
-
+import org.example.Persistencia.*;
 import java.time.LocalDate;
 
 /**
- * El controlador  liga el modelo de datos con la vista. Los modelos son esencialmente animales únicos, con sus
+ * El controlador liga el modelo de datos con la vista. Los modelos son
+ * esencialmente animales únicos, con sus
  * propios datos; la vista, es la representación en un JPanel de esos datos.
- * Los cambios en los datos se realizan  a través del Controlador, que llama a los métodos del Modelo, para
+ * Los cambios en los datos se realizan a través del Controlador, que llama a
+ * los métodos del Modelo, para
  * modificar los datos, y, que se reflejan en la vista.
  */
 public class Controlador {
     Animal animal;
     Vista vista;
-
 
     /**
      * El constructor toma un Animal y crea una vista para él a partir de sus datos.
@@ -40,7 +40,8 @@ public class Controlador {
     }
 
     /**
-     * Este método envía al modelo de datos los datos necesarios para crear un nuevo tratamiento y crea
+     * Este método envía al modelo de datos los datos necesarios para crear un nuevo
+     * tratamiento y crea
      * una nueva vista para el animal
      *
      * @param tratamiento La descripción del nuevo tratamiento
@@ -52,7 +53,8 @@ public class Controlador {
     }
 
     /**
-     * Envía la señal al modelo de datos para que se actualice el estado. Se crea una nueva vista.
+     * Envía la señal al modelo de datos para que se actualice el estado. Se crea
+     * una nueva vista.
      */
     public void liberacionControlador() {
         if (animal.liberacionAnimal()) {
@@ -63,17 +65,21 @@ public class Controlador {
     }
 
     /**
-     * Envía la señal al modelo de datos para que se actualice el estado. Se crea una nueva vista.
+     * Envía la señal al modelo de datos para que se actualice el estado. Se crea
+     * una nueva vista.
      */
     public void bajaControlador() {
         if (animal.bajaAnimal()) {
+
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
+
     /**
-     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea una nueva vista.
+     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea
+     * una nueva vista.
      */
     public void aumentarGravedadCont() {
         if (animal.aumentarGravedad()) {
@@ -82,8 +88,10 @@ public class Controlador {
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
     }
+
     /**
-     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea una nueva vista.
+     * Envía la señal al modelo de datos para que se actualice la gravedad. Se crea
+     * una nueva vista.
      */
     public void dismGravedadCont() {
         if (animal.disminuirGravedad()) {
@@ -97,13 +105,16 @@ public class Controlador {
      * @return Devuelve la representación en JSON del modelo de datos
      */
     public String getInsert() {
-        return String.format("""
-                INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
-                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-                """,animal.getId(),animal.getClass().getSimpleName(),  animal.getPeso(),animal.getFechaEntrada(),
-                    animal.getFechaSalida(), animal.getEspecie(), animal.getEstado(), animal.getTipoLesion(),
-                    animal.getGravedad());
+        return String.format(
+                """
+                        INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
+                        VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
+                        """,
+                animal.getId(), animal.getClass().getSimpleName(), animal.getPeso(), animal.getFechaEntrada(),
+                animal.getFechaSalida(), animal.getEspecie(), animal.getEstado(), animal.getTipoLesion(),
+                animal.getGravedad());
     }
+
     public String getTratamientosInsert() {
         return String.format("""
                 INSERT INTO tratamientos(id, fechaInicio, fechaFin)
@@ -119,7 +130,6 @@ public class Controlador {
     public String getEstado() {
         return this.animal.getEstado();
     }
-
 
     /**
      * @return La vista del animal
