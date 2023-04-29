@@ -2,25 +2,29 @@ package org.example.Persistencia;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.example.Aplicacion;
 import org.example.Modelo.Animal;
 
+import static org.example.Persistencia.Conexion.poblarHashMaps;
+
 public class GestionDatos {
 
+    static final String INSERT_ANIMAL_SIN_FECHA = """
+            INSERT INTO
+            animales(id, tipo_familia, peso, fecha_entrada, fecha_salida, especie, tipo_estado, tipo_lesion, tipo_gravedad)
+            VALUES(%d,   %d,           %d,   '%s',          %s,           '%s',    '%s',         %s,         %d);""";
     static final String INSERT_ANIMAL_CON_FECHA = """
             INSERT INTO
             animales(id, tipo_familia, peso, fecha_entrada, fecha_salida, especie, tipo_estado, tipo_lesion, tipo_gravedad)
-            VALUES(%d,   %d,           %d,   '%s',          %s,           '%s',    %d,          %s,        %d); """;
-    static final String INSERT_ANIMAL_SIN_FECHA = """
-            INSERT INTO
-            animales(id, tipo_familia, peso, fecha_entrada, especie, tipo_estado, tipo_lesion, tipo_gravedad)
-            VALUES(%d,   %d,           %d,   '%s',          '%s',    %d,          %s,        %d); """;
+            VALUES(%d,   %d,           %d,   '%s',          '%s',           '%s',    '%s',         %s,         %d);""";
 
     static final String INSERT_TRATAM = """
             INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin,
-            descripcion) VALUES (%s, %s, %s, %s) """;
+            descripcion) VALUES (%s, %s, %s, %s)""";
 
     static final String QUERY_FAMILIA = """
             SELECT * FROM animales WHERE tipo = (
@@ -39,8 +43,7 @@ public class GestionDatos {
 
     public static void updateAnimal(int id_animal, String estado) {
         // Sólo pueden cambiarse los estados
-        Connection c = Conexion.getConnection();
-        try {
+        try (Connection c = Conexion.getConnection()) {
             Statement st = c.createStatement();
             int id_estado = Aplicacion.estados.get(estado);
             st.executeUpdate(String.format("UPDATE animales SET estado = %d WHERE id = %d", id_animal, id_estado));
@@ -51,9 +54,8 @@ public class GestionDatos {
     }
 
     public static void insertarUpdate(String query, int id, String familia, int peso, LocalDate fechaEntrada,
-            LocalDate fechaSalida, String especie, String estado, boolean tipoLesion, String gravedad) {
-        Connection c = Conexion.getConnection();
-        try {
+                                      LocalDate fechaSalida, String especie, String estado, boolean tipoLesion, String gravedad) {
+        try (Connection c = Conexion.getConnection()) {
             Statement st = c.createStatement();
             switch (query) {
                 case "i_animal" -> {
@@ -74,7 +76,8 @@ public class GestionDatos {
                     st.executeQuery(
                             String.format(INSERT_TRATAM, id, Aplicacion.familias.get(familia), peso, fechaEntrada,
                                     fechaSalida, especie, Aplicacion.estados.get(estado), tipoLesion,
-                                    Aplicacion.gravedades.get(gravedad)));
+                                    Aplicacion.gravedades.get(gravedad))
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -83,8 +86,7 @@ public class GestionDatos {
     }
 
     public static ResultSet ejecutarQuery(String query, String filtro) {
-        Connection c = Conexion.getConnection();
-        try {
+        try (Connection c = Conexion.getConnection()) {
             Statement st = c.createStatement();
             ResultSet rs = null;
 
@@ -108,76 +110,54 @@ public class GestionDatos {
         }
     }
 
-    public static ArrayList<Animal> buildListaFromResultSet() throws SQLException {
+    public static ArrayList<Animal> buildListaFromResultSet() {
         ArrayList<Animal> animalList = new ArrayList<>();
-        Connection c = Conexion.getConnection();
-        try {
+        try (Connection c = Conexion.getConnection()) {
             Statement st = c.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM animales;");
             while (rs.next()) {
                 int id = rs.getInt(1);
                 String familia = Aplicacion.familias_id.get(rs.getInt(2));
-                int peso = rs.getInt(3);
-                LocalDate fechaEntrada = rs.getDate(4).toLocalDate();
-                LocalDate fechaSalida = rs.getDate(5).toLocalDate();
-                String especie = rs.getString(6);
-                String estado = Aplicacion.estados_id.get(rs.getInt(7));
-                boolean tipoLesion = rs.getBoolean(8);
-                String gravedad = Aplicacion.gravedades_id.get(rs.getInt(9));
+                String estado = Aplicacion.estados_id.get(rs.getInt(3));
+                String gravedad = Aplicacion.gravedades_id.get(rs.getInt(4));
+                boolean tipoLesion = rs.getBoolean(5);
+                int peso = rs.getInt(6);
+                String especie = rs.getString(7);
+                String fechaEntrada = rs.getString(8);
+                String fechaSalida = rs.getString(9);
 
                 ArrayList<LocalDate[]> fechas = new ArrayList<>();
                 ArrayList<String> descripciones = new ArrayList<>();
-                ResultSet rs2 = st.executeQuery(
-                        String.format("SELECT * FROM tratamientos WHERE id_animal=%d", id));
 
-                while (rs2.next()) {
-                    fechas.add(new LocalDate[] { rs2.getDate(1).toLocalDate(), rs2.getDate(2).toLocalDate() });
-                    descripciones.add(rs2.getString(3));
+                String queryTratam = String.format("SELECT * FROM tratamientos WHERE id_animal='%d'", id);
+                ResultSet rs2 = c.createStatement().executeQuery(queryTratam);
+                LocalDate fechaEnt = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate fechaSal = null;
+                if (fechaSalida != null) {
+                    fechaSal = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 }
 
-                Animal a = Animal.rebuildFromData(id, familia, peso, fechaEntrada, fechaSalida, especie, estado,
-                        tipoLesion,
-                        (LocalDate[][]) fechas.toArray(), (String[]) descripciones.toArray(), gravedad);
+                while (rs2.next()) {
+                    fechas.add(new LocalDate[]{
+                            LocalDate.parse(rs2.getString(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            LocalDate.parse(rs2.getString(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    });
+                    descripciones.add(rs2.getString(5));
+                }
+
+                Animal a = Animal.rebuildFromData(id, familia, peso, fechaEnt, fechaSal, especie, estado,
+                        tipoLesion, fechas, descripciones, gravedad);
 
                 animalList.add(a);
             }
         } catch (SQLException e) {
-            System.out.println("Hubo un problema al ejecutar la query");
+            System.out.println("Hubo un problema al ejecutar la query " + e.getCause());
             throw new RuntimeException(e.getLocalizedMessage());
         }
         return animalList;
     }
 
-    public static ArrayList<Animal> buildListaFromResultSet(ResultSet rs, Statement st) throws SQLException {
-        ArrayList<Animal> animalList = new ArrayList<>();
-        while (rs.next()) {
-            int id = rs.getInt(1);
-            String familia = Aplicacion.familias_id.get(rs.getInt(2));
-            int peso = rs.getInt(3);
-            LocalDate fechaEntrada = rs.getDate(4).toLocalDate();
-            LocalDate fechaSalida = rs.getDate(5).toLocalDate();
-            String especie = rs.getString(6);
-            String estado = Aplicacion.estados_id.get(rs.getInt(7));
-            boolean tipoLesion = rs.getBoolean(8);
-            String gravedad = Aplicacion.gravedades_id.get(rs.getInt(9));
-
-            ArrayList<LocalDate[]> fechas = new ArrayList<>();
-            ArrayList<String> descripciones = new ArrayList<>();
-            ResultSet rs2 = st.executeQuery(
-                    String.format("SELECT * FROM tratamientos WHERE id_animal=%d", id));
-
-            while (rs2.next()) {
-                fechas.add(new LocalDate[] { rs2.getDate(1).toLocalDate(), rs2.getDate(2).toLocalDate() });
-                descripciones.add(rs2.getString(3));
-            }
-
-            Animal a = Animal.rebuildFromData(id, familia, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion,
-                    (LocalDate[][]) fechas.toArray(), (String[]) descripciones.toArray(), gravedad);
-
-            animalList.add(a);
-
-        }
-
-        return animalList;
-    }
+//    public static ArrayList<Animal> buildListaFromResultSet(ResultSet rs, Statement st) throws SQLException {
+//
+//    }
 }

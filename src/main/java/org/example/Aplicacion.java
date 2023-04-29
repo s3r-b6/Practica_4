@@ -14,10 +14,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static org.example.Persistencia.Conexion.poblarHashMaps;
+
 /**
  * @author Sergio Bermejo de las Heras
- *         Esta clase es el punto de entrada a la aplicación. Tiene como
- *         atributos las diferentes ventanas de la aplicación.
+ * Esta clase es el punto de entrada a la aplicación. Tiene como
+ * atributos las diferentes ventanas de la aplicación.
  */
 public class Aplicacion {
     static JFrame ventanaPrincipal;
@@ -63,7 +65,6 @@ public class Aplicacion {
     public static void rebuildLista() throws IOException, SQLException {
         ArrayList<Animal> listaAnimales = GestionDatos.buildListaFromResultSet();
         ArrayList<Controlador> listaControladores = new ArrayList<>();
-
         listaAnimales.forEach(animal -> listaControladores.add(new Controlador(animal)));
         lista = listaControladores;
     }
@@ -82,14 +83,11 @@ public class Aplicacion {
         ventanaPrincipal = v;
 
         JButton botonAlta = new JButton("Alta");
-        JButton botonGuardar = new JButton("Guardar");
         JPanel contenedorBotones = new JPanel(new FlowLayout());
 
         botonAlta.addActionListener(e -> cargarVentanaAlta(new VentanaAlta(lista.size())));
-        botonGuardar.addActionListener(e -> accionGuardar(lista));
 
         attachFiltros(contenedorBotones);
-        contenedorBotones.add(botonGuardar);
         contenedorBotones.add(botonAlta);
         v.getContentPane().add(contenedorBotones, BorderLayout.SOUTH);
 
@@ -241,25 +239,5 @@ public class Aplicacion {
     public static void addAnimal(Animal a) {
         lista.add(new Controlador(a));
         cargarVentanaPrincipal(new VentanaAnimales(lista));
-    }
-
-    /**
-     * El método desencadenado por el botón de guardar. Envía la lista de
-     * controladores al método que se encarga
-     * de persistir los datos, si el usuario confirma que desea hacerlo.
-     *
-     * @param lista La lista de controladores
-     */
-    private static void accionGuardar(ArrayList<Controlador> lista) {
-        Object[] opt = { "Sí", "No" };
-        if (JOptionPane.showOptionDialog(null,
-                "¿Seguro que deseas guardar?\n Esta acción es irreversible",
-                "Confirmación de guardado",
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-                null, opt, opt[0]) != JOptionPane.YES_OPTION) {
-            return;
-        }
-        // TODO: accion guardar
-        // Ficheros.guardarEstado(lista);
     }
 }

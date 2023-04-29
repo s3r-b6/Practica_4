@@ -102,7 +102,7 @@ public abstract class Animal {
      *                                tratamientos
      */
     public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado,
-            LocalDate[][] fechasTratamientos, String[] descripcionTratamientos) {
+                  ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos) {
         switch (estado) {
             case "Liberado" -> this.estado = Estado.Liberado;
             case "Fallecido" -> this.estado = Estado.Fallecido;
@@ -113,8 +113,8 @@ public abstract class Animal {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.especie = especie;
-        this.fechasTratamientos = new ArrayList<>(Arrays.asList(fechasTratamientos));
-        this.descripcionTratamientos = new ArrayList<>(Arrays.asList(descripcionTratamientos));
+        this.fechasTratamientos = fechasTratamientos;
+        this.descripcionTratamientos = descripcionTratamientos;
     }
 
     /**
@@ -136,8 +136,8 @@ public abstract class Animal {
      * @return Devuelve un Animal
      */
     public static Animal rebuildFromData(int id, String tipo, int peso, LocalDate fechaEntrada, LocalDate fechaSalida,
-            String especie, String estado, boolean tipoLesion, LocalDate[][] fechasTratamientos,
-            String[] descripcionTratamientos, String gravedad) {
+                                         String especie, String estado, boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos,
+                                         ArrayList<String> descripcionTratamientos, String gravedad) {
         switch (tipo) {
             case "Ave" -> {
                 return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos,
@@ -231,9 +231,9 @@ public abstract class Animal {
             LocalDate[] fechasArray = fechasTratamientos.get(i);
             String descripcionTratamiento = descripcionTratamientos.get(i);
 
-            tratamientos[i] = new Object[] { fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            tratamientos[i] = new Object[]{fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), descripcionTratamiento,
-                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now())) };
+                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))};
         }
 
         return tratamientos;
@@ -249,7 +249,7 @@ public abstract class Animal {
      * @param fechaFin    La fecha de final del tratamiento
      */
     public void addTratamiento(String tratamiento, LocalDate fechaFin) {
-        fechasTratamientos.add(new LocalDate[] { LocalDate.now(), fechaFin });
+        fechasTratamientos.add(new LocalDate[]{LocalDate.now(), fechaFin});
         descripcionTratamientos.add(tratamiento);
     }
 

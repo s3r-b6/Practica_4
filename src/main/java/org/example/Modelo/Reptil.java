@@ -1,6 +1,7 @@
 package org.example.Modelo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Reptil extends Animal {
     LesionReptil tipoLesion;
@@ -44,7 +45,7 @@ public class Reptil extends Animal {
      * @param gravedad                El grado de importancia de la lesión
      */
     public Reptil(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado,
-            boolean tipoLesion, LocalDate[][] fechasTratamientos, String[] descripcionTratamientos, String gravedad) {
+                  boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos, String gravedad) {
         super(id, peso, fechaEntrada, fechaSalida, especie, estado, fechasTratamientos, descripcionTratamientos);
         switch (gravedad) {
             case "Alta" -> this.gravedad = Gravedad.Alta;
