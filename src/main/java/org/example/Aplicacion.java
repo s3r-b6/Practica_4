@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.example.Persistencia.Conexion.poblarHashMaps;
+import static org.example.Persistencia.GestionDatos.buildListaFromResultSet;
 
 /**
  * @author Sergio Bermejo de las Heras
@@ -36,18 +37,15 @@ public class Aplicacion {
     public static HashMap<Integer, String> gravedades_id = new HashMap<>();
     /**
      * La lista de animales contiene los controladores para cada uno de los
-     * animales.
-     * La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame
-     * cada
-     * una de las vistas del controlador. Desde la interfaz, se pueden enviar
-     * señales al
-     * controlador para que modifique los datos del modelo y justo después actualice
-     * la
-     * representación de los datos.
+     * animales. La interfaz gráfica se realiza creando un JFrame y añadiéndole a ese JFrame
+     * cada una de las vistas del controlador. Desde la interfaz, se pueden enviar
+     * señales al controlador para que modifique los datos del modelo y justo después actualice
+     * la representación de los datos.
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException, SQLException {
+    //TODO: arreglar ventana principal con pocos elementos
+    public static void main(String[] args) {
         rebuildLista();
         cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
@@ -57,13 +55,10 @@ public class Aplicacion {
      * lista de animales
      * a partir del archivo .json, y, a partir de él reconstruye una lista de
      * contrladores.
-     *
-     * @throws IOException
-     * @throws SQLException
      */
 
-    public static void rebuildLista() throws IOException, SQLException {
-        ArrayList<Animal> listaAnimales = GestionDatos.buildListaFromResultSet();
+    public static void rebuildLista() {
+        ArrayList<Animal> listaAnimales = buildListaFromResultSet();
         ArrayList<Controlador> listaControladores = new ArrayList<>();
         listaAnimales.forEach(animal -> listaControladores.add(new Controlador(animal)));
         lista = listaControladores;
@@ -78,8 +73,7 @@ public class Aplicacion {
      * @param v Un objeto del tipo VentanaAnimales
      */
     public static void cargarVentanaPrincipal(VentanaAnimales v) {
-        if (ventanaPrincipal != null)
-            ventanaPrincipal.dispose();
+        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
         ventanaPrincipal = v;
 
         JButton botonAlta = new JButton("Alta");
@@ -161,28 +155,27 @@ public class Aplicacion {
             return;
         }
 
-        // Si el alguno de los botones no está seleccionado, enviar un string vacío para
-        // gestionarlo
-        // dentro del constructor, else, enviar la opción
+        // Si alguno de los botones no está seleccionado, enviar un string vacío para
+        // gestionarlo dentro del constructor, else, enviar la opción
         String[] filtro = {
                 especieSelecc == null ? "" : especieSelecc.getActionCommand(),
                 estadoSelecc == null ? "" : estadoSelecc.getActionCommand()
         };
 
-        cargarVentanaPrincipal(new VentanaAnimales(lista, filtro));
+        ArrayList<Controlador> lista = new ArrayList<>();
+        GestionDatos.buildListaFromFiltros(filtro).forEach(a -> lista.add(new Controlador(a)));
+        cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
 
     /**
      * El método cargarPanelAnimal intenta cargar el componente VentanaAnimal como
-     * ventana XXXXX,
-     * si el atributo ya tiene asignada una ventana, se destruye con el método
+     * ventana XXXXX, si el atributo ya tiene asignada una ventana, se destruye con el método
      * dispose
      *
      * @param v Un objeto del tipo VentanaAnimal
      */
     public static void cargarVentanaDetalle(VentanaAnimal v) {
-        if (ventanaDetalle != null)
-            ventanaDetalle.dispose();
+        if (ventanaDetalle != null) ventanaDetalle.dispose();
         ventanaDetalle = v;
     }
 
@@ -195,22 +188,19 @@ public class Aplicacion {
      * @param v Un objeto del tipo VentanaAlta
      */
     public static void cargarVentanaAlta(VentanaAlta v) {
-        if (ventanaAlta != null)
-            ventanaAlta.dispose();
+        if (ventanaAlta != null) ventanaAlta.dispose();
         ventanaAlta = v;
     }
 
     /**
      * El método cargarMenuAlta intenta cargar el componente VentanaTratamiento como
-     * ventana XXXXX,
-     * si el atributo ya tiene asignada una ventana, se destruye con el método
+     * ventana XXXXX, si el atributo ya tiene asignada una ventana, se destruye con el método
      * dispose
      *
      * @param v Un objeto del tipo VentanaTratamiento
      */
     public static void cargarVentanaTratamiento(VentanaTratamiento v) {
-        if (ventanaTratamiento != null)
-            ventanaTratamiento.dispose();
+        if (ventanaTratamiento != null) ventanaTratamiento.dispose();
         ventanaTratamiento = v;
     }
 
@@ -222,10 +212,8 @@ public class Aplicacion {
      * @param c
      */
     public static void recrearVentanas(Controlador c) {
-        if (ventanaPrincipal != null)
-            ventanaPrincipal.dispose();
-        if (ventanaDetalle != null)
-            ventanaDetalle.dispose();
+        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
+        if (ventanaDetalle != null) ventanaDetalle.dispose();
         cargarVentanaPrincipal(new VentanaAnimales(lista));
         cargarVentanaDetalle(new VentanaAnimal(c));
     }

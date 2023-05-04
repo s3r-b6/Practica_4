@@ -11,8 +11,8 @@ import java.util.List;
 import org.example.Aplicacion;
 
 public class Conexion {
-    static final String URL_DB = "jdbc:mysql://localhost:3306/db_animales";
-    static final String URL = "jdbc:mysql://localhost:3306/";
+    static final String URL_DB = "jdbc:mysql://localhost:3307/db_animales";
+    static final String URL = "jdbc:mysql://localhost:3307/";
     static final String USER = "root";
 
     static final String[] queriesCrear = new String[]{
@@ -205,6 +205,7 @@ public class Conexion {
         }
     }
 
+    //al crear la DB por primera vez, o, en cada query (mejorable)
     public static void poblarHashMaps(Connection c) throws SQLException {
         Statement st = c.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM estados");
