@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.example.Aplicacion;
 
+import static org.example.Aplicacion.*;
+
 public class Conexion {
     static final String URL_DB = "jdbc:mysql://localhost:3307/db_animales";
     static final String URL = "jdbc:mysql://localhost:3307/";
@@ -74,10 +76,11 @@ public class Conexion {
 
     public static Connection getConnection() {
         try {
-            // Problema: la base de datos podría existir y no tener la estructura adecuada
-            Connection connection = DriverManager.getConnection(URL_DB, USER, "");
-            poblarHashMaps(connection);
-            return connection;
+            Connection c = DriverManager.getConnection(URL_DB, USER, "");
+            // Si no ha habido excepción, la BD existe y funciona
+            // Problema: la base de datos podría existir y no tener la estructura adecuada, pero no se comprueba eso
+            if (estados.isEmpty() || familias.isEmpty() || gravedades.isEmpty()) poblarHashMaps(c);
+            return c;
         } catch (SQLException e) {
             System.out.println("Base de datos no detectada\nCreando la base de datos de cero");
             try (Connection c2 = DriverManager.getConnection(URL, USER, "")) {
@@ -119,38 +122,38 @@ public class Conexion {
             String[] insertAnimalQuery = {
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             1, Aplicacion.familias.get("Ave"), 2, "2023-04-23", "NULL", "Canario",
-                            Aplicacion.estados.get("Tratamiento"), "TRUE", Aplicacion.gravedades.get("Alta")),
+                            estados.get("Tratamiento"), "TRUE", Aplicacion.gravedades.get("Alta")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             2, Aplicacion.familias.get("Mamifero"), 180, "2023-04-21", "NULL", "Tigre",
-                            Aplicacion.estados.get("Tratamiento"), "TRUE",
+                            estados.get("Tratamiento"), "TRUE",
                             Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             3, Aplicacion.familias.get("Reptil"), 3, "2023-04-22", "2023-04-24", "Cocodrilo",
-                            Aplicacion.estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("N/A")),
+                            estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("N/A")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             4, Aplicacion.familias.get("Reptil"), 7, "2023-02-20", "2023-06-26", "Caimán",
-                            Aplicacion.estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("Media")),
+                            estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             5, Aplicacion.familias.get("Ave"), 2, "2023-06-23", "NULL", "Canario",
-                            Aplicacion.estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Alta")),
+                            estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Alta")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             6, Aplicacion.familias.get("Mamifero"), 180, "2023-07-21", "NULL", "Tigre",
-                            Aplicacion.estados.get("Fallecido"), "FALSE",
+                            estados.get("Fallecido"), "FALSE",
                             Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             7, Aplicacion.familias.get("Reptil"), 3, "2023-03-22", "2023-09-24", "Salamanquesa",
-                            Aplicacion.estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("N/A")),
+                            estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("N/A")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             8, Aplicacion.familias.get("Reptil"), 7, "2023-01-20", "2023-12-26", "Serpiente",
-                            Aplicacion.estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Media")),
+                            estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             9, Aplicacion.familias.get("Ave"), 30, "2023-06-15", "NULL", "Búho real",
-                            Aplicacion.estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Baja")),
+                            estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Baja")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             10, Aplicacion.familias.get("Mamifero"), 50, "2023-02-10", "2023-07-20", "Oso pardo",
-                            Aplicacion.estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Alta")),
+                            estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Alta")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA, 11, Aplicacion.familias.get("Mamifero"), 2, "2023-04-05", "NULL", "Rana verde",
-                            Aplicacion.estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("N/A"))
+                            estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("N/A"))
 
             };
 
@@ -194,7 +197,6 @@ public class Conexion {
 
             };
 
-
             for (String str : insertAnimalQuery) st.executeUpdate(str);
 
             for (String str : insertTratamQuery) st.executeUpdate(str);
@@ -206,24 +208,28 @@ public class Conexion {
     }
 
     //al crear la DB por primera vez, o, en cada query (mejorable)
-    public static void poblarHashMaps(Connection c) throws SQLException {
-        Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM estados");
-        while (rs.next()) {
-            Aplicacion.estados.put(rs.getString(2), rs.getInt(1));
-            Aplicacion.estados_id.put(rs.getInt(1), rs.getString(2));
+    public static void poblarHashMaps(Connection c) {
+        try {
+            Statement st = c.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM estados");
+            while (rs.next()) {
+                estados.put(rs.getString(2), rs.getInt(1));
+                Aplicacion.estados_id.put(rs.getInt(1), rs.getString(2));
+            }
+            rs = st.executeQuery("SELECT * FROM familias");
+            while (rs.next()) {
+                Aplicacion.familias.put(rs.getString(2), rs.getInt(1));
+                Aplicacion.familias_id.put(rs.getInt(1), rs.getString(2));
+            }
+            rs = st.executeQuery("SELECT * FROM gravedad");
+            while (rs.next()) {
+                Aplicacion.gravedades.put(rs.getString(2), rs.getInt(1));
+                Aplicacion.gravedades_id.put(rs.getInt(1), rs.getString(2));
+            }
+        } catch (Exception e) {
+            System.err.println(e.getLocalizedMessage());
+            throw new RuntimeException(e);
         }
-        rs = st.executeQuery("SELECT * FROM familias");
-        while (rs.next()) {
-            Aplicacion.familias.put(rs.getString(2), rs.getInt(1));
-            Aplicacion.familias_id.put(rs.getInt(1), rs.getString(2));
-        }
-        rs = st.executeQuery("SELECT * FROM gravedad");
-        while (rs.next()) {
-            Aplicacion.gravedades.put(rs.getString(2), rs.getInt(1));
-            Aplicacion.gravedades_id.put(rs.getInt(1), rs.getString(2));
-        }
-        st.close();
     }
 
 }

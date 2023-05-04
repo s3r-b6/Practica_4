@@ -13,10 +13,10 @@ import org.example.Modelo.Animal;
 import static org.example.Aplicacion.estados;
 import static org.example.Aplicacion.familias;
 import static org.example.Persistencia.Conexion.*;
-import static org.example.Persistencia.Conexion.poblarHashMaps;
 
 public class GestionDatos {
 
+    //TODO: Gestión del alta -> Insertar un animal sin fecha de salida (de entrada sería LocalDate.now())
     static final String INSERT_ANIMAL_SIN_FECHA = """
             INSERT INTO
             animales(id, tipo_familia, peso, fecha_entrada, fecha_salida, especie, tipo_estado, tipo_lesion, tipo_gravedad)
@@ -106,6 +106,7 @@ public class GestionDatos {
                 ResultSet rs2 = c.createStatement().executeQuery(queryTratam);
                 LocalDate fechaEnt = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 LocalDate fechaSal = null;
+
                 if (fechaSalida != null) {
                     fechaSal = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 }
