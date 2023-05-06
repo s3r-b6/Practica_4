@@ -1,9 +1,12 @@
 package org.example.Modelo;
 
+import static org.example.Aplicacion.familias;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import org.example.Persistencia.GestionDatos;
 
 /**
  * Esta clase representa el modelo de datos de los animales. Las familias
@@ -102,7 +105,7 @@ public abstract class Animal {
      *                                tratamientos
      */
     public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado,
-                  ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos) {
+            ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos) {
         switch (estado) {
             case "Liberado" -> this.estado = Estado.Liberado;
             case "Fallecido" -> this.estado = Estado.Fallecido;
@@ -136,8 +139,8 @@ public abstract class Animal {
      * @return Devuelve un Animal
      */
     public static Animal rebuildFromData(int id, String tipo, int peso, LocalDate fechaEntrada, LocalDate fechaSalida,
-                                         String especie, String estado, boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos,
-                                         ArrayList<String> descripcionTratamientos, String gravedad) {
+            String especie, String estado, boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos,
+            ArrayList<String> descripcionTratamientos, String gravedad) {
         switch (tipo) {
             case "Ave" -> {
                 return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos,
@@ -231,9 +234,9 @@ public abstract class Animal {
             LocalDate[] fechasArray = fechasTratamientos.get(i);
             String descripcionTratamiento = descripcionTratamientos.get(i);
 
-            tratamientos[i] = new Object[]{fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            tratamientos[i] = new Object[] { fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), descripcionTratamiento,
-                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))};
+                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now())) };
         }
 
         return tratamientos;
@@ -249,7 +252,7 @@ public abstract class Animal {
      * @param fechaFin    La fecha de final del tratamiento
      */
     public void addTratamiento(String tratamiento, LocalDate fechaFin) {
-        fechasTratamientos.add(new LocalDate[]{LocalDate.now(), fechaFin});
+        fechasTratamientos.add(new LocalDate[] { LocalDate.now(), fechaFin });
         descripcionTratamientos.add(tratamiento);
     }
 
@@ -281,47 +284,21 @@ public abstract class Animal {
         return true;
     }
 
-    /**
-     * Este método devuelve la representación del animal como JSON. Podría haberse
-     * utilizado la librería que
-     * está importada y que se está utilizando para deserializar, pero quería
-     * escribir la función para serializar
-     * a mano.
-     *
-     * @return Un string de JSON que representa los diferentes datos del animal
-     */
-    public String toJSON() {
-        String plantilla = """
-                {
-                    "id":%d,
-                    "tipo":"%s",
-                    "peso":%d,
-                    "fechaEntrada":"%s",
-                    "fechaSalida":"%s",
-                    "especie":"%s",
-                    "estado":"%s",
-                    "tipoLesion": "%s",
-                    "gravedad": "%s",
-                    "fechasTratamientos":[%s],
-                    "descripcionTratamientos":[%s]
-                },""";
+    public String getInsert() {
+        String familia = this.getClass().getSimpleName();
+        String fechaSalida = this.getFechaSalida();
 
-        ArrayList<LocalDate[]> tratamientos = this.fechasTratamientos;
-        StringBuilder fechasT = new StringBuilder();
-        for (LocalDate[] arr : tratamientos)
-            fechasT.append("[\"").append(arr[0]).append("\",\"").append(arr[1]).append("\"],");
-        fechasT.deleteCharAt(fechasT.length() - 1);
-
-        StringBuilder tratam = new StringBuilder();
-        for (String t : descripcionTratamientos) {
-            tratam.append("\"").append(t).append("\",");
+        if (fechaSalida.equals(null)) {
+            return String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA, this.getId(),
+                    familias.get(familia), this.getPeso(), this.getFechaEntrada(),
+                    "NULL", this.getEspecie(), this.getEstado(), this.getTipoLesion(),
+                    this.getGravedad());
+        } else {
+            return String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA, this.getId(),
+                    familias.get(familia), this.getPeso(), this.getFechaEntrada(),
+                    fechaSalida, this.getEspecie(), this.getEstado(), this.getTipoLesion(),
+                    this.getGravedad());
         }
-        tratam.deleteCharAt(tratam.length() - 1);
-
-        return String.format(plantilla, this.getId(), this.getClass().getSimpleName(), this.getPeso(),
-                this.getFechaEntrada(),
-                this.getFechaSalida(), this.getEspecie(), this.getEstado(), this.getTipoLesion(), this.getGravedad(),
-                fechasT, tratam);
     }
 
     public String getGravedad() {

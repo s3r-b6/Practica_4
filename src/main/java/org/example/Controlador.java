@@ -1,7 +1,8 @@
 package org.example;
 
 import org.example.Modelo.Animal;
-import org.example.Persistencia.*;
+import org.example.Persistencia.GestionDatos;
+
 import java.time.LocalDate;
 
 /**
@@ -49,6 +50,7 @@ public class Controlador {
      */
     public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.addTratamiento(tratamiento, fechaFin);
+        GestionDatos.insertTratamiento(animal.getId(), LocalDate.now().toString(), fechaFin.toString(), tratamiento);
         this.vista = construirVista();
     }
 
@@ -58,6 +60,7 @@ public class Controlador {
      */
     public void liberacionControlador() {
         if (animal.liberacionAnimal()) {
+            GestionDatos.updateEstado(animal.getId(), animal.getEstado());
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
@@ -70,7 +73,7 @@ public class Controlador {
      */
     public void bajaControlador() {
         if (animal.bajaAnimal()) {
-
+            GestionDatos.updateEstado(animal.getId(), animal.getEstado());
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
@@ -83,6 +86,7 @@ public class Controlador {
      */
     public void aumentarGravedadCont() {
         if (animal.aumentarGravedad()) {
+            GestionDatos.updateGravedad(animal.getId(), animal.getGravedad());
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
@@ -95,33 +99,11 @@ public class Controlador {
      */
     public void dismGravedadCont() {
         if (animal.disminuirGravedad()) {
+            GestionDatos.updateGravedad(animal.getId(), animal.getGravedad());
             this.vista = new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
                     animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
                     animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
         }
-    }
-
-    /**
-     * @return Devuelve la representación en JSON del modelo de datos
-     */
-    public String getInsert() {
-        return String.format(
-                """
-                        INSERT INTO animales(id, !!!tipo!!!, peso, fechaEntrada, fechaSalida, especie, !!!estado!!!, tipoLesion, gravedad)
-                        VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-                        """,
-                animal.getId(), animal.getClass().getSimpleName(), animal.getPeso(), animal.getFechaEntrada(),
-                animal.getFechaSalida(), animal.getEspecie(), animal.getEstado(), animal.getTipoLesion(),
-                animal.getGravedad());
-    }
-
-    public String getTratamientosInsert() {
-        return String.format("""
-                INSERT INTO tratamientos(id, fechaInicio, fechaFin)
-                VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');
-                """, animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
-                animal.getTipoLesion(), animal.getGravedad());
     }
 
     /**

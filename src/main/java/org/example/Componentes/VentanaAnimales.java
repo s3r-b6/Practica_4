@@ -1,7 +1,6 @@
 package org.example.Componentes;
 
 import org.example.Controlador;
-import org.example.Persistencia.GestionDatos;
 import org.example.Vista;
 
 import javax.swing.*;
@@ -22,7 +21,8 @@ public class VentanaAnimales extends JFrame {
     public VentanaAnimales(ArrayList<Controlador> lista) {
         this.setLayout(new BorderLayout());
         this.setTitle("Ventana principal");
-        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png"))
+                .getImage());
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         int size = 350 * (lista.size() / 3);
         this.setPreferredSize(new Dimension(Math.min(size, 1500), 850));
@@ -46,7 +46,6 @@ public class VentanaAnimales extends JFrame {
             gridPane.add(contenedorAnimal);
         }
 
-
         this.add(gridPane, BorderLayout.CENTER);
 
         JScrollPane scroll = new JScrollPane(gridPane);
@@ -54,7 +53,7 @@ public class VentanaAnimales extends JFrame {
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.getContentPane().add(scroll);
 
-        //centrar la ventana
+        // centrar la ventana
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);

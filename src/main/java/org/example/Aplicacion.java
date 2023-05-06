@@ -9,17 +9,15 @@ import org.example.Persistencia.GestionDatos;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.example.Persistencia.Conexion.poblarHashMaps;
 import static org.example.Persistencia.GestionDatos.buildListaFromResultSet;
 
 /**
  * @author Sergio Bermejo de las Heras
- * Esta clase es el punto de entrada a la aplicación. Tiene como atributos las diferentes ventanas de la aplicación.
+ *         Esta clase es el punto de entrada a la aplicación. Tiene como
+ *         atributos las diferentes ventanas de la aplicación.
  */
 public class Aplicacion {
     static JFrame ventanaPrincipal;
@@ -34,22 +32,27 @@ public class Aplicacion {
     public static HashMap<Integer, String> familias_id = new HashMap<>();
     public static HashMap<Integer, String> gravedades_id = new HashMap<>();
     /**
-     * La lista de animales contiene los controladores para cada uno de los animales. La interfaz gráfica se realiza
-     * creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del controlador. Desde la interfaz, se
-     * pueden enviar señales al controlador para que modifique los datos del modelo y justo después actualice
+     * La lista de animales contiene los controladores para cada uno de los
+     * animales. La interfaz gráfica se realiza
+     * creando un JFrame y añadiéndole a ese JFrame cada una de las vistas del
+     * controlador. Desde la interfaz, se
+     * pueden enviar señales al controlador para que modifique los datos del modelo
+     * y justo después actualice
      * la representación de los datos.
      */
     static ArrayList<Controlador> lista = new ArrayList<>();
 
-    //TODO: arreglar ventana principal con pocos elementos
+    // TODO: arreglar ventana principal con pocos elementos
     public static void main(String[] args) {
         rebuildLista();
         cargarVentanaPrincipal(new VentanaAnimales(lista));
     }
 
     /**
-     * Llama al método reconstruirLista del paquete de Persistencia para crear una lista de animales
-     * a partir del archivo .json, y, a partir de él reconstruye una lista de contrladores.
+     * Llama al método reconstruirLista del paquete de Persistencia para crear una
+     * lista de animales
+     * a partir del archivo .json, y, a partir de él reconstruye una lista de
+     * contrladores.
      */
 
     public static void rebuildLista() {
@@ -61,13 +64,16 @@ public class Aplicacion {
     }
 
     /**
-     * El método cargarPanelAnimales intenta cargar el componente VentanaAnimales como ventana principal,
-     * si el atributo ya tiene asignada una ventana, se destruye con el método dispose
+     * El método cargarPanelAnimales intenta cargar el componente VentanaAnimales
+     * como ventana principal,
+     * si el atributo ya tiene asignada una ventana, se destruye con el método
+     * dispose
      *
      * @param v Un objeto del tipo VentanaAnimales
      */
     public static void cargarVentanaPrincipal(VentanaAnimales v) {
-        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
+        if (ventanaPrincipal != null)
+            ventanaPrincipal.dispose();
         ventanaPrincipal = v;
 
         JButton botonAlta = new JButton("Alta");
@@ -162,53 +168,64 @@ public class Aplicacion {
     }
 
     /**
-     * El método cargarPanelAnimal intenta cargar el componente VentanaAnimal como ventana XXXXX, si el atributo ya
+     * El método cargarPanelAnimal intenta cargar el componente VentanaAnimal como
+     * ventana XXXXX, si el atributo ya
      * tiene asignada una ventana, se destruye con el método dispose
      *
      * @param v Un objeto del tipo VentanaAnimal
      */
     public static void cargarVentanaDetalle(VentanaAnimal v) {
-        if (ventanaDetalle != null) ventanaDetalle.dispose();
+        if (ventanaDetalle != null)
+            ventanaDetalle.dispose();
         ventanaDetalle = v;
     }
 
     /**
-     * El método cargarMenuAlta intenta cargar el componente VentanaAlta como ventana XXXXX,
-     * si el atributo ya tiene asignada una ventana, se destruye con el método dispose
+     * El método cargarMenuAlta intenta cargar el componente VentanaAlta como
+     * ventana XXXXX,
+     * si el atributo ya tiene asignada una ventana, se destruye con el método
+     * dispose
      *
      * @param v Un objeto del tipo VentanaAlta
      */
     public static void cargarVentanaAlta(VentanaAlta v) {
-        if (ventanaAlta != null) ventanaAlta.dispose();
+        if (ventanaAlta != null)
+            ventanaAlta.dispose();
         ventanaAlta = v;
     }
 
     /**
-     * El método cargarMenuAlta intenta cargar el componente VentanaTratamiento como ventana XXXXX, si el atributo ya
+     * El método cargarMenuAlta intenta cargar el componente VentanaTratamiento como
+     * ventana XXXXX, si el atributo ya
      * tiene asignada una ventana, se destruye con el método dispose
      *
      * @param v Un objeto del tipo VentanaTratamiento
      */
     public static void cargarVentanaTratamiento(VentanaTratamiento v) {
-        if (ventanaTratamiento != null) ventanaTratamiento.dispose();
+        if (ventanaTratamiento != null)
+            ventanaTratamiento.dispose();
         ventanaTratamiento = v;
     }
 
     /**
-     * Este método destruye las ventanas principal y de detalle (en las que los datos pueden desactualizarse
+     * Este método destruye las ventanas principal y de detalle (en las que los
+     * datos pueden desactualizarse
      * respesto a su representación) y carga nuevos JFrames en ellas.
      *
      * @param c
      */
     public static void recrearVentanas(Controlador c) {
-        if (ventanaPrincipal != null) ventanaPrincipal.dispose();
-        if (ventanaDetalle != null) ventanaDetalle.dispose();
+        if (ventanaPrincipal != null)
+            ventanaPrincipal.dispose();
+        if (ventanaDetalle != null)
+            ventanaDetalle.dispose();
         cargarVentanaPrincipal(new VentanaAnimales(lista));
         cargarVentanaDetalle(new VentanaAnimal(c));
     }
 
     /**
-     * Este método añade a la lista un nuevo controlador y llama al método que carga un nuevo panel de animales
+     * Este método añade a la lista un nuevo controlador y llama al método que carga
+     * un nuevo panel de animales
      *
      * @param a El Animal a añadir
      */
