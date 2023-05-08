@@ -25,7 +25,7 @@ public class GestionDatos {
             VALUES(%d,   %d,           %d,   '%s',          '%s',           '%s',    '%s',         %s,         %d);""";
 
     static final String INSERT_TRATAM = """
-            INSERT INTO tratamientos (id_animal, fechaInicio, fechaFin, descripcion) VALUES (%s, %s, %s, %s)
+            INSERT INTO tratamientos (id_animal,fecha_inicio,fecha_fin, descripcion) VALUES (%s, %s, %s, "%s")
             """;
 
     static final String QUERY_FAMILIA = "SELECT * FROM animales WHERE tipo_familia = %d;";
@@ -34,8 +34,8 @@ public class GestionDatos {
     private static final String QUERY_FAMILIA_ESTADO = """
             SELECT * FROM animales WHERE tipo_familia = %d AND tipo_estado = %d;
             """;
-    private static final String UPDATE_ESTADO = "UPDATE animales SET estado = %d WHERE id = %d";
-    private static final String UPDATE_GRAVEDAD = "UPDATE animales SET gravedad = %d WHERE id = %d";
+    private static final String UPDATE_ESTADO = "UPDATE animales SET tipo_estado = %d WHERE id = %d";
+    private static final String UPDATE_GRAVEDAD = "UPDATE animales SET tipo_gravedad = %d WHERE id = %d";
 
     public static void updateEstado(int idAnimal, String estadoAnimal) {
         try (Connection c = getConnection()) {
@@ -51,16 +51,6 @@ public class GestionDatos {
         try (Connection c = getConnection()) {
             Statement st = c.createStatement();
             st.executeUpdate(String.format(UPDATE_GRAVEDAD, gravedades.get(nuevaGravedad), idAnimal));
-        } catch (SQLException e) {
-            System.out.println("Hubo un problema al ejecutar la query");
-            throw new RuntimeException(e.getLocalizedMessage());
-        }
-    }
-
-    public static void updateAnimal(int idAnimal, String fechaInicio, String fechaFin, String descripcion) {
-        try (Connection c = getConnection()) {
-            Statement st = c.createStatement();
-            st.executeQuery(String.format(INSERT_TRATAM, idAnimal, fechaInicio, fechaFin, descripcion));
         } catch (SQLException e) {
             System.out.println("Hubo un problema al ejecutar la query");
             throw new RuntimeException(e.getLocalizedMessage());
@@ -120,7 +110,7 @@ public class GestionDatos {
                 }
 
                 while (rs2.next()) {
-                    fechas.add(new LocalDate[] {
+                    fechas.add(new LocalDate[]{
                             LocalDate.parse(rs2.getString(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                             LocalDate.parse(rs2.getString(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     });
@@ -188,7 +178,7 @@ public class GestionDatos {
                 ResultSet rs2 = st.executeQuery(queryTratam);
 
                 while (rs2.next()) {
-                    fechas.add(new LocalDate[] {
+                    fechas.add(new LocalDate[]{
                             LocalDate.parse(rs2.getString(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                             LocalDate.parse(rs2.getString(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     });
