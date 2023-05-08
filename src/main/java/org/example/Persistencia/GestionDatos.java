@@ -25,7 +25,7 @@ public class GestionDatos {
             VALUES(%d,   %d,           %d,   '%s',          '%s',           '%s',    '%s',         %s,         %d);""";
 
     static final String INSERT_TRATAM = """
-            INSERT INTO tratamientos (id_animal,fecha_inicio,fecha_fin, descripcion) VALUES (%s, %s, %s, "%s")
+            INSERT INTO tratamientos (id_animal,fecha_inicio,fecha_fin, descripcion) VALUES (%s, "%s", "%s", "%s")
             """;
 
     static final String QUERY_FAMILIA = "SELECT * FROM animales WHERE tipo_familia = %d;";
@@ -102,17 +102,17 @@ public class GestionDatos {
 
                 String queryTratam = String.format(QUERY_TRATAM, id);
                 ResultSet rs2 = c.createStatement().executeQuery(queryTratam);
-                LocalDate fechaEnt = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate fechaEnt = LocalDate.parse(fechaEntrada);
                 LocalDate fechaSal = null;
 
                 if (fechaSalida != null) {
-                    fechaSal = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    fechaSal = LocalDate.parse(fechaEntrada);
                 }
 
                 while (rs2.next()) {
                     fechas.add(new LocalDate[]{
-                            LocalDate.parse(rs2.getString(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                            LocalDate.parse(rs2.getString(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            LocalDate.parse(rs2.getString(3)),
+                            LocalDate.parse(rs2.getString(4)),
                     });
                     descripciones.add(rs2.getString(5));
                 }
@@ -165,11 +165,11 @@ public class GestionDatos {
             ArrayList<LocalDate[]> fechas = new ArrayList<>();
             ArrayList<String> descripciones = new ArrayList<>();
 
-            LocalDate fechaEnt = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate fechaEnt = LocalDate.parse(fechaEntrada);
             LocalDate fechaSal = null;
 
             if (fechaSalida != null) {
-                fechaSal = LocalDate.parse(fechaEntrada, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                fechaSal = LocalDate.parse(fechaEntrada);
             }
 
             try (Connection c = getConnection()) {
@@ -179,8 +179,8 @@ public class GestionDatos {
 
                 while (rs2.next()) {
                     fechas.add(new LocalDate[]{
-                            LocalDate.parse(rs2.getString(3), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                            LocalDate.parse(rs2.getString(4), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            LocalDate.parse(rs2.getString(3)),
+                            LocalDate.parse(rs2.getString(4)),
                     });
                     descripciones.add(rs2.getString(5));
                 }

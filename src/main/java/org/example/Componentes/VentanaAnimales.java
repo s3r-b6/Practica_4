@@ -25,7 +25,7 @@ public class VentanaAnimales extends JFrame {
                 .getImage());
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         int size = 350 * (lista.size() / 3);
-        this.setPreferredSize(new Dimension(Math.min(size, 1500), 850));
+        this.setPreferredSize(new Dimension(Math.min(Math.max(800, size * 350), 1500), 850));
 
         GridLayout gl = new GridLayout(3, lista.size() / 3);
         JPanel gridPane = new JPanel(gl);

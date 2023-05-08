@@ -3,6 +3,7 @@ package org.example;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.Objects;
 
 /**
  * Es la representación de cara al usuario del modelo de datos. Cuando el
@@ -34,7 +35,8 @@ public class Vista {
      * detalle.
      */
     Vista(String tipo, int id, String especie, String fechaEntrada, String fechaSalida, String estado, int peso,
-            Object[][] historialTratamiento, String tipoLesion, String gravedad) {
+          Object[][] historialTratamiento, String tipoLesion, String gravedad) {
+        if (Objects.equals(fechaSalida, "NULL")) fechaSalida = "";
         this.vistaNormal = buildCuerpo(tipo, id, especie, fechaEntrada, fechaSalida, estado, peso, tipoLesion,
                 gravedad);
         this.vistaDetalle = buildDetalle(
@@ -61,7 +63,7 @@ public class Vista {
      */
     private JPanel buildDetalle(JPanel contenedorCuerpo, Object[][] historialTratamiento) {
         DefaultTableModel model = new DefaultTableModel(historialTratamiento,
-                new String[] { "Fecha-Inicio", "Fecha-Fin", "Tratamiento", "Completado" });
+                new String[]{"Fecha-Inicio", "Fecha-Fin", "Tratamiento", "Completado"});
         JTable tabla = new JTable(model) {
             public Class getColumnClass(int column) {
                 return getValueAt(0, column).getClass();
@@ -106,7 +108,7 @@ public class Vista {
      * @return Devuelve el JPanel que representa los datos del animal
      */
     private JPanel buildCuerpo(String tipo, int id, String especie, String fechaEntrada, String fechaSalida,
-            String estado, int peso, String tipoLesion, String gravedad) {
+                               String estado, int peso, String tipoLesion, String gravedad) {
         JPanel contenedorCuerpo = new JPanel(new BorderLayout());
         JPanel h1 = new JPanel(new GridLayout(1, 2));
         h1.add(new JLabel("Familia: " + tipo));

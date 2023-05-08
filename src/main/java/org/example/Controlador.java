@@ -29,7 +29,7 @@ public class Controlador {
 
     private Vista construirVista() {
         return new Vista(animal.getClass().getSimpleName(), animal.getId(), animal.getEspecie(),
-                animal.getFechaEntrada(), animal.getFechaSalida(), animal.getEstado(), animal.getPeso(),
+                animal.getFechaEntradaFormateada(), animal.getFechaSalidaFormateada(), animal.getEstado(), animal.getPeso(),
                 animal.getHistorialTratamiento(), animal.getTipoLesion(), animal.getGravedad());
     }
 
@@ -50,7 +50,8 @@ public class Controlador {
      */
     public void nuevoTratamientoControlador(String tratamiento, LocalDate fechaFin) {
         animal.addTratamiento(tratamiento, fechaFin);
-        GestionDatos.insertTratamiento(animal.getId(), LocalDate.now().toString(), fechaFin.toString(), tratamiento);
+        LocalDate fechaInicio = LocalDate.now();
+        GestionDatos.insertTratamiento(animal.getId(), fechaInicio.toString(), fechaFin.toString(), tratamiento);
         this.vista = construirVista();
     }
 

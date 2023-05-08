@@ -133,10 +133,10 @@ public class Conexion {
                             estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             5, Aplicacion.familias.get("Ave"), 2, "2023-06-23", "NULL", "Canario",
-                            estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Alta")),
+                            estados.get("Tratamiento"), "FALSE", Aplicacion.gravedades.get("Alta")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             6, Aplicacion.familias.get("Mamifero"), 180, "2023-07-21", "NULL", "Tigre",
-                            estados.get("Fallecido"), "FALSE",
+                            estados.get("Tratamiento"), "FALSE",
                             Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             7, Aplicacion.familias.get("Reptil"), 3, "2023-03-22", "2023-09-24", "Salamanquesa",
@@ -146,13 +146,16 @@ public class Conexion {
                             estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Media")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA,
                             9, Aplicacion.familias.get("Ave"), 30, "2023-06-15", "NULL", "Búho real",
-                            estados.get("Liberado"), "FALSE", Aplicacion.gravedades.get("Baja")),
+                            estados.get("Tratamiento"), "FALSE", Aplicacion.gravedades.get("Baja")),
                     String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
                             10, Aplicacion.familias.get("Mamifero"), 50, "2023-02-10", "2023-07-20", "Oso pardo",
                             estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Alta")),
                     String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA, 11, Aplicacion.familias.get("Mamifero"), 2,
                             "2023-04-05", "NULL", "Rana verde",
-                            estados.get("Fallecido"), "FALSE", Aplicacion.gravedades.get("N/A"))
+                            estados.get("Tratamiento"), "FALSE", Aplicacion.gravedades.get("N/A")),
+                    String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA,
+                            12, Aplicacion.familias.get("Mamifero"), 50, "2023-02-10", "2023-09-24", "Oso polar",
+                            estados.get("Liberado"), "TRUE", Aplicacion.gravedades.get("Alta")),
 
             };
 

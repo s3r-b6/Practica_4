@@ -1,12 +1,12 @@
 package org.example.Modelo;
 
-import static org.example.Aplicacion.familias;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.example.Persistencia.GestionDatos;
+
+import static org.example.Aplicacion.*;
 
 /**
  * Esta clase representa el modelo de datos de los animales. Las familias
@@ -34,7 +34,6 @@ public abstract class Animal {
      * @param especie La especie
      */
     public Animal(int id, int peso, String especie, String gravedad) {
-        System.out.println(gravedad);
         this.id = id;
         this.peso = peso;
         this.fechaEntrada = LocalDate.now();
@@ -105,7 +104,7 @@ public abstract class Animal {
      *                                tratamientos
      */
     public Animal(int id, int peso, LocalDate fechaEntrada, LocalDate fechaSalida, String especie, String estado,
-            ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos) {
+                  ArrayList<LocalDate[]> fechasTratamientos, ArrayList<String> descripcionTratamientos) {
         switch (estado) {
             case "Liberado" -> this.estado = Estado.Liberado;
             case "Fallecido" -> this.estado = Estado.Fallecido;
@@ -139,8 +138,8 @@ public abstract class Animal {
      * @return Devuelve un Animal
      */
     public static Animal rebuildFromData(int id, String tipo, int peso, LocalDate fechaEntrada, LocalDate fechaSalida,
-            String especie, String estado, boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos,
-            ArrayList<String> descripcionTratamientos, String gravedad) {
+                                         String especie, String estado, boolean tipoLesion, ArrayList<LocalDate[]> fechasTratamientos,
+                                         ArrayList<String> descripcionTratamientos, String gravedad) {
         switch (tipo) {
             case "Ave" -> {
                 return new Ave(id, peso, fechaEntrada, fechaSalida, especie, estado, tipoLesion, fechasTratamientos,
@@ -189,19 +188,30 @@ public abstract class Animal {
         return this.peso;
     }
 
-    /**
-     * @return La fecha de entrada como String (formateada)
-     */
     public String getFechaEntrada() {
+        return this.fechaEntrada.toString();
+    }
+
+    public String getFechaSalida() {
+        if (this.fechaSalida == null)
+            return "NULL";
+        else
+            return this.fechaSalida.toString();
+    }
+
+    /**
+     * @return La fecha de entrada como String
+     */
+    public String getFechaEntradaFormateada() {
         return this.fechaEntrada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     /**
-     * @return La fecha de salida como String (formateada)
+     * @return La fecha de salida como String
      */
-    public String getFechaSalida() {
+    public String getFechaSalidaFormateada() {
         if (this.fechaSalida == null)
-            return "";
+            return "NULL";
         else
             return this.fechaSalida.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
@@ -234,9 +244,9 @@ public abstract class Animal {
             LocalDate[] fechasArray = fechasTratamientos.get(i);
             String descripcionTratamiento = descripcionTratamientos.get(i);
 
-            tratamientos[i] = new Object[] { fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            tratamientos[i] = new Object[]{fechasArray[0].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     fechasArray[1].format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), descripcionTratamiento,
-                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now())) };
+                    (fechasArray[1].isBefore(LocalDate.now()) || fechasArray[1].isEqual(LocalDate.now()))};
         }
 
         return tratamientos;
@@ -252,7 +262,7 @@ public abstract class Animal {
      * @param fechaFin    La fecha de final del tratamiento
      */
     public void addTratamiento(String tratamiento, LocalDate fechaFin) {
-        fechasTratamientos.add(new LocalDate[] { LocalDate.now(), fechaFin });
+        fechasTratamientos.add(new LocalDate[]{LocalDate.now(), fechaFin});
         descripcionTratamientos.add(tratamiento);
     }
 
@@ -288,16 +298,16 @@ public abstract class Animal {
         String familia = this.getClass().getSimpleName();
         String fechaSalida = this.getFechaSalida();
 
-        if (fechaSalida.equals(null)) {
+        if (fechaSalida.equals("NULL")) {
             return String.format(GestionDatos.INSERT_ANIMAL_SIN_FECHA, this.getId(),
                     familias.get(familia), this.getPeso(), this.getFechaEntrada(),
-                    "NULL", this.getEspecie(), this.getEstado(), this.getTipoLesion(),
-                    this.getGravedad());
+                    "NULL", this.getEspecie(), estados.get(this.getEstado()), !this.getTipoLesion().equals("Otro"),
+                    gravedades.get(this.getGravedad()));
         } else {
             return String.format(GestionDatos.INSERT_ANIMAL_CON_FECHA, this.getId(),
                     familias.get(familia), this.getPeso(), this.getFechaEntrada(),
-                    fechaSalida, this.getEspecie(), this.getEstado(), this.getTipoLesion(),
-                    this.getGravedad());
+                    fechaSalida, this.getEspecie(), estados.get(this.getEstado()), !this.getTipoLesion().equals("Otro"),
+                    gravedades.get(this.getGravedad()));
         }
     }
 
@@ -313,7 +323,7 @@ public abstract class Animal {
                 return "Baja";
             }
             default -> {
-                return "N/a";
+                return "N/A";
             }
         }
 
