@@ -11,6 +11,7 @@ import org.example.Aplicacion;
 import static org.example.Aplicacion.*;
 
 public class Conexion {
+    //NOTA: El puerto es el 3307 porque es como está configurado el XAMPP en clase
     static final String URL_DB = "jdbc:mysql://localhost:3307/db_animales";
     static final String URL = "jdbc:mysql://localhost:3307";
     static final String USER = "root";
@@ -76,8 +77,9 @@ public class Conexion {
             // Si no ha habido excepción, la BD existe y funciona
             // Problema: la base de datos podría existir y no tener la estructura adecuada,
             // pero no se comprueba eso
-            if (estados.isEmpty() || familias.isEmpty() || gravedades.isEmpty())
+            if (estados.isEmpty() || familias.isEmpty() || gravedades.isEmpty()) {
                 poblarHashMaps(c);
+            }
             return c;
         } catch (SQLException e) {
             System.out.println("Base de datos no detectada\nCreando la base de datos de cero");
@@ -89,11 +91,10 @@ public class Conexion {
                 c2.close();
                 try (Connection c3 = DriverManager.getConnection(URL_DB, USER, "")) {
                     Statement st2 = c3.createStatement();
-                    for (String q : queriesCrear) {
-                        st2.executeUpdate(q);
-                    }
-                    st2.close();
 
+                    for (String q : queriesCrear) st2.executeUpdate(q);
+
+                    st2.close();
                     poblarHashMaps(c3);
                     poblarMockData(c3);
                 }
@@ -169,6 +170,14 @@ public class Conexion {
                                     VALUES                   (%d,        '%s',         '%s',      '%s')""",
                             1, "2023-04-22", "2023-05-05", "Cirugía de urgencia"),
                     String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            2, "2023-04-20", "2023-05-01", "Administración de medicamento"),
+                    String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            2, "2023-04-22", "2023-05-05", "Cirugía de urgencia"),
+                    String.format("""
                                      INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
                                     VALUES                   (%d,        '%s',         '%s',      '%s')""",
                             2, "2023-04-23", "2023-04-24", "Administración de antibióticos"),
@@ -176,6 +185,23 @@ public class Conexion {
                                     INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
                                     VALUES                   (%d,        '%s',         '%s',      '%s')""",
                             3, "2023-04-24", "2023-04-30", "Rehabilitación física"),
+
+                    String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            3, "2023-04-20", "2023-05-01", "Administración de medicamento"),
+                    String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            3, "2023-04-22", "2023-05-05", "Cirugía de urgencia"),
+                    String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            4, "2023-04-20", "2023-05-01", "Administración de medicamento"),
+                    String.format("""
+                                    INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
+                                    VALUES                   (%d,        '%s',         '%s',      '%s')""",
+                            4, "2023-04-22", "2023-05-05", "Cirugía de urgencia"),
                     String.format("""
                                     INSERT INTO tratamientos (id_animal, fecha_inicio, fecha_fin, descripcion)
                                     VALUES                   (%d,        '%s',         '%s',      '%s')""",
