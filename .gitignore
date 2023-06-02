@@ -20,7 +20,11 @@
 *.zip
 *.tar.gz
 *.rar
-
+target/
+.classpath
+.project
+.settings
+src/main/java/org/example/Persistencia/pass.env
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*

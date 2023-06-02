@@ -4,29 +4,30 @@ import org.example.Aplicacion;
 import org.example.Modelo.Ave;
 import org.example.Modelo.Mamifero;
 import org.example.Modelo.Reptil;
+import org.example.Persistencia.GestionDatos;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 /**
- * Esta clase representa el JFrame de la "ventana de alta de animales" de la aplicación
+ * Esta clase representa el JFrame de la "ventana de alta de animales" de la
+ * aplicación
  */
 public class VentanaAlta extends JFrame {
     /**
      * El constructor del componente de alta de animales
      *
-     * @param listaSize El número de animales que hay en la lista. Se utiliza para asignarle id al animal que se crea nuevo
+     * @param listaSize El número de animales que hay en la lista. Se utiliza para
+     *                  asignarle id al animal que se crea nuevo
      */
     public VentanaAlta(int listaSize) {
         this.setSize(375, 250);
         this.setResizable(false);
         this.setTitle("Panel alta de animales");
         this.setLayout(new BorderLayout());
-        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png")).getImage());
+        this.setIconImage(new ImageIcon((System.getProperty("user.dir") + "/src/main/java/org/example/IMG/icono.png"))
+                .getImage());
 
         JPanel contenedorCampos = new JPanel();
         contenedorCampos.setLayout(new BoxLayout(contenedorCampos, BoxLayout.PAGE_AXIS));
@@ -53,13 +54,16 @@ public class VentanaAlta extends JFrame {
         reptilBoton.setActionCommand("Reptil");
 
         aveBoton.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Caza");
+            if (e.getStateChange() == ItemEvent.SELECTED)
+                labelTipoLesion.setText("Caza");
         });
         mamiferoBoton.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Atropello");
+            if (e.getStateChange() == ItemEvent.SELECTED)
+                labelTipoLesion.setText("Atropello");
         });
         reptilBoton.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) labelTipoLesion.setText("Infección");
+            if (e.getStateChange() == ItemEvent.SELECTED)
+                labelTipoLesion.setText("Infección");
         });
 
         JRadioButton gravedadAlta = new JRadioButton("Alta");
@@ -74,7 +78,8 @@ public class VentanaAlta extends JFrame {
 
         errorPeso.setForeground(Color.RED);
 
-        botonAddAnimal.addActionListener(e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, gravedadBtn, listaSize));
+        botonAddAnimal.addActionListener(
+                e -> accionAddAnimal(this, pesoTF, especie, familiasBtn, tipoLesion, gravedadBtn, listaSize));
 
         familiasBtn.add(mamiferoBoton);
         familiasBtn.add(aveBoton);
@@ -112,47 +117,59 @@ public class VentanaAlta extends JFrame {
 
         this.add(contenedorCampos, BorderLayout.CENTER);
         this.add(botonAddAnimal, BorderLayout.SOUTH);
-        //centrar la ventana
+        // centrar la ventana
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 
-
     /**
-     * Este es el método que toma los valores de la ventana de alta para registrar un nuevo animal.
+     * Este es el método que toma los valores de la ventana de alta para registrar
+     * un nuevo animal.
      *
-     * @param ventanaAlta Un puntero a la ventana de alta, para destruirla en caso de que se cree el nuevo animal
+     * @param ventanaAlta Un puntero a la ventana de alta, para destruirla en caso
+     *                    de que se cree el nuevo animal
      * @param pesoTF      El JTextField que contiene el peso
      * @param especieTF   El JTextField que contiene la especie
      * @param familiasBtn El grupo de botones que marca el tipo de animal
-     * @param tipoLesion  El JCheckbox que marca si el tipo de lesión es la característica de la especie, o no
-     * @param listaSize   El tamaño actual de la lista (listaSize+1 será la ID del animal nuevo)
+     * @param tipoLesion  El JCheckbox que marca si el tipo de lesión es la
+     *                    característica de la especie, o no
+     * @param listaSize   El tamaño actual de la lista (listaSize+1 será la ID del
+     *                    animal nuevo)
      */
     private static void accionAddAnimal(VentanaAlta ventanaAlta, JTextField pesoTF, JTextField especieTF,
-                                        ButtonGroup familiasBtn, JCheckBox tipoLesion, ButtonGroup gravedadBtn, int listaSize) {
+            ButtonGroup familiasBtn, JCheckBox tipoLesion, ButtonGroup gravedadBtn, int listaSize) {
         String peso = pesoTF.getText();
         String especie = especieTF.getText();
 
         if (pesoTF.getText().equals("") || especie.equals("") || familiasBtn.getSelection() == null
                 || peso.matches("[^0-9]*") || peso.length() > 5) {
-            JOptionPane.showMessageDialog(null, "Por favor, introduce valores en los campos", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Por favor, introduce valores en los campos", "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
         String familia = familiasBtn.getSelection().getActionCommand();
         String gravedad = gravedadBtn.getSelection().getActionCommand();
-        if (gravedad == null) gravedad = "N/A";
+        if (gravedad == null)
+            gravedad = "N/A";
         switch (familia) {
             case "Ave" -> {
-                Aplicacion.addAnimal(new Ave(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
+                Ave a = new Ave(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad);
+                GestionDatos.insertarAnimal(a);
                 ventanaAlta.dispose();
+                Aplicacion.addAnimal(a);
             }
             case "Mamífero" -> {
-                Aplicacion.addAnimal(new Mamifero(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
+                Mamifero m = new Mamifero(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(),
+                        gravedad);
+                GestionDatos.insertarAnimal(m);
+                Aplicacion.addAnimal(m);
                 ventanaAlta.dispose();
             }
             case "Reptil" -> {
-                Aplicacion.addAnimal(new Reptil(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(), gravedad));
+                Reptil r = new Reptil(especie, listaSize + 1, Integer.parseInt(peso), tipoLesion.isSelected(),
+                        gravedad);
+                Aplicacion.addAnimal(r);
                 ventanaAlta.dispose();
             }
             default -> throw new IllegalStateException("Valor inesperado: " + familia);
